@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Banking Fraud Analytics & Customer Segmentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dark-theme">
+  <div class="app-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="brand">
+        <i class="fa-solid fa-shield-halved brand-icon"></i>
+        <div class="brand-text">
+          <h2>AEGIS BANK</h2>
+          <span>Big Data Fraud Intelligence</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#overview" class="nav-item active" data-tab="overview">
+          <i class="fa-solid fa-chart-pie"></i> <span>Overview</span>
+        </a>
+        <a href="#fraud" class="nav-item" data-tab="fraud">
+          <i class="fa-solid fa-triangle-exclamation"></i> <span>Fraud Analytics</span>
+        </a>
+        <a href="#prediction" class="nav-item" data-tab="prediction">
+          <i class="fa-solid fa-robot"></i> <span>Fraud Prediction</span>
+        </a>
+        <a href="#segmentation" class="nav-item" data-tab="segmentation">
+          <i class="fa-solid fa-users"></i> <span>Customer Segmentation</span>
+        </a>
+        <a href="#anomaly" class="nav-item" data-tab="anomaly">
+          <i class="fa-solid fa-radar"></i> <span>Anomaly Detection</span>
+        </a>
+        <a href="#performance" class="nav-item" data-tab="performance">
+          <i class="fa-solid fa-microchip"></i> <span>Model Performance</span>
+        </a>
+        <a href="#explorer" class="nav-item" data-tab="explorer">
+          <i class="fa-solid fa-table-list"></i> <span>Transaction Explorer</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="tech-badge"><i class="fa-bolt"></i> PySpark Engine</div>
+        <div class="tech-badge"><i class="fa-brain"></i> Scikit-Learn ML</div>
+        <div class="hadoop-no-badge"><i class="fa-ban"></i> Standard PySpark (No Hadoop)</div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- Header -->
+      <header class="top-header">
+        <div class="header-title">
+          <h1 id="page-title">Analytics Overview</h1>
+          <p id="page-subtitle">Real-time enterprise banking transactions and ML insights</p>
+        </div>
+        <div class="header-actions">
+          <div class="system-status">
+            <span class="pulse-dot"></span> System Live & Operational
+          </div>
+          <button class="btn btn-primary" onclick="refreshDashboard()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+        </div>
+      </header>
+
+      <!-- TAB 1: OVERVIEW -->
+      <section id="tab-overview" class="tab-content active">
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon icon-blue"><i class="fa-solid fa-list-check"></i></div>
+            <div class="kpi-info">
+              <span class="kpi-label">Total Transactions</span>
+              <h3 id="kpi-total-txns">--</h3>
+              <span class="kpi-sub">Processed by PySpark</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon icon-emerald"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+            <div class="kpi-info">
+              <span class="kpi-label">Total Volume</span>
+              <h3 id="kpi-total-value">--</h3>
+              <span class="kpi-sub">Total transaction value</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon icon-indigo"><i class="fa-solid fa-user-group"></i></div>
+            <div class="kpi-info">
+              <span class="kpi-label">Total Customers</span>
+              <h3 id="kpi-total-customers">--</h3>
+              <span class="kpi-sub">Profiled accounts</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon icon-rose"><i class="fa-solid fa-shield-virus"></i></div>
+            <div class="kpi-info">
+              <span class="kpi-label">Fraudulent Txns</span>
+              <h3 id="kpi-fraud-txns">--</h3>
+              <span class="kpi-sub" id="kpi-fraud-rate">Rate: --</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon icon-amber"><i class="fa-solid fa-bell-concierge"></i></div>
+            <div class="kpi-info">
+              <span class="kpi-label">Detected Anomalies</span>
+              <h3 id="kpi-anomalies">--</h3>
+              <span class="kpi-sub">Isolation Forest flags</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-row">
+          <div class="chart-card flex-2">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-chart-line"></i> Transaction Volume & Fraud Trends Over Time</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="chart-trends"></canvas>
+            </div>
+          </div>
+          <div class="chart-card flex-1">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-chart-pie"></i> Fraud vs Legitimate</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="chart-fraud-ratio"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: FRAUD ANALYTICS -->
+      <section id="tab-fraud" class="tab-content">
+        <div class="charts-grid-2x2">
+          <div class="chart-card">
+            <div class="card-header"><h3><i class="fa-solid fa-layer-group"></i> Fraud by Transaction Type</h3></div>
+            <div class="chart-container"><canvas id="chart-fraud-by-type"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="card-header"><h3><i class="fa-solid fa-credit-card"></i> Fraud by Payment Method</h3></div>
+            <div class="chart-container"><canvas id="chart-fraud-by-pm"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="card-header"><h3><i class="fa-solid fa-location-dot"></i> Fraud by Location</h3></div>
+            <div class="chart-container"><canvas id="chart-fraud-by-location"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="card-header"><h3><i class="fa-solid fa-mobile-screen-button"></i> Fraud by Device Type</h3></div>
+            <div class="chart-container"><canvas id="chart-fraud-by-device"></canvas></div>
+          </div>
+        </div>
+
+        <div class="table-card mt-4">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-triangle-exclamation"></i> Flagged Suspicious Transactions</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="table-suspicious">
+              <thead>
+                <tr>
+                  <th>Txn ID</th>
+                  <th>Customer ID</th>
+                  <th>Date & Time</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Merchant</th>
+                  <th>Location</th>
+                  <th>Payment Method</th>
+                  <th>Device</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody><!-- Dynamic JS --></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: FRAUD PREDICTION -->
+      <section id="tab-prediction" class="tab-content">
+        <div class="grid-layout-2col">
+          <div class="form-card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-sliders"></i> Fraud Inference Sandbox</h3>
+              <p>Test real-time Machine Learning prediction engines</p>
+            </div>
+
+            <div class="preset-buttons mb-3">
+              <span>Quick Presets:</span>
+              <button class="btn btn-sm btn-outline" onclick="loadPreset('legit')">Legitimate Grocery</button>
+              <button class="btn btn-sm btn-outline" onclick="loadPreset('night')">Late Night High Amount</button>
+              <button class="btn btn-sm btn-outline" onclick="loadPreset('drain')">Account Drain Fraud</button>
+            </div>
+
+            <form id="prediction-form" onsubmit="handlePrediction(event)">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Transaction Amount (₹)</label>
+                  <input type="number" id="pred-amount" step="0.01" value="150000.00" required>
+                </div>
+                <div class="form-group">
+                  <label>Balance Before (₹)</label>
+                  <input type="number" id="pred-bal-before" step="0.01" value="160000.00" required>
+                </div>
+                <div class="form-group">
+                  <label>Balance After (₹)</label>
+                  <input type="number" id="pred-bal-after" step="0.01" value="10000.00" required>
+                </div>
+                <div class="form-group">
+                  <label>Transaction Time (HH:MM:SS)</label>
+                  <input type="text" id="pred-time" value="03:15:00" required>
+                </div>
+                <div class="form-group">
+                  <label>Transaction Type</label>
+                  <select id="pred-type">
+                    <option value="UPI">UPI</option>
+                    <option value="ATM Withdrawal">ATM Withdrawal</option>
+                    <option value="Bank Transfer" selected>Bank Transfer</option>
+                    <option value="Online Purchase">Online Purchase</option>
+                    <option value="Card Payment">Card Payment</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Account Type</label>
+                  <select id="pred-account">
+                    <option value="Savings">Savings</option>
+                    <option value="Current">Current</option>
+                    <option value="Salary">Salary</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Payment Method</label>
+                  <select id="pred-payment">
+                    <option value="Net Banking" selected>Net Banking</option>
+                    <option value="UPI">UPI</option>
+                    <option value="Debit Card">Debit Card</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="ATM">ATM</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Device Type</label>
+                  <select id="pred-device">
+                    <option value="Android">Android</option>
+                    <option value="iOS">iOS</option>
+                    <option value="Windows">Windows</option>
+                    <option value="Mac">Mac</option>
+                    <option value="ATM">ATM</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Location</label>
+                  <input type="text" id="pred-location" value="Mumbai" required>
+                </div>
+                <div class="form-group">
+                  <label>Select Classifier Model</label>
+                  <select id="pred-model-choice">
+                    <option value="Random Forest">Random Forest (Recommended)</option>
+                    <option value="CART Decision Tree">CART Decision Tree</option>
+                    <option value="Logistic Regression">Logistic Regression</option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-accent btn-block mt-3">
+                <i class="fa-solid fa-bolt"></i> Evaluate Fraud Risk
+              </button>
+            </form>
+          </div>
+
+          <div class="result-card" id="result-card-container">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-shield-heart"></i> AI Inference Output</h3>
+            </div>
+            
+            <div class="prediction-idle" id="pred-idle">
+              <i class="fa-solid fa-microchip idle-icon"></i>
+              <p>Submit transaction details to execute classification model evaluation.</p>
+            </div>
+
+            <div class="prediction-result-content hidden" id="pred-result-box">
+              <div class="result-badge-wrap">
+                <span class="prediction-badge" id="res-badge">LEGITIMATE</span>
+                <span class="risk-badge" id="res-risk">LOW RISK</span>
+              </div>
+
+              <div class="gauge-container">
+                <div class="probability-circle" id="res-circle">
+                  <span id="res-prob-val">0%</span>
+                  <span class="sub">Fraud Probability</span>
+                </div>
+              </div>
+
+              <div class="result-details-grid">
+                <div class="detail-item">
+                  <span class="label">Classification</span>
+                  <strong id="res-classification">--</strong>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Fraud Probability</span>
+                  <strong id="res-prob">--</strong>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Risk Category</span>
+                  <strong id="res-risk-text">--</strong>
+                </div>
+                <div class="detail-item">
+                  <span class="label">Evaluated By Model</span>
+                  <strong id="res-model">--</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: CUSTOMER SEGMENTATION -->
+      <section id="tab-segmentation" class="tab-content">
+        <div class="charts-row">
+          <div class="chart-card flex-1">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-chart-line"></i> K-Means Elbow Curve Analysis</h3>
+              <p>Optimal cluster determination via inertia minimization</p>
+            </div>
+            <div class="chart-container"><canvas id="chart-elbow"></canvas></div>
+          </div>
+          <div class="chart-card flex-1">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-chart-pie"></i> Customer Segment Distribution</h3>
+            </div>
+            <div class="chart-container"><canvas id="chart-cluster-pie"></canvas></div>
+          </div>
+        </div>
+
+        <div class="clusters-cards-grid mt-4" id="cluster-cards-container">
+          <!-- Dynamic JS Cards -->
+        </div>
+      </section>
+
+      <!-- TAB 5: ANOMALY DETECTION -->
+      <section id="tab-anomaly" class="tab-content">
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon icon-rose"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <div class="kpi-info">
+              <span class="kpi-label">Anomalies Detected</span>
+              <h3 id="anomaly-total">--</h3>
+              <span class="kpi-sub">Outlier records</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon icon-amber"><i class="fa-solid fa-percent"></i></div>
+            <div class="kpi-info">
+              <span class="kpi-label">Anomaly Percentage</span>
+              <h3 id="anomaly-pct">--</h3>
+              <span class="kpi-sub">Contamination rate</span>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon icon-indigo"><i class="fa-solid fa-tree"></i></div>
+            <div class="kpi-info">
+              <span class="kpi-label">Algorithm</span>
+              <h3>Isolation Forest</h3>
+              <span class="kpi-sub">Unsupervised outlier score</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="charts-row mt-4">
+          <div class="chart-card flex-2">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-chart-column"></i> Anomaly Score Distribution</h3>
+              <p>Lower score indicates severe structural/behavioral deviation</p>
+            </div>
+            <div class="chart-container"><canvas id="chart-anomaly-dist"></canvas></div>
+          </div>
+          <div class="chart-card flex-1">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-circle-info"></i> Supervised vs Unsupervised</h3>
+            </div>
+            <div class="info-body">
+              <div class="info-block">
+                <h4><i class="fa-solid fa-tags text-rose"></i> Fraud Classification</h4>
+                <p>Supervised learning trained on historical ground truth <code>is_fraud</code> labels to predict direct fraud probability.</p>
+              </div>
+              <hr>
+              <div class="info-block">
+                <h4><i class="fa-solid fa-radar text-amber"></i> Anomaly Detection</h4>
+                <p>Unsupervised Isolation Forest isolating unusual patterns (extreme amounts, strange balance jumps, night hours) without needing labels.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card mt-4">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-magnifying-glass-chart"></i> Top Structural Anomalies Flagged</h3>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="table-anomalies">
+              <thead>
+                <tr>
+                  <th>Txn ID</th>
+                  <th>Customer ID</th>
+                  <th>Date & Time</th>
+                  <th>Type</th>
+                  <th>Amount</th>
+                  <th>Location</th>
+                  <th>Payment Method</th>
+                  <th>Anomaly Score</th>
+                  <th>Ground Truth Fraud</th>
+                </tr>
+              </thead>
+              <tbody><!-- Dynamic JS --></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 6: MODEL PERFORMANCE -->
+      <section id="tab-performance" class="tab-content">
+        <div class="charts-row">
+          <div class="chart-card flex-2">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-chart-bar"></i> Algorithm Performance Benchmark</h3>
+              <p>Comparing Logistic Regression, CART Decision Tree, and Random Forest</p>
+            </div>
+            <div class="chart-container"><canvas id="chart-model-comp"></canvas></div>
+          </div>
+          <div class="chart-card flex-1">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-trophy"></i> Best Performing Model</h3>
+            </div>
+            <div class="best-model-box">
+              <i class="fa-solid fa-award trophy-icon"></i>
+              <h2 id="best-model-title">Random Forest</h2>
+              <p id="best-model-desc">Highest overall F1-score & ROC-AUC performance on test partition.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="metrics-table-card mt-4">
+          <div class="card-header"><h3><i class="fa-solid fa-table"></i> Detailed Metric Evaluation Matrix</h3></div>
+          <div class="table-responsive">
+            <table class="data-table" id="table-model-metrics">
+              <thead>
+                <tr>
+                  <th>Algorithm</th>
+                  <th>Accuracy</th>
+                  <th>Precision</th>
+                  <th>Recall</th>
+                  <th>F1-Score</th>
+                  <th>ROC-AUC</th>
+                </tr>
+              </thead>
+              <tbody><!-- Dynamic JS --></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="cm-grid mt-4" id="cm-cards-container">
+          <!-- Dynamic Confusion Matrix Cards -->
+        </div>
+      </section>
+
+      <!-- TAB 7: TRANSACTION EXPLORER -->
+      <section id="tab-explorer" class="tab-content">
+        <div class="filter-card">
+          <div class="card-header">
+            <h3><i class="fa-solid fa-filter"></i> Search & Multi-Criteria Filtering</h3>
+          </div>
+          <div class="filter-grid">
+            <div class="filter-group">
+              <label>Search (ID/Merchant/Customer)</label>
+              <input type="text" id="flt-search" placeholder="Search..." oninput="triggerFilter()">
+            </div>
+            <div class="filter-group">
+              <label>Transaction Type</label>
+              <select id="flt-type" onchange="triggerFilter()">
+                <option value="">All Types</option>
+                <option value="UPI">UPI</option>
+                <option value="ATM Withdrawal">ATM Withdrawal</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Online Purchase">Online Purchase</option>
+                <option value="Card Payment">Card Payment</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Payment Method</label>
+              <select id="flt-pm" onchange="triggerFilter()">
+                <option value="">All Methods</option>
+                <option value="UPI">UPI</option>
+                <option value="Debit Card">Debit Card</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Net Banking">Net Banking</option>
+                <option value="ATM">ATM</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Fraud Status</label>
+              <select id="flt-fraud" onchange="triggerFilter()">
+                <option value="">All Records</option>
+                <option value="1">Fraud Only</option>
+                <option value="0">Legitimate Only</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Min Amount (₹)</label>
+              <input type="number" id="flt-min-amt" placeholder="0" onchange="triggerFilter()">
+            </div>
+            <div class="filter-group">
+              <label>Max Amount (₹)</label>
+              <input type="number" id="flt-max-amt" placeholder="500000" onchange="triggerFilter()">
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card mt-4">
+          <div class="table-header-flex">
+            <h3><i class="fa-solid fa-database"></i> Processed Banking Transactions</h3>
+            <span class="total-badge" id="explorer-total-count">Showing 0 records</span>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table" id="table-explorer">
+              <thead>
+                <tr>
+                  <th>Txn ID</th>
+                  <th>Customer ID</th>
+                  <th>Date & Time</th>
+                  <th>Type</th>
+                  <th>Account</th>
+                  <th>Amount</th>
+                  <th>Balance Before</th>
+                  <th>Balance After</th>
+                  <th>Merchant</th>
+                  <th>Location</th>
+                  <th>Method</th>
+                  <th>Device</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody><!-- Dynamic JS --></tbody>
+            </table>
+          </div>
+
+          <div class="pagination-bar">
+            <button class="btn btn-sm btn-outline" id="btn-prev-page" onclick="changePage(-1)"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+            <span id="page-indicator">Page 1 of 1</span>
+            <button class="btn btn-sm btn-outline" id="btn-next-page" onclick="changePage(1)">Next <i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

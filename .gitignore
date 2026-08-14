@@ -1,0 +1,20 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PySpark / Temp / Log files
+.spark-staging/
+metastore_db/
+derby.log
+*.log
+
+# Large Raw Datasets & Processed Parquet Files (>100MB GitHub Limit)
+data/raw/
+data/processed/transactions_processed.parquet
+
+# OS & IDE files
+.DS_Store
+.idea/
+.vscode/
+*.swp

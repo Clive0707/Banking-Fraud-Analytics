@@ -1,0 +1,8 @@
+{
+  "total_transactions": 15000000,
+  "total_transaction_value": 78877875116.59,
+  "total_customers": 25000,
+  "fraudulent_transactions": 146645,
+  "average_transaction_amount": 5258.53,
+  "fraud_rate": 0.98
+}

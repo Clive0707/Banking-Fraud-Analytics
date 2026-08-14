@@ -1,0 +1,2479 @@
+{
+  "transaction_type": [
+    {
+      "transaction_type": "UPI",
+      "count": 5702817,
+      "total_amount": 29990374401.64,
+      "avg_amount": 5258.87,
+      "fraud_count": 54136,
+      "fraud_rate": 0.95
+    },
+    {
+      "transaction_type": "Card Payment",
+      "count": 3748095,
+      "total_amount": 19701384382.13,
+      "avg_amount": 5256.37,
+      "fraud_count": 35355,
+      "fraud_rate": 0.94
+    },
+    {
+      "transaction_type": "Bank Transfer",
+      "count": 2249517,
+      "total_amount": 11832550737.51,
+      "avg_amount": 5260.04,
+      "fraud_count": 21613,
+      "fraud_rate": 0.96
+    },
+    {
+      "transaction_type": "ATM Withdrawal",
+      "count": 1799181,
+      "total_amount": 9469311506.7,
+      "avg_amount": 5263.12,
+      "fraud_count": 17211,
+      "fraud_rate": 0.96
+    },
+    {
+      "transaction_type": "Online Purchase",
+      "count": 1500390,
+      "total_amount": 7884254088.61,
+      "avg_amount": 5254.8,
+      "fraud_count": 18330,
+      "fraud_rate": 1.22
+    }
+  ],
+  "payment_method": [
+    {
+      "payment_method": "UPI",
+      "count": 5698319,
+      "total_amount": 29983620471.91,
+      "fraud_count": 55704,
+      "fraud_rate": 0.98
+    },
+    {
+      "payment_method": "Debit Card",
+      "count": 3751953,
+      "total_amount": 19700785485.84,
+      "fraud_count": 36739,
+      "fraud_rate": 0.98
+    },
+    {
+      "payment_method": "Net Banking",
+      "count": 2248932,
+      "total_amount": 11840613237.4,
+      "fraud_count": 21934,
+      "fraud_rate": 0.98
+    },
+    {
+      "payment_method": "Credit Card",
+      "count": 1798986,
+      "total_amount": 9450983124.13,
+      "fraud_count": 17660,
+      "fraud_rate": 0.98
+    },
+    {
+      "payment_method": "ATM",
+      "count": 1501810,
+      "total_amount": 7901872797.31,
+      "fraud_count": 14608,
+      "fraud_rate": 0.97
+    }
+  ],
+  "location": [
+    {
+      "location": "Mumbai",
+      "count": 3289755,
+      "total_amount": 17285360617.75,
+      "fraud_count": 31145,
+      "fraud_rate": 0.95
+    },
+    {
+      "location": "Delhi",
+      "count": 2129493,
+      "total_amount": 10960716899.95,
+      "fraud_count": 20895,
+      "fraud_rate": 0.98
+    },
+    {
+      "location": "Bengaluru",
+      "count": 1972826,
+      "total_amount": 10516828637.1,
+      "fraud_count": 19539,
+      "fraud_rate": 0.99
+    },
+    {
+      "location": "Hyderabad",
+      "count": 1450460,
+      "total_amount": 7700199115.96,
+      "fraud_count": 12695,
+      "fraud_rate": 0.88
+    },
+    {
+      "location": "Pune",
+      "count": 1441738,
+      "total_amount": 7663627325.07,
+      "fraud_count": 12473,
+      "fraud_rate": 0.87
+    },
+    {
+      "location": "Chennai",
+      "count": 1184571,
+      "total_amount": 6085641800.23,
+      "fraud_count": 10348,
+      "fraud_rate": 0.87
+    },
+    {
+      "location": "Kolkata",
+      "count": 1021161,
+      "total_amount": 5634065279.01,
+      "fraud_count": 9008,
+      "fraud_rate": 0.88
+    },
+    {
+      "location": "Ahmedabad",
+      "count": 961656,
+      "total_amount": 5303163238.13,
+      "fraud_count": 8555,
+      "fraud_rate": 0.89
+    },
+    {
+      "location": "Nashik",
+      "count": 727597,
+      "total_amount": 3537949327.76,
+      "fraud_count": 6330,
+      "fraud_rate": 0.87
+    },
+    {
+      "location": "Nagpur",
+      "count": 606732,
+      "total_amount": 3068026376.16,
+      "fraud_count": 5281,
+      "fraud_rate": 0.87
+    },
+    {
+      "location": "London",
+      "count": 53740,
+      "total_amount": 281255838.52,
+      "fraud_count": 2619,
+      "fraud_rate": 4.87
+    },
+    {
+      "location": "Dubai",
+      "count": 53586,
+      "total_amount": 282614507.12,
+      "fraud_count": 2642,
+      "fraud_rate": 4.93
+    },
+    {
+      "location": "Singapore",
+      "count": 53575,
+      "total_amount": 278350853.67,
+      "fraud_count": 2574,
+      "fraud_rate": 4.8
+    },
+    {
+      "location": "New York",
+      "count": 53110,
+      "total_amount": 280075300.16,
+      "fraud_count": 2541,
+      "fraud_rate": 4.78
+    }
+  ],
+  "device_type": [
+    {
+      "device_type": "Android",
+      "count": 6750706,
+      "fraud_count": 64030,
+      "fraud_rate": 0.95
+    },
+    {
+      "device_type": "iOS",
+      "count": 2997845,
+      "fraud_count": 28638,
+      "fraud_rate": 0.96
+    },
+    {
+      "device_type": "Windows",
+      "count": 2700523,
+      "fraud_count": 29696,
+      "fraud_rate": 1.1
+    },
+    {
+      "device_type": "ATM",
+      "count": 1502740,
+      "fraud_count": 14274,
+      "fraud_rate": 0.95
+    },
+    {
+      "device_type": "Mac",
+      "count": 1048186,
+      "fraud_count": 10007,
+      "fraud_rate": 0.95
+    }
+  ],
+  "monthly_trends": [
+    {
+      "month": "2025-01",
+      "total_transactions": 1276029,
+      "total_amount": 6712695958.92,
+      "fraud_count": 12414
+    },
+    {
+      "month": "2025-02",
+      "total_transactions": 1149838,
+      "total_amount": 6045852853.86,
+      "fraud_count": 11177
+    },
+    {
+      "month": "2025-03",
+      "total_transactions": 1272055,
+      "total_amount": 6688676655.22,
+      "fraud_count": 12412
+    },
+    {
+      "month": "2025-04",
+      "total_transactions": 1232056,
+      "total_amount": 6488158276.84,
+      "fraud_count": 12102
+    },
+    {
+      "month": "2025-05",
+      "total_transactions": 1275883,
+      "total_amount": 6705147936.86,
+      "fraud_count": 12618
+    },
+    {
+      "month": "2025-06",
+      "total_transactions": 1234193,
+      "total_amount": 6476439590.05,
+      "fraud_count": 12089
+    },
+    {
+      "month": "2025-07",
+      "total_transactions": 1274044,
+      "total_amount": 6690786040.44,
+      "fraud_count": 12356
+    },
+    {
+      "month": "2025-08",
+      "total_transactions": 1273023,
+      "total_amount": 6697096717.62,
+      "fraud_count": 12519
+    },
+    {
+      "month": "2025-09",
+      "total_transactions": 1233864,
+      "total_amount": 6489479463.35,
+      "fraud_count": 12057
+    },
+    {
+      "month": "2025-10",
+      "total_transactions": 1274205,
+      "total_amount": 6723130125.57,
+      "fraud_count": 12574
+    },
+    {
+      "month": "2025-11",
+      "total_transactions": 1230750,
+      "total_amount": 6470081348.07,
+      "fraud_count": 11914
+    },
+    {
+      "month": "2025-12",
+      "total_transactions": 1274060,
+      "total_amount": 6690330149.79,
+      "fraud_count": 12413
+    }
+  ],
+  "daily_trends": [
+    {
+      "transaction_date": "2025-01-01",
+      "total_transactions": 41510,
+      "total_amount": 221181054.02,
+      "fraud_count": 377
+    },
+    {
+      "transaction_date": "2025-01-02",
+      "total_transactions": 41314,
+      "total_amount": 215956828.99,
+      "fraud_count": 400
+    },
+    {
+      "transaction_date": "2025-01-03",
+      "total_transactions": 41164,
+      "total_amount": 213352046.11,
+      "fraud_count": 426
+    },
+    {
+      "transaction_date": "2025-01-04",
+      "total_transactions": 40949,
+      "total_amount": 216690837.68,
+      "fraud_count": 401
+    },
+    {
+      "transaction_date": "2025-01-05",
+      "total_transactions": 41289,
+      "total_amount": 219366220.01,
+      "fraud_count": 389
+    },
+    {
+      "transaction_date": "2025-01-06",
+      "total_transactions": 41312,
+      "total_amount": 219174752.61,
+      "fraud_count": 397
+    },
+    {
+      "transaction_date": "2025-01-07",
+      "total_transactions": 40988,
+      "total_amount": 219041064.78,
+      "fraud_count": 388
+    },
+    {
+      "transaction_date": "2025-01-08",
+      "total_transactions": 41433,
+      "total_amount": 218919890.78,
+      "fraud_count": 393
+    },
+    {
+      "transaction_date": "2025-01-09",
+      "total_transactions": 41348,
+      "total_amount": 214658177.49,
+      "fraud_count": 418
+    },
+    {
+      "transaction_date": "2025-01-10",
+      "total_transactions": 41126,
+      "total_amount": 217357153.25,
+      "fraud_count": 412
+    },
+    {
+      "transaction_date": "2025-01-11",
+      "total_transactions": 41115,
+      "total_amount": 212513701.5,
+      "fraud_count": 374
+    },
+    {
+      "transaction_date": "2025-01-12",
+      "total_transactions": 41081,
+      "total_amount": 215830215.48,
+      "fraud_count": 369
+    },
+    {
+      "transaction_date": "2025-01-13",
+      "total_transactions": 40686,
+      "total_amount": 213315238.36,
+      "fraud_count": 381
+    },
+    {
+      "transaction_date": "2025-01-14",
+      "total_transactions": 41270,
+      "total_amount": 217521569.01,
+      "fraud_count": 374
+    },
+    {
+      "transaction_date": "2025-01-15",
+      "total_transactions": 40986,
+      "total_amount": 217459490.42,
+      "fraud_count": 435
+    },
+    {
+      "transaction_date": "2025-01-16",
+      "total_transactions": 41330,
+      "total_amount": 210954035.01,
+      "fraud_count": 403
+    },
+    {
+      "transaction_date": "2025-01-17",
+      "total_transactions": 41111,
+      "total_amount": 217238948.11,
+      "fraud_count": 431
+    },
+    {
+      "transaction_date": "2025-01-18",
+      "total_transactions": 41210,
+      "total_amount": 213335347.93,
+      "fraud_count": 385
+    },
+    {
+      "transaction_date": "2025-01-19",
+      "total_transactions": 40980,
+      "total_amount": 215180195.93,
+      "fraud_count": 428
+    },
+    {
+      "transaction_date": "2025-01-20",
+      "total_transactions": 41241,
+      "total_amount": 214871907.35,
+      "fraud_count": 375
+    },
+    {
+      "transaction_date": "2025-01-21",
+      "total_transactions": 41113,
+      "total_amount": 220202136.82,
+      "fraud_count": 418
+    },
+    {
+      "transaction_date": "2025-01-22",
+      "total_transactions": 41166,
+      "total_amount": 213036478.74,
+      "fraud_count": 375
+    },
+    {
+      "transaction_date": "2025-01-23",
+      "total_transactions": 40962,
+      "total_amount": 218853710.86,
+      "fraud_count": 409
+    },
+    {
+      "transaction_date": "2025-01-24",
+      "total_transactions": 41305,
+      "total_amount": 217161834.73,
+      "fraud_count": 438
+    },
+    {
+      "transaction_date": "2025-01-25",
+      "total_transactions": 41098,
+      "total_amount": 214317046.17,
+      "fraud_count": 369
+    },
+    {
+      "transaction_date": "2025-01-26",
+      "total_transactions": 41062,
+      "total_amount": 215142894.05,
+      "fraud_count": 403
+    },
+    {
+      "transaction_date": "2025-01-27",
+      "total_transactions": 41114,
+      "total_amount": 219750921.42,
+      "fraud_count": 407
+    },
+    {
+      "transaction_date": "2025-01-28",
+      "total_transactions": 41326,
+      "total_amount": 217336242.9,
+      "fraud_count": 428
+    },
+    {
+      "transaction_date": "2025-01-29",
+      "total_transactions": 40887,
+      "total_amount": 217463953.26,
+      "fraud_count": 384
+    },
+    {
+      "transaction_date": "2025-01-30",
+      "total_transactions": 41371,
+      "total_amount": 216285200.35,
+      "fraud_count": 415
+    },
+    {
+      "transaction_date": "2025-01-31",
+      "total_transactions": 41182,
+      "total_amount": 219226864.8,
+      "fraud_count": 412
+    },
+    {
+      "transaction_date": "2025-02-01",
+      "total_transactions": 40919,
+      "total_amount": 212099737.09,
+      "fraud_count": 386
+    },
+    {
+      "transaction_date": "2025-02-02",
+      "total_transactions": 40844,
+      "total_amount": 214825705.34,
+      "fraud_count": 388
+    },
+    {
+      "transaction_date": "2025-02-03",
+      "total_transactions": 41125,
+      "total_amount": 217605118.24,
+      "fraud_count": 386
+    },
+    {
+      "transaction_date": "2025-02-04",
+      "total_transactions": 40898,
+      "total_amount": 209975790.48,
+      "fraud_count": 399
+    },
+    {
+      "transaction_date": "2025-02-05",
+      "total_transactions": 41258,
+      "total_amount": 216093771.03,
+      "fraud_count": 391
+    },
+    {
+      "transaction_date": "2025-02-06",
+      "total_transactions": 41277,
+      "total_amount": 217230532.26,
+      "fraud_count": 414
+    },
+    {
+      "transaction_date": "2025-02-07",
+      "total_transactions": 40899,
+      "total_amount": 217643191.24,
+      "fraud_count": 368
+    },
+    {
+      "transaction_date": "2025-02-08",
+      "total_transactions": 41165,
+      "total_amount": 220219649.98,
+      "fraud_count": 405
+    },
+    {
+      "transaction_date": "2025-02-09",
+      "total_transactions": 40991,
+      "total_amount": 216467660.47,
+      "fraud_count": 413
+    },
+    {
+      "transaction_date": "2025-02-10",
+      "total_transactions": 41158,
+      "total_amount": 217050130.3,
+      "fraud_count": 401
+    },
+    {
+      "transaction_date": "2025-02-11",
+      "total_transactions": 40993,
+      "total_amount": 211387336.37,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-02-12",
+      "total_transactions": 40986,
+      "total_amount": 217806821.47,
+      "fraud_count": 409
+    },
+    {
+      "transaction_date": "2025-02-13",
+      "total_transactions": 41176,
+      "total_amount": 216169784.26,
+      "fraud_count": 414
+    },
+    {
+      "transaction_date": "2025-02-14",
+      "total_transactions": 40851,
+      "total_amount": 216326036.16,
+      "fraud_count": 356
+    },
+    {
+      "transaction_date": "2025-02-15",
+      "total_transactions": 41133,
+      "total_amount": 217242188.54,
+      "fraud_count": 405
+    },
+    {
+      "transaction_date": "2025-02-16",
+      "total_transactions": 41192,
+      "total_amount": 217136293.27,
+      "fraud_count": 401
+    },
+    {
+      "transaction_date": "2025-02-17",
+      "total_transactions": 41226,
+      "total_amount": 212820834.88,
+      "fraud_count": 377
+    },
+    {
+      "transaction_date": "2025-02-18",
+      "total_transactions": 41253,
+      "total_amount": 217129120.35,
+      "fraud_count": 385
+    },
+    {
+      "transaction_date": "2025-02-19",
+      "total_transactions": 41125,
+      "total_amount": 216494467.63,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-02-20",
+      "total_transactions": 41034,
+      "total_amount": 214734817.59,
+      "fraud_count": 427
+    },
+    {
+      "transaction_date": "2025-02-21",
+      "total_transactions": 41402,
+      "total_amount": 214369682.02,
+      "fraud_count": 424
+    },
+    {
+      "transaction_date": "2025-02-22",
+      "total_transactions": 41186,
+      "total_amount": 217957111.5,
+      "fraud_count": 416
+    },
+    {
+      "transaction_date": "2025-02-23",
+      "total_transactions": 40768,
+      "total_amount": 216853963.48,
+      "fraud_count": 358
+    },
+    {
+      "transaction_date": "2025-02-24",
+      "total_transactions": 40926,
+      "total_amount": 216455611.69,
+      "fraud_count": 430
+    },
+    {
+      "transaction_date": "2025-02-25",
+      "total_transactions": 41154,
+      "total_amount": 216049268.62,
+      "fraud_count": 393
+    },
+    {
+      "transaction_date": "2025-02-26",
+      "total_transactions": 40731,
+      "total_amount": 212433084.65,
+      "fraud_count": 405
+    },
+    {
+      "transaction_date": "2025-02-27",
+      "total_transactions": 41249,
+      "total_amount": 219159883.41,
+      "fraud_count": 411
+    },
+    {
+      "transaction_date": "2025-02-28",
+      "total_transactions": 40919,
+      "total_amount": 216115261.54,
+      "fraud_count": 403
+    },
+    {
+      "transaction_date": "2025-03-01",
+      "total_transactions": 41318,
+      "total_amount": 217423246.74,
+      "fraud_count": 414
+    },
+    {
+      "transaction_date": "2025-03-02",
+      "total_transactions": 41251,
+      "total_amount": 214826237.79,
+      "fraud_count": 392
+    },
+    {
+      "transaction_date": "2025-03-03",
+      "total_transactions": 41303,
+      "total_amount": 216880099.66,
+      "fraud_count": 395
+    },
+    {
+      "transaction_date": "2025-03-04",
+      "total_transactions": 40961,
+      "total_amount": 213827220.66,
+      "fraud_count": 397
+    },
+    {
+      "transaction_date": "2025-03-05",
+      "total_transactions": 41087,
+      "total_amount": 214924506.41,
+      "fraud_count": 369
+    },
+    {
+      "transaction_date": "2025-03-06",
+      "total_transactions": 40888,
+      "total_amount": 215687446.07,
+      "fraud_count": 374
+    },
+    {
+      "transaction_date": "2025-03-07",
+      "total_transactions": 40839,
+      "total_amount": 214169599.39,
+      "fraud_count": 402
+    },
+    {
+      "transaction_date": "2025-03-08",
+      "total_transactions": 41267,
+      "total_amount": 215413930.11,
+      "fraud_count": 415
+    },
+    {
+      "transaction_date": "2025-03-09",
+      "total_transactions": 41167,
+      "total_amount": 214656899.02,
+      "fraud_count": 423
+    },
+    {
+      "transaction_date": "2025-03-10",
+      "total_transactions": 40656,
+      "total_amount": 213985655.48,
+      "fraud_count": 434
+    },
+    {
+      "transaction_date": "2025-03-11",
+      "total_transactions": 41382,
+      "total_amount": 219920234.63,
+      "fraud_count": 420
+    },
+    {
+      "transaction_date": "2025-03-12",
+      "total_transactions": 41204,
+      "total_amount": 220848491.03,
+      "fraud_count": 377
+    },
+    {
+      "transaction_date": "2025-03-13",
+      "total_transactions": 41159,
+      "total_amount": 214338847.55,
+      "fraud_count": 377
+    },
+    {
+      "transaction_date": "2025-03-14",
+      "total_transactions": 40921,
+      "total_amount": 215947253.82,
+      "fraud_count": 401
+    },
+    {
+      "transaction_date": "2025-03-15",
+      "total_transactions": 41067,
+      "total_amount": 215158719.04,
+      "fraud_count": 408
+    },
+    {
+      "transaction_date": "2025-03-16",
+      "total_transactions": 40937,
+      "total_amount": 214025360.12,
+      "fraud_count": 384
+    },
+    {
+      "transaction_date": "2025-03-17",
+      "total_transactions": 40812,
+      "total_amount": 218404322.19,
+      "fraud_count": 401
+    },
+    {
+      "transaction_date": "2025-03-18",
+      "total_transactions": 40996,
+      "total_amount": 216581675.59,
+      "fraud_count": 408
+    },
+    {
+      "transaction_date": "2025-03-19",
+      "total_transactions": 40852,
+      "total_amount": 217888840.6,
+      "fraud_count": 382
+    },
+    {
+      "transaction_date": "2025-03-20",
+      "total_transactions": 40976,
+      "total_amount": 213277595.01,
+      "fraud_count": 396
+    },
+    {
+      "transaction_date": "2025-03-21",
+      "total_transactions": 41089,
+      "total_amount": 216757054.71,
+      "fraud_count": 411
+    },
+    {
+      "transaction_date": "2025-03-22",
+      "total_transactions": 40866,
+      "total_amount": 214124211.79,
+      "fraud_count": 410
+    },
+    {
+      "transaction_date": "2025-03-23",
+      "total_transactions": 41053,
+      "total_amount": 219510917.32,
+      "fraud_count": 428
+    },
+    {
+      "transaction_date": "2025-03-24",
+      "total_transactions": 41212,
+      "total_amount": 216000998.5,
+      "fraud_count": 398
+    },
+    {
+      "transaction_date": "2025-03-25",
+      "total_transactions": 40906,
+      "total_amount": 215792557.31,
+      "fraud_count": 410
+    },
+    {
+      "transaction_date": "2025-03-26",
+      "total_transactions": 41188,
+      "total_amount": 215087369.98,
+      "fraud_count": 401
+    },
+    {
+      "transaction_date": "2025-03-27",
+      "total_transactions": 40626,
+      "total_amount": 211144180.17,
+      "fraud_count": 392
+    },
+    {
+      "transaction_date": "2025-03-28",
+      "total_transactions": 40812,
+      "total_amount": 211020374.06,
+      "fraud_count": 409
+    },
+    {
+      "transaction_date": "2025-03-29",
+      "total_transactions": 41124,
+      "total_amount": 217385840.26,
+      "fraud_count": 384
+    },
+    {
+      "transaction_date": "2025-03-30",
+      "total_transactions": 40880,
+      "total_amount": 216017792.46,
+      "fraud_count": 396
+    },
+    {
+      "transaction_date": "2025-03-31",
+      "total_transactions": 41256,
+      "total_amount": 217649177.75,
+      "fraud_count": 404
+    },
+    {
+      "transaction_date": "2025-04-01",
+      "total_transactions": 41175,
+      "total_amount": 221750038.27,
+      "fraud_count": 388
+    },
+    {
+      "transaction_date": "2025-04-02",
+      "total_transactions": 41236,
+      "total_amount": 214948577.9,
+      "fraud_count": 390
+    },
+    {
+      "transaction_date": "2025-04-03",
+      "total_transactions": 41060,
+      "total_amount": 216748780.0,
+      "fraud_count": 384
+    },
+    {
+      "transaction_date": "2025-04-04",
+      "total_transactions": 40932,
+      "total_amount": 214621043.5,
+      "fraud_count": 428
+    },
+    {
+      "transaction_date": "2025-04-05",
+      "total_transactions": 41021,
+      "total_amount": 214144969.15,
+      "fraud_count": 413
+    },
+    {
+      "transaction_date": "2025-04-06",
+      "total_transactions": 41082,
+      "total_amount": 215249885.12,
+      "fraud_count": 423
+    },
+    {
+      "transaction_date": "2025-04-07",
+      "total_transactions": 40780,
+      "total_amount": 212694653.35,
+      "fraud_count": 380
+    },
+    {
+      "transaction_date": "2025-04-08",
+      "total_transactions": 41266,
+      "total_amount": 217150613.83,
+      "fraud_count": 404
+    },
+    {
+      "transaction_date": "2025-04-09",
+      "total_transactions": 41173,
+      "total_amount": 217144273.16,
+      "fraud_count": 442
+    },
+    {
+      "transaction_date": "2025-04-10",
+      "total_transactions": 41075,
+      "total_amount": 218423426.11,
+      "fraud_count": 407
+    },
+    {
+      "transaction_date": "2025-04-11",
+      "total_transactions": 41283,
+      "total_amount": 215203444.4,
+      "fraud_count": 388
+    },
+    {
+      "transaction_date": "2025-04-12",
+      "total_transactions": 40966,
+      "total_amount": 215447274.44,
+      "fraud_count": 393
+    },
+    {
+      "transaction_date": "2025-04-13",
+      "total_transactions": 41055,
+      "total_amount": 218124001.73,
+      "fraud_count": 399
+    },
+    {
+      "transaction_date": "2025-04-14",
+      "total_transactions": 40602,
+      "total_amount": 214436247.28,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-04-15",
+      "total_transactions": 41302,
+      "total_amount": 220276347.85,
+      "fraud_count": 416
+    },
+    {
+      "transaction_date": "2025-04-16",
+      "total_transactions": 40951,
+      "total_amount": 213794274.35,
+      "fraud_count": 412
+    },
+    {
+      "transaction_date": "2025-04-17",
+      "total_transactions": 41341,
+      "total_amount": 221308367.0,
+      "fraud_count": 394
+    },
+    {
+      "transaction_date": "2025-04-18",
+      "total_transactions": 41044,
+      "total_amount": 217898261.33,
+      "fraud_count": 400
+    },
+    {
+      "transaction_date": "2025-04-19",
+      "total_transactions": 40814,
+      "total_amount": 213983624.03,
+      "fraud_count": 401
+    },
+    {
+      "transaction_date": "2025-04-20",
+      "total_transactions": 40993,
+      "total_amount": 218015038.0,
+      "fraud_count": 379
+    },
+    {
+      "transaction_date": "2025-04-21",
+      "total_transactions": 41063,
+      "total_amount": 215498620.95,
+      "fraud_count": 386
+    },
+    {
+      "transaction_date": "2025-04-22",
+      "total_transactions": 41363,
+      "total_amount": 219335549.18,
+      "fraud_count": 362
+    },
+    {
+      "transaction_date": "2025-04-23",
+      "total_transactions": 41185,
+      "total_amount": 217165982.0,
+      "fraud_count": 420
+    },
+    {
+      "transaction_date": "2025-04-24",
+      "total_transactions": 40700,
+      "total_amount": 209335745.27,
+      "fraud_count": 419
+    },
+    {
+      "transaction_date": "2025-04-25",
+      "total_transactions": 41122,
+      "total_amount": 215640950.77,
+      "fraud_count": 394
+    },
+    {
+      "transaction_date": "2025-04-26",
+      "total_transactions": 41068,
+      "total_amount": 216002073.84,
+      "fraud_count": 416
+    },
+    {
+      "transaction_date": "2025-04-27",
+      "total_transactions": 41014,
+      "total_amount": 215356907.18,
+      "fraud_count": 442
+    },
+    {
+      "transaction_date": "2025-04-28",
+      "total_transactions": 41328,
+      "total_amount": 215312586.71,
+      "fraud_count": 437
+    },
+    {
+      "transaction_date": "2025-04-29",
+      "total_transactions": 41033,
+      "total_amount": 218164814.23,
+      "fraud_count": 383
+    },
+    {
+      "transaction_date": "2025-04-30",
+      "total_transactions": 41029,
+      "total_amount": 214981905.91,
+      "fraud_count": 396
+    },
+    {
+      "transaction_date": "2025-05-01",
+      "total_transactions": 40994,
+      "total_amount": 215161971.17,
+      "fraud_count": 403
+    },
+    {
+      "transaction_date": "2025-05-02",
+      "total_transactions": 41113,
+      "total_amount": 215776685.08,
+      "fraud_count": 384
+    },
+    {
+      "transaction_date": "2025-05-03",
+      "total_transactions": 41044,
+      "total_amount": 217294012.31,
+      "fraud_count": 394
+    },
+    {
+      "transaction_date": "2025-05-04",
+      "total_transactions": 41056,
+      "total_amount": 216732184.93,
+      "fraud_count": 393
+    },
+    {
+      "transaction_date": "2025-05-05",
+      "total_transactions": 40851,
+      "total_amount": 213344441.88,
+      "fraud_count": 446
+    },
+    {
+      "transaction_date": "2025-05-06",
+      "total_transactions": 40967,
+      "total_amount": 216305444.34,
+      "fraud_count": 395
+    },
+    {
+      "transaction_date": "2025-05-07",
+      "total_transactions": 41001,
+      "total_amount": 215422387.38,
+      "fraud_count": 407
+    },
+    {
+      "transaction_date": "2025-05-08",
+      "total_transactions": 41345,
+      "total_amount": 216781211.08,
+      "fraud_count": 435
+    },
+    {
+      "transaction_date": "2025-05-09",
+      "total_transactions": 41098,
+      "total_amount": 218003243.33,
+      "fraud_count": 430
+    },
+    {
+      "transaction_date": "2025-05-10",
+      "total_transactions": 41065,
+      "total_amount": 212567060.34,
+      "fraud_count": 407
+    },
+    {
+      "transaction_date": "2025-05-11",
+      "total_transactions": 41040,
+      "total_amount": 214031455.74,
+      "fraud_count": 387
+    },
+    {
+      "transaction_date": "2025-05-12",
+      "total_transactions": 41363,
+      "total_amount": 216437383.5,
+      "fraud_count": 374
+    },
+    {
+      "transaction_date": "2025-05-13",
+      "total_transactions": 41435,
+      "total_amount": 216367999.57,
+      "fraud_count": 392
+    },
+    {
+      "transaction_date": "2025-05-14",
+      "total_transactions": 41116,
+      "total_amount": 218424449.86,
+      "fraud_count": 370
+    },
+    {
+      "transaction_date": "2025-05-15",
+      "total_transactions": 41518,
+      "total_amount": 218860086.9,
+      "fraud_count": 427
+    },
+    {
+      "transaction_date": "2025-05-16",
+      "total_transactions": 41131,
+      "total_amount": 215720749.91,
+      "fraud_count": 395
+    },
+    {
+      "transaction_date": "2025-05-17",
+      "total_transactions": 41328,
+      "total_amount": 215678889.27,
+      "fraud_count": 408
+    },
+    {
+      "transaction_date": "2025-05-18",
+      "total_transactions": 41310,
+      "total_amount": 217053414.93,
+      "fraud_count": 412
+    },
+    {
+      "transaction_date": "2025-05-19",
+      "total_transactions": 40863,
+      "total_amount": 213591589.84,
+      "fraud_count": 367
+    },
+    {
+      "transaction_date": "2025-05-20",
+      "total_transactions": 40981,
+      "total_amount": 215954687.55,
+      "fraud_count": 435
+    },
+    {
+      "transaction_date": "2025-05-21",
+      "total_transactions": 41350,
+      "total_amount": 216865946.18,
+      "fraud_count": 452
+    },
+    {
+      "transaction_date": "2025-05-22",
+      "total_transactions": 41072,
+      "total_amount": 215081244.59,
+      "fraud_count": 395
+    },
+    {
+      "transaction_date": "2025-05-23",
+      "total_transactions": 41275,
+      "total_amount": 218912331.25,
+      "fraud_count": 441
+    },
+    {
+      "transaction_date": "2025-05-24",
+      "total_transactions": 41359,
+      "total_amount": 219847966.47,
+      "fraud_count": 432
+    },
+    {
+      "transaction_date": "2025-05-25",
+      "total_transactions": 41420,
+      "total_amount": 218307055.15,
+      "fraud_count": 428
+    },
+    {
+      "transaction_date": "2025-05-26",
+      "total_transactions": 41473,
+      "total_amount": 218117007.3,
+      "fraud_count": 392
+    },
+    {
+      "transaction_date": "2025-05-27",
+      "total_transactions": 41114,
+      "total_amount": 216553901.45,
+      "fraud_count": 383
+    },
+    {
+      "transaction_date": "2025-05-28",
+      "total_transactions": 41078,
+      "total_amount": 213852563.59,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-05-29",
+      "total_transactions": 41020,
+      "total_amount": 217584930.26,
+      "fraud_count": 407
+    },
+    {
+      "transaction_date": "2025-05-30",
+      "total_transactions": 41172,
+      "total_amount": 215635373.15,
+      "fraud_count": 408
+    },
+    {
+      "transaction_date": "2025-05-31",
+      "total_transactions": 40931,
+      "total_amount": 214880268.56,
+      "fraud_count": 413
+    },
+    {
+      "transaction_date": "2025-06-01",
+      "total_transactions": 41331,
+      "total_amount": 215157290.0,
+      "fraud_count": 404
+    },
+    {
+      "transaction_date": "2025-06-02",
+      "total_transactions": 41190,
+      "total_amount": 215276235.34,
+      "fraud_count": 417
+    },
+    {
+      "transaction_date": "2025-06-03",
+      "total_transactions": 41395,
+      "total_amount": 217829518.47,
+      "fraud_count": 426
+    },
+    {
+      "transaction_date": "2025-06-04",
+      "total_transactions": 41290,
+      "total_amount": 215293811.17,
+      "fraud_count": 399
+    },
+    {
+      "transaction_date": "2025-06-05",
+      "total_transactions": 41065,
+      "total_amount": 215023955.79,
+      "fraud_count": 411
+    },
+    {
+      "transaction_date": "2025-06-06",
+      "total_transactions": 41064,
+      "total_amount": 216063224.81,
+      "fraud_count": 396
+    },
+    {
+      "transaction_date": "2025-06-07",
+      "total_transactions": 41282,
+      "total_amount": 212191884.57,
+      "fraud_count": 383
+    },
+    {
+      "transaction_date": "2025-06-08",
+      "total_transactions": 41112,
+      "total_amount": 217205525.24,
+      "fraud_count": 412
+    },
+    {
+      "transaction_date": "2025-06-09",
+      "total_transactions": 41013,
+      "total_amount": 215303982.87,
+      "fraud_count": 397
+    },
+    {
+      "transaction_date": "2025-06-10",
+      "total_transactions": 41268,
+      "total_amount": 217499152.8,
+      "fraud_count": 381
+    },
+    {
+      "transaction_date": "2025-06-11",
+      "total_transactions": 41332,
+      "total_amount": 217388136.83,
+      "fraud_count": 408
+    },
+    {
+      "transaction_date": "2025-06-12",
+      "total_transactions": 41396,
+      "total_amount": 221205772.84,
+      "fraud_count": 379
+    },
+    {
+      "transaction_date": "2025-06-13",
+      "total_transactions": 40966,
+      "total_amount": 214355492.29,
+      "fraud_count": 386
+    },
+    {
+      "transaction_date": "2025-06-14",
+      "total_transactions": 41231,
+      "total_amount": 215578344.28,
+      "fraud_count": 411
+    },
+    {
+      "transaction_date": "2025-06-15",
+      "total_transactions": 41298,
+      "total_amount": 215974132.47,
+      "fraud_count": 419
+    },
+    {
+      "transaction_date": "2025-06-16",
+      "total_transactions": 41155,
+      "total_amount": 216423365.0,
+      "fraud_count": 404
+    },
+    {
+      "transaction_date": "2025-06-17",
+      "total_transactions": 40997,
+      "total_amount": 214341275.03,
+      "fraud_count": 407
+    },
+    {
+      "transaction_date": "2025-06-18",
+      "total_transactions": 40974,
+      "total_amount": 218229069.74,
+      "fraud_count": 429
+    },
+    {
+      "transaction_date": "2025-06-19",
+      "total_transactions": 40950,
+      "total_amount": 216860140.07,
+      "fraud_count": 418
+    },
+    {
+      "transaction_date": "2025-06-20",
+      "total_transactions": 41269,
+      "total_amount": 215806338.55,
+      "fraud_count": 387
+    },
+    {
+      "transaction_date": "2025-06-21",
+      "total_transactions": 40775,
+      "total_amount": 215999036.17,
+      "fraud_count": 410
+    },
+    {
+      "transaction_date": "2025-06-22",
+      "total_transactions": 40748,
+      "total_amount": 209834851.05,
+      "fraud_count": 375
+    },
+    {
+      "transaction_date": "2025-06-23",
+      "total_transactions": 41272,
+      "total_amount": 219166016.85,
+      "fraud_count": 419
+    },
+    {
+      "transaction_date": "2025-06-24",
+      "total_transactions": 41176,
+      "total_amount": 215260040.25,
+      "fraud_count": 388
+    },
+    {
+      "transaction_date": "2025-06-25",
+      "total_transactions": 40988,
+      "total_amount": 215690084.94,
+      "fraud_count": 419
+    },
+    {
+      "transaction_date": "2025-06-26",
+      "total_transactions": 40924,
+      "total_amount": 217466536.79,
+      "fraud_count": 396
+    },
+    {
+      "transaction_date": "2025-06-27",
+      "total_transactions": 41305,
+      "total_amount": 214932673.27,
+      "fraud_count": 376
+    },
+    {
+      "transaction_date": "2025-06-28",
+      "total_transactions": 41085,
+      "total_amount": 213736677.4,
+      "fraud_count": 417
+    },
+    {
+      "transaction_date": "2025-06-29",
+      "total_transactions": 41285,
+      "total_amount": 215883099.96,
+      "fraud_count": 409
+    },
+    {
+      "transaction_date": "2025-06-30",
+      "total_transactions": 41057,
+      "total_amount": 215463925.21,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-07-01",
+      "total_transactions": 41589,
+      "total_amount": 218105679.3,
+      "fraud_count": 392
+    },
+    {
+      "transaction_date": "2025-07-02",
+      "total_transactions": 41381,
+      "total_amount": 221887689.05,
+      "fraud_count": 380
+    },
+    {
+      "transaction_date": "2025-07-03",
+      "total_transactions": 41180,
+      "total_amount": 215904810.27,
+      "fraud_count": 449
+    },
+    {
+      "transaction_date": "2025-07-04",
+      "total_transactions": 41256,
+      "total_amount": 214353675.96,
+      "fraud_count": 403
+    },
+    {
+      "transaction_date": "2025-07-05",
+      "total_transactions": 40752,
+      "total_amount": 213861979.81,
+      "fraud_count": 389
+    },
+    {
+      "transaction_date": "2025-07-06",
+      "total_transactions": 41086,
+      "total_amount": 216851901.58,
+      "fraud_count": 392
+    },
+    {
+      "transaction_date": "2025-07-07",
+      "total_transactions": 40917,
+      "total_amount": 214719473.16,
+      "fraud_count": 382
+    },
+    {
+      "transaction_date": "2025-07-08",
+      "total_transactions": 41415,
+      "total_amount": 216152414.49,
+      "fraud_count": 410
+    },
+    {
+      "transaction_date": "2025-07-09",
+      "total_transactions": 40911,
+      "total_amount": 218735964.91,
+      "fraud_count": 380
+    },
+    {
+      "transaction_date": "2025-07-10",
+      "total_transactions": 41037,
+      "total_amount": 217204604.12,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-07-11",
+      "total_transactions": 40747,
+      "total_amount": 217559633.28,
+      "fraud_count": 392
+    },
+    {
+      "transaction_date": "2025-07-12",
+      "total_transactions": 41274,
+      "total_amount": 217846854.12,
+      "fraud_count": 405
+    },
+    {
+      "transaction_date": "2025-07-13",
+      "total_transactions": 41199,
+      "total_amount": 216408170.02,
+      "fraud_count": 380
+    },
+    {
+      "transaction_date": "2025-07-14",
+      "total_transactions": 40906,
+      "total_amount": 217101764.53,
+      "fraud_count": 375
+    },
+    {
+      "transaction_date": "2025-07-15",
+      "total_transactions": 41049,
+      "total_amount": 214658595.72,
+      "fraud_count": 417
+    },
+    {
+      "transaction_date": "2025-07-16",
+      "total_transactions": 40750,
+      "total_amount": 210609309.92,
+      "fraud_count": 407
+    },
+    {
+      "transaction_date": "2025-07-17",
+      "total_transactions": 41050,
+      "total_amount": 215964985.91,
+      "fraud_count": 416
+    },
+    {
+      "transaction_date": "2025-07-18",
+      "total_transactions": 41176,
+      "total_amount": 213762468.86,
+      "fraud_count": 380
+    },
+    {
+      "transaction_date": "2025-07-19",
+      "total_transactions": 41206,
+      "total_amount": 215848121.44,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-07-20",
+      "total_transactions": 40860,
+      "total_amount": 213314393.91,
+      "fraud_count": 391
+    },
+    {
+      "transaction_date": "2025-07-21",
+      "total_transactions": 40937,
+      "total_amount": 211642232.11,
+      "fraud_count": 420
+    },
+    {
+      "transaction_date": "2025-07-22",
+      "total_transactions": 40913,
+      "total_amount": 212886690.13,
+      "fraud_count": 411
+    },
+    {
+      "transaction_date": "2025-07-23",
+      "total_transactions": 41187,
+      "total_amount": 217305159.43,
+      "fraud_count": 401
+    },
+    {
+      "transaction_date": "2025-07-24",
+      "total_transactions": 41088,
+      "total_amount": 214884876.46,
+      "fraud_count": 396
+    },
+    {
+      "transaction_date": "2025-07-25",
+      "total_transactions": 41108,
+      "total_amount": 216189432.08,
+      "fraud_count": 389
+    },
+    {
+      "transaction_date": "2025-07-26",
+      "total_transactions": 40924,
+      "total_amount": 213712661.41,
+      "fraud_count": 432
+    },
+    {
+      "transaction_date": "2025-07-27",
+      "total_transactions": 41347,
+      "total_amount": 216097819.82,
+      "fraud_count": 390
+    },
+    {
+      "transaction_date": "2025-07-28",
+      "total_transactions": 41233,
+      "total_amount": 217044971.31,
+      "fraud_count": 401
+    },
+    {
+      "transaction_date": "2025-07-29",
+      "total_transactions": 41300,
+      "total_amount": 217822105.61,
+      "fraud_count": 393
+    },
+    {
+      "transaction_date": "2025-07-30",
+      "total_transactions": 41240,
+      "total_amount": 216094692.64,
+      "fraud_count": 379
+    },
+    {
+      "transaction_date": "2025-07-31",
+      "total_transactions": 41026,
+      "total_amount": 216252909.08,
+      "fraud_count": 392
+    },
+    {
+      "transaction_date": "2025-08-01",
+      "total_transactions": 41094,
+      "total_amount": 214010035.39,
+      "fraud_count": 448
+    },
+    {
+      "transaction_date": "2025-08-02",
+      "total_transactions": 41033,
+      "total_amount": 217698647.47,
+      "fraud_count": 394
+    },
+    {
+      "transaction_date": "2025-08-03",
+      "total_transactions": 41144,
+      "total_amount": 218740292.15,
+      "fraud_count": 387
+    },
+    {
+      "transaction_date": "2025-08-04",
+      "total_transactions": 40962,
+      "total_amount": 214785101.77,
+      "fraud_count": 371
+    },
+    {
+      "transaction_date": "2025-08-05",
+      "total_transactions": 40639,
+      "total_amount": 212986649.82,
+      "fraud_count": 394
+    },
+    {
+      "transaction_date": "2025-08-06",
+      "total_transactions": 40844,
+      "total_amount": 211688334.01,
+      "fraud_count": 394
+    },
+    {
+      "transaction_date": "2025-08-07",
+      "total_transactions": 41017,
+      "total_amount": 214680385.48,
+      "fraud_count": 397
+    },
+    {
+      "transaction_date": "2025-08-08",
+      "total_transactions": 40769,
+      "total_amount": 216094691.28,
+      "fraud_count": 396
+    },
+    {
+      "transaction_date": "2025-08-09",
+      "total_transactions": 40958,
+      "total_amount": 218086106.95,
+      "fraud_count": 401
+    },
+    {
+      "transaction_date": "2025-08-10",
+      "total_transactions": 41076,
+      "total_amount": 214089123.41,
+      "fraud_count": 441
+    },
+    {
+      "transaction_date": "2025-08-11",
+      "total_transactions": 41073,
+      "total_amount": 217630047.16,
+      "fraud_count": 391
+    },
+    {
+      "transaction_date": "2025-08-12",
+      "total_transactions": 41325,
+      "total_amount": 216742239.89,
+      "fraud_count": 424
+    },
+    {
+      "transaction_date": "2025-08-13",
+      "total_transactions": 41166,
+      "total_amount": 216567740.76,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-08-14",
+      "total_transactions": 41174,
+      "total_amount": 217267346.21,
+      "fraud_count": 426
+    },
+    {
+      "transaction_date": "2025-08-15",
+      "total_transactions": 41248,
+      "total_amount": 216249456.33,
+      "fraud_count": 417
+    },
+    {
+      "transaction_date": "2025-08-16",
+      "total_transactions": 41210,
+      "total_amount": 216128423.2,
+      "fraud_count": 403
+    },
+    {
+      "transaction_date": "2025-08-17",
+      "total_transactions": 40953,
+      "total_amount": 217052811.63,
+      "fraud_count": 358
+    },
+    {
+      "transaction_date": "2025-08-18",
+      "total_transactions": 41251,
+      "total_amount": 215706400.31,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-08-19",
+      "total_transactions": 41084,
+      "total_amount": 218428232.76,
+      "fraud_count": 405
+    },
+    {
+      "transaction_date": "2025-08-20",
+      "total_transactions": 41124,
+      "total_amount": 217318274.76,
+      "fraud_count": 387
+    },
+    {
+      "transaction_date": "2025-08-21",
+      "total_transactions": 41354,
+      "total_amount": 213354266.86,
+      "fraud_count": 399
+    },
+    {
+      "transaction_date": "2025-08-22",
+      "total_transactions": 40751,
+      "total_amount": 216279811.13,
+      "fraud_count": 400
+    },
+    {
+      "transaction_date": "2025-08-23",
+      "total_transactions": 41130,
+      "total_amount": 215123813.69,
+      "fraud_count": 444
+    },
+    {
+      "transaction_date": "2025-08-24",
+      "total_transactions": 41574,
+      "total_amount": 220419104.83,
+      "fraud_count": 455
+    },
+    {
+      "transaction_date": "2025-08-25",
+      "total_transactions": 41279,
+      "total_amount": 213202020.09,
+      "fraud_count": 371
+    },
+    {
+      "transaction_date": "2025-08-26",
+      "total_transactions": 41132,
+      "total_amount": 217590543.78,
+      "fraud_count": 436
+    },
+    {
+      "transaction_date": "2025-08-27",
+      "total_transactions": 41080,
+      "total_amount": 217261196.24,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-08-28",
+      "total_transactions": 40894,
+      "total_amount": 213658173.06,
+      "fraud_count": 375
+    },
+    {
+      "transaction_date": "2025-08-29",
+      "total_transactions": 40712,
+      "total_amount": 215046157.42,
+      "fraud_count": 392
+    },
+    {
+      "transaction_date": "2025-08-30",
+      "total_transactions": 41177,
+      "total_amount": 218784903.34,
+      "fraud_count": 386
+    },
+    {
+      "transaction_date": "2025-08-31",
+      "total_transactions": 40796,
+      "total_amount": 214426386.44,
+      "fraud_count": 409
+    },
+    {
+      "transaction_date": "2025-09-01",
+      "total_transactions": 41162,
+      "total_amount": 217155322.42,
+      "fraud_count": 368
+    },
+    {
+      "transaction_date": "2025-09-02",
+      "total_transactions": 40843,
+      "total_amount": 219100416.42,
+      "fraud_count": 370
+    },
+    {
+      "transaction_date": "2025-09-03",
+      "total_transactions": 40923,
+      "total_amount": 214067211.45,
+      "fraud_count": 397
+    },
+    {
+      "transaction_date": "2025-09-04",
+      "total_transactions": 40949,
+      "total_amount": 214582442.85,
+      "fraud_count": 400
+    },
+    {
+      "transaction_date": "2025-09-05",
+      "total_transactions": 41490,
+      "total_amount": 217849953.4,
+      "fraud_count": 404
+    },
+    {
+      "transaction_date": "2025-09-06",
+      "total_transactions": 41191,
+      "total_amount": 218403868.34,
+      "fraud_count": 427
+    },
+    {
+      "transaction_date": "2025-09-07",
+      "total_transactions": 40881,
+      "total_amount": 214225269.24,
+      "fraud_count": 393
+    },
+    {
+      "transaction_date": "2025-09-08",
+      "total_transactions": 41020,
+      "total_amount": 215303683.01,
+      "fraud_count": 388
+    },
+    {
+      "transaction_date": "2025-09-09",
+      "total_transactions": 41102,
+      "total_amount": 216871457.23,
+      "fraud_count": 418
+    },
+    {
+      "transaction_date": "2025-09-10",
+      "total_transactions": 41015,
+      "total_amount": 212788802.68,
+      "fraud_count": 439
+    },
+    {
+      "transaction_date": "2025-09-11",
+      "total_transactions": 41306,
+      "total_amount": 219234658.86,
+      "fraud_count": 409
+    },
+    {
+      "transaction_date": "2025-09-12",
+      "total_transactions": 41331,
+      "total_amount": 217294100.09,
+      "fraud_count": 390
+    },
+    {
+      "transaction_date": "2025-09-13",
+      "total_transactions": 41043,
+      "total_amount": 212011440.32,
+      "fraud_count": 386
+    },
+    {
+      "transaction_date": "2025-09-14",
+      "total_transactions": 41200,
+      "total_amount": 217271542.84,
+      "fraud_count": 405
+    },
+    {
+      "transaction_date": "2025-09-15",
+      "total_transactions": 40972,
+      "total_amount": 213654386.4,
+      "fraud_count": 415
+    },
+    {
+      "transaction_date": "2025-09-16",
+      "total_transactions": 41008,
+      "total_amount": 214698955.5,
+      "fraud_count": 407
+    },
+    {
+      "transaction_date": "2025-09-17",
+      "total_transactions": 40841,
+      "total_amount": 214983433.26,
+      "fraud_count": 398
+    },
+    {
+      "transaction_date": "2025-09-18",
+      "total_transactions": 41265,
+      "total_amount": 216496277.61,
+      "fraud_count": 402
+    },
+    {
+      "transaction_date": "2025-09-19",
+      "total_transactions": 40852,
+      "total_amount": 213082368.9,
+      "fraud_count": 402
+    },
+    {
+      "transaction_date": "2025-09-20",
+      "total_transactions": 41188,
+      "total_amount": 216316800.53,
+      "fraud_count": 407
+    },
+    {
+      "transaction_date": "2025-09-21",
+      "total_transactions": 41385,
+      "total_amount": 217129077.4,
+      "fraud_count": 391
+    },
+    {
+      "transaction_date": "2025-09-22",
+      "total_transactions": 41316,
+      "total_amount": 217573573.27,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-09-23",
+      "total_transactions": 40878,
+      "total_amount": 215324757.43,
+      "fraud_count": 399
+    },
+    {
+      "transaction_date": "2025-09-24",
+      "total_transactions": 41197,
+      "total_amount": 216524572.65,
+      "fraud_count": 400
+    },
+    {
+      "transaction_date": "2025-09-25",
+      "total_transactions": 41294,
+      "total_amount": 219394336.98,
+      "fraud_count": 397
+    },
+    {
+      "transaction_date": "2025-09-26",
+      "total_transactions": 41316,
+      "total_amount": 218871567.11,
+      "fraud_count": 393
+    },
+    {
+      "transaction_date": "2025-09-27",
+      "total_transactions": 41117,
+      "total_amount": 214602120.98,
+      "fraud_count": 392
+    },
+    {
+      "transaction_date": "2025-09-28",
+      "total_transactions": 41309,
+      "total_amount": 222328165.55,
+      "fraud_count": 442
+    },
+    {
+      "transaction_date": "2025-09-29",
+      "total_transactions": 41225,
+      "total_amount": 215725526.53,
+      "fraud_count": 395
+    },
+    {
+      "transaction_date": "2025-09-30",
+      "total_transactions": 41245,
+      "total_amount": 216613374.1,
+      "fraud_count": 417
+    },
+    {
+      "transaction_date": "2025-10-01",
+      "total_transactions": 40951,
+      "total_amount": 215700119.34,
+      "fraud_count": 407
+    },
+    {
+      "transaction_date": "2025-10-02",
+      "total_transactions": 41284,
+      "total_amount": 218309537.63,
+      "fraud_count": 409
+    },
+    {
+      "transaction_date": "2025-10-03",
+      "total_transactions": 41369,
+      "total_amount": 222108807.96,
+      "fraud_count": 420
+    },
+    {
+      "transaction_date": "2025-10-04",
+      "total_transactions": 41218,
+      "total_amount": 218017758.68,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-10-05",
+      "total_transactions": 41165,
+      "total_amount": 219062612.17,
+      "fraud_count": 398
+    },
+    {
+      "transaction_date": "2025-10-06",
+      "total_transactions": 40886,
+      "total_amount": 213571796.14,
+      "fraud_count": 395
+    },
+    {
+      "transaction_date": "2025-10-07",
+      "total_transactions": 41079,
+      "total_amount": 216510955.94,
+      "fraud_count": 371
+    },
+    {
+      "transaction_date": "2025-10-08",
+      "total_transactions": 41352,
+      "total_amount": 215777308.47,
+      "fraud_count": 416
+    },
+    {
+      "transaction_date": "2025-10-09",
+      "total_transactions": 40919,
+      "total_amount": 214825206.63,
+      "fraud_count": 433
+    },
+    {
+      "transaction_date": "2025-10-10",
+      "total_transactions": 40983,
+      "total_amount": 216533304.73,
+      "fraud_count": 429
+    },
+    {
+      "transaction_date": "2025-10-11",
+      "total_transactions": 41332,
+      "total_amount": 218108057.81,
+      "fraud_count": 411
+    },
+    {
+      "transaction_date": "2025-10-12",
+      "total_transactions": 41478,
+      "total_amount": 219666843.63,
+      "fraud_count": 417
+    },
+    {
+      "transaction_date": "2025-10-13",
+      "total_transactions": 41085,
+      "total_amount": 216718780.81,
+      "fraud_count": 418
+    },
+    {
+      "transaction_date": "2025-10-14",
+      "total_transactions": 41137,
+      "total_amount": 215821676.7,
+      "fraud_count": 403
+    },
+    {
+      "transaction_date": "2025-10-15",
+      "total_transactions": 41199,
+      "total_amount": 218081679.68,
+      "fraud_count": 424
+    },
+    {
+      "transaction_date": "2025-10-16",
+      "total_transactions": 40986,
+      "total_amount": 215843309.35,
+      "fraud_count": 378
+    },
+    {
+      "transaction_date": "2025-10-17",
+      "total_transactions": 41157,
+      "total_amount": 214083791.64,
+      "fraud_count": 386
+    },
+    {
+      "transaction_date": "2025-10-18",
+      "total_transactions": 40942,
+      "total_amount": 215245332.57,
+      "fraud_count": 417
+    },
+    {
+      "transaction_date": "2025-10-19",
+      "total_transactions": 41093,
+      "total_amount": 217397746.68,
+      "fraud_count": 390
+    },
+    {
+      "transaction_date": "2025-10-20",
+      "total_transactions": 41371,
+      "total_amount": 220290862.0,
+      "fraud_count": 398
+    },
+    {
+      "transaction_date": "2025-10-21",
+      "total_transactions": 40932,
+      "total_amount": 214894729.52,
+      "fraud_count": 365
+    },
+    {
+      "transaction_date": "2025-10-22",
+      "total_transactions": 41254,
+      "total_amount": 218300841.19,
+      "fraud_count": 398
+    },
+    {
+      "transaction_date": "2025-10-23",
+      "total_transactions": 40838,
+      "total_amount": 214371523.84,
+      "fraud_count": 428
+    },
+    {
+      "transaction_date": "2025-10-24",
+      "total_transactions": 41404,
+      "total_amount": 221419721.2,
+      "fraud_count": 379
+    },
+    {
+      "transaction_date": "2025-10-25",
+      "total_transactions": 41140,
+      "total_amount": 217571110.01,
+      "fraud_count": 421
+    },
+    {
+      "transaction_date": "2025-10-26",
+      "total_transactions": 41102,
+      "total_amount": 217046051.36,
+      "fraud_count": 422
+    },
+    {
+      "transaction_date": "2025-10-27",
+      "total_transactions": 40855,
+      "total_amount": 212380514.05,
+      "fraud_count": 385
+    },
+    {
+      "transaction_date": "2025-10-28",
+      "total_transactions": 40565,
+      "total_amount": 214219840.74,
+      "fraud_count": 418
+    },
+    {
+      "transaction_date": "2025-10-29",
+      "total_transactions": 41121,
+      "total_amount": 216200777.23,
+      "fraud_count": 441
+    },
+    {
+      "transaction_date": "2025-10-30",
+      "total_transactions": 41083,
+      "total_amount": 218090423.22,
+      "fraud_count": 402
+    },
+    {
+      "transaction_date": "2025-10-31",
+      "total_transactions": 40925,
+      "total_amount": 216959104.65,
+      "fraud_count": 389
+    },
+    {
+      "transaction_date": "2025-11-01",
+      "total_transactions": 41022,
+      "total_amount": 216543745.26,
+      "fraud_count": 403
+    },
+    {
+      "transaction_date": "2025-11-02",
+      "total_transactions": 40979,
+      "total_amount": 215095325.64,
+      "fraud_count": 416
+    },
+    {
+      "transaction_date": "2025-11-03",
+      "total_transactions": 41014,
+      "total_amount": 215850149.92,
+      "fraud_count": 399
+    },
+    {
+      "transaction_date": "2025-11-04",
+      "total_transactions": 40779,
+      "total_amount": 216854274.97,
+      "fraud_count": 430
+    },
+    {
+      "transaction_date": "2025-11-05",
+      "total_transactions": 41184,
+      "total_amount": 217902525.28,
+      "fraud_count": 373
+    },
+    {
+      "transaction_date": "2025-11-06",
+      "total_transactions": 40759,
+      "total_amount": 212850279.98,
+      "fraud_count": 350
+    },
+    {
+      "transaction_date": "2025-11-07",
+      "total_transactions": 41038,
+      "total_amount": 219265771.36,
+      "fraud_count": 389
+    },
+    {
+      "transaction_date": "2025-11-08",
+      "total_transactions": 40832,
+      "total_amount": 212350600.17,
+      "fraud_count": 424
+    },
+    {
+      "transaction_date": "2025-11-09",
+      "total_transactions": 40754,
+      "total_amount": 215263214.37,
+      "fraud_count": 378
+    },
+    {
+      "transaction_date": "2025-11-10",
+      "total_transactions": 41329,
+      "total_amount": 215800857.33,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-11-11",
+      "total_transactions": 40979,
+      "total_amount": 218560048.83,
+      "fraud_count": 413
+    },
+    {
+      "transaction_date": "2025-11-12",
+      "total_transactions": 40516,
+      "total_amount": 213728310.25,
+      "fraud_count": 394
+    },
+    {
+      "transaction_date": "2025-11-13",
+      "total_transactions": 41010,
+      "total_amount": 211954690.0,
+      "fraud_count": 419
+    },
+    {
+      "transaction_date": "2025-11-14",
+      "total_transactions": 40905,
+      "total_amount": 212894944.41,
+      "fraud_count": 410
+    },
+    {
+      "transaction_date": "2025-11-15",
+      "total_transactions": 40958,
+      "total_amount": 215356981.75,
+      "fraud_count": 416
+    },
+    {
+      "transaction_date": "2025-11-16",
+      "total_transactions": 41148,
+      "total_amount": 213529464.31,
+      "fraud_count": 397
+    },
+    {
+      "transaction_date": "2025-11-17",
+      "total_transactions": 40705,
+      "total_amount": 213219345.11,
+      "fraud_count": 424
+    },
+    {
+      "transaction_date": "2025-11-18",
+      "total_transactions": 41409,
+      "total_amount": 217087351.38,
+      "fraud_count": 407
+    },
+    {
+      "transaction_date": "2025-11-19",
+      "total_transactions": 41162,
+      "total_amount": 213839043.19,
+      "fraud_count": 425
+    },
+    {
+      "transaction_date": "2025-11-20",
+      "total_transactions": 40722,
+      "total_amount": 215650985.78,
+      "fraud_count": 400
+    },
+    {
+      "transaction_date": "2025-11-21",
+      "total_transactions": 41299,
+      "total_amount": 216321733.06,
+      "fraud_count": 372
+    },
+    {
+      "transaction_date": "2025-11-22",
+      "total_transactions": 41178,
+      "total_amount": 214582278.4,
+      "fraud_count": 378
+    },
+    {
+      "transaction_date": "2025-11-23",
+      "total_transactions": 40961,
+      "total_amount": 217772734.96,
+      "fraud_count": 384
+    },
+    {
+      "transaction_date": "2025-11-24",
+      "total_transactions": 41379,
+      "total_amount": 219223562.39,
+      "fraud_count": 415
+    },
+    {
+      "transaction_date": "2025-11-25",
+      "total_transactions": 41251,
+      "total_amount": 216866367.87,
+      "fraud_count": 396
+    },
+    {
+      "transaction_date": "2025-11-26",
+      "total_transactions": 41350,
+      "total_amount": 219327489.9,
+      "fraud_count": 391
+    },
+    {
+      "transaction_date": "2025-11-27",
+      "total_transactions": 40929,
+      "total_amount": 215154410.89,
+      "fraud_count": 386
+    },
+    {
+      "transaction_date": "2025-11-28",
+      "total_transactions": 40838,
+      "total_amount": 211801516.83,
+      "fraud_count": 356
+    },
+    {
+      "transaction_date": "2025-11-29",
+      "total_transactions": 41027,
+      "total_amount": 218608076.03,
+      "fraud_count": 361
+    },
+    {
+      "transaction_date": "2025-11-30",
+      "total_transactions": 41334,
+      "total_amount": 216825268.45,
+      "fraud_count": 402
+    },
+    {
+      "transaction_date": "2025-12-01",
+      "total_transactions": 41483,
+      "total_amount": 214296392.1,
+      "fraud_count": 408
+    },
+    {
+      "transaction_date": "2025-12-02",
+      "total_transactions": 40682,
+      "total_amount": 213539636.52,
+      "fraud_count": 399
+    },
+    {
+      "transaction_date": "2025-12-03",
+      "total_transactions": 41123,
+      "total_amount": 218825958.09,
+      "fraud_count": 377
+    },
+    {
+      "transaction_date": "2025-12-04",
+      "total_transactions": 40725,
+      "total_amount": 215014529.57,
+      "fraud_count": 441
+    },
+    {
+      "transaction_date": "2025-12-05",
+      "total_transactions": 40986,
+      "total_amount": 213185934.32,
+      "fraud_count": 384
+    },
+    {
+      "transaction_date": "2025-12-06",
+      "total_transactions": 41147,
+      "total_amount": 216976199.59,
+      "fraud_count": 396
+    },
+    {
+      "transaction_date": "2025-12-07",
+      "total_transactions": 40897,
+      "total_amount": 213215094.71,
+      "fraud_count": 402
+    },
+    {
+      "transaction_date": "2025-12-08",
+      "total_transactions": 41289,
+      "total_amount": 216976891.66,
+      "fraud_count": 431
+    },
+    {
+      "transaction_date": "2025-12-09",
+      "total_transactions": 40931,
+      "total_amount": 215555568.72,
+      "fraud_count": 389
+    },
+    {
+      "transaction_date": "2025-12-10",
+      "total_transactions": 41252,
+      "total_amount": 218681909.37,
+      "fraud_count": 412
+    },
+    {
+      "transaction_date": "2025-12-11",
+      "total_transactions": 41477,
+      "total_amount": 220067879.04,
+      "fraud_count": 410
+    },
+    {
+      "transaction_date": "2025-12-12",
+      "total_transactions": 41110,
+      "total_amount": 215388776.87,
+      "fraud_count": 359
+    },
+    {
+      "transaction_date": "2025-12-13",
+      "total_transactions": 41562,
+      "total_amount": 219324507.18,
+      "fraud_count": 376
+    },
+    {
+      "transaction_date": "2025-12-14",
+      "total_transactions": 41322,
+      "total_amount": 215204795.01,
+      "fraud_count": 376
+    },
+    {
+      "transaction_date": "2025-12-15",
+      "total_transactions": 40996,
+      "total_amount": 214994235.48,
+      "fraud_count": 400
+    },
+    {
+      "transaction_date": "2025-12-16",
+      "total_transactions": 41177,
+      "total_amount": 217964474.06,
+      "fraud_count": 377
+    },
+    {
+      "transaction_date": "2025-12-17",
+      "total_transactions": 40991,
+      "total_amount": 213533450.65,
+      "fraud_count": 395
+    },
+    {
+      "transaction_date": "2025-12-18",
+      "total_transactions": 40767,
+      "total_amount": 213907082.24,
+      "fraud_count": 432
+    },
+    {
+      "transaction_date": "2025-12-19",
+      "total_transactions": 40779,
+      "total_amount": 213217472.54,
+      "fraud_count": 427
+    },
+    {
+      "transaction_date": "2025-12-20",
+      "total_transactions": 41074,
+      "total_amount": 215660468.44,
+      "fraud_count": 392
+    },
+    {
+      "transaction_date": "2025-12-21",
+      "total_transactions": 40998,
+      "total_amount": 210276311.94,
+      "fraud_count": 400
+    },
+    {
+      "transaction_date": "2025-12-22",
+      "total_transactions": 40997,
+      "total_amount": 216949669.35,
+      "fraud_count": 406
+    },
+    {
+      "transaction_date": "2025-12-23",
+      "total_transactions": 41181,
+      "total_amount": 213769737.38,
+      "fraud_count": 393
+    },
+    {
+      "transaction_date": "2025-12-24",
+      "total_transactions": 41179,
+      "total_amount": 219603536.56,
+      "fraud_count": 419
+    },
+    {
+      "transaction_date": "2025-12-25",
+      "total_transactions": 40787,
+      "total_amount": 217331648.73,
+      "fraud_count": 392
+    },
+    {
+      "transaction_date": "2025-12-26",
+      "total_transactions": 41286,
+      "total_amount": 215752371.36,
+      "fraud_count": 405
+    },
+    {
+      "transaction_date": "2025-12-27",
+      "total_transactions": 41061,
+      "total_amount": 215618675.3,
+      "fraud_count": 394
+    },
+    {
+      "transaction_date": "2025-12-28",
+      "total_transactions": 41378,
+      "total_amount": 217469430.7,
+      "fraud_count": 431
+    },
+    {
+      "transaction_date": "2025-12-29",
+      "total_transactions": 41055,
+      "total_amount": 215218963.09,
+      "fraud_count": 358
+    },
+    {
+      "transaction_date": "2025-12-30",
+      "total_transactions": 41123,
+      "total_amount": 216705951.53,
+      "fraud_count": 437
+    },
+    {
+      "transaction_date": "2025-12-31",
+      "total_transactions": 41245,
+      "total_amount": 216102597.69,
+      "fraud_count": 395
+    }
+  ]
+}

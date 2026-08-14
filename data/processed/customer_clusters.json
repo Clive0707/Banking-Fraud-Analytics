@@ -1,0 +1,99 @@
+{
+  "elbow_curve": [
+    {
+      "k": 2,
+      "inertia": 83919.67,
+      "silhouette_score": 0.5146
+    },
+    {
+      "k": 3,
+      "inertia": 68698.25,
+      "silhouette_score": 0.214
+    },
+    {
+      "k": 4,
+      "inertia": 58420.62,
+      "silhouette_score": 0.2139
+    },
+    {
+      "k": 5,
+      "inertia": 51602.33,
+      "silhouette_score": 0.2134
+    },
+    {
+      "k": 6,
+      "inertia": 47750.45,
+      "silhouette_score": 0.2055
+    },
+    {
+      "k": 7,
+      "inertia": 44363.42,
+      "silhouette_score": 0.1907
+    },
+    {
+      "k": 8,
+      "inertia": 41360.54,
+      "silhouette_score": 0.1913
+    }
+  ],
+  "optimal_k": 4,
+  "total_customers": 25000,
+  "cluster_profiles": [
+    {
+      "cluster_id": 0,
+      "label": "Standard Retail Customers",
+      "count": 7651,
+      "percentage": 30.6,
+      "stats": {
+        "total_transaction_amount": 1896058.55,
+        "average_transaction_amount": 3219.71,
+        "transaction_count": 588.99,
+        "average_balance_before": 74348.17,
+        "unique_merchants": 12.0,
+        "fraud_count": 4.97
+      }
+    },
+    {
+      "cluster_id": 1,
+      "label": "High Spending / VIP Customers",
+      "count": 2192,
+      "percentage": 8.77,
+      "stats": {
+        "total_transaction_amount": 15813943.82,
+        "average_transaction_amount": 26346.13,
+        "transaction_count": 600.28,
+        "average_balance_before": 75970.43,
+        "unique_merchants": 12.0,
+        "fraud_count": 7.89
+      }
+    },
+    {
+      "cluster_id": 2,
+      "label": "High Risk / Fraud Prone Customers",
+      "count": 7538,
+      "percentage": 30.15,
+      "stats": {
+        "total_transaction_amount": 2008498.15,
+        "average_transaction_amount": 3221.59,
+        "transaction_count": 623.06,
+        "average_balance_before": 76003.67,
+        "unique_merchants": 12.0,
+        "fraud_count": 7.03
+      }
+    },
+    {
+      "cluster_id": 3,
+      "label": "High Balance Customers",
+      "count": 7619,
+      "percentage": 30.48,
+      "stats": {
+        "total_transaction_amount": 1911918.53,
+        "average_transaction_amount": 3250.83,
+        "transaction_count": 588.16,
+        "average_balance_before": 77512.1,
+        "unique_merchants": 12.0,
+        "fraud_count": 5.03
+      }
+    }
+  ]
+}
