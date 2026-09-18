@@ -16,16 +16,16 @@
 /* Custom Typography Utility Aliases */
 .font-headline-xl {
   font-family: 'Geist', sans-serif;
-  font-size: 32px;
-  line-height: 40px;
+  font-size: 28px;
+  line-height: 36px;
   letter-spacing: -0.025em;
   font-weight: 600;
 }
 
 .font-headline-lg {
   font-family: 'Geist', sans-serif;
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 22px;
+  line-height: 30px;
   letter-spacing: -0.02em;
   font-weight: 600;
 }
@@ -113,14 +113,14 @@
   font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
 }
 
-/* Tab Navigation State */
+/* Tab Navigation State — Strict Specificity Overrides */
 .tab-pane {
-  display: none;
-  animation: fadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  display: none !important;
 }
 
 .tab-pane.active {
-  display: block;
+  display: flex !important;
+  animation: fadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes fadeIn {
@@ -169,8 +169,8 @@
 
 #report-modal-dialog {
   opacity: 0;
-  transform: scale(0.96) translateY(10px);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.97) translateY(12px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 #report-modal-backdrop.active #report-modal-dialog {
@@ -216,9 +216,9 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .heatmap-cell:hover {
-  transform: scale(1.18);
+  transform: scale(1.15);
   z-index: 10;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 }
 
 /* Subtle Scrollbars */
@@ -244,18 +244,51 @@ input[type="range"]::-webkit-slider-thumb {
   background: #94a3b8;
 }
 
-/* Print Styles for Export Report */
+/* Print Styles for Executive Audit Report */
 @media print {
-  aside, header, #slide-over-backdrop, #slide-over-drawer, .header-actions, .filter-bar, button {
+  /* Hide application shell UI */
+  aside, 
+  header, 
+  #slide-over-backdrop, 
+  #slide-over-drawer, 
+  .no-print,
+  main > div > section {
     display: none !important;
   }
-  main {
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100% !important;
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
   }
-  .tab-pane {
+
+  /* Show Report Container in full page format */
+  #report-modal-backdrop {
     display: block !important;
-    page-break-after: always;
+    position: static !important;
+    background: none !important;
+    padding: 0 !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  #report-modal-dialog {
+    display: block !important;
+    position: static !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  .print-header-banner {
+    display: block !important;
+  }
+
+  .print-page-break {
+    page-break-before: always;
   }
 }
