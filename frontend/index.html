@@ -1,655 +1,1481 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AEGIS BANK — Big Data Fraud Intelligence Platform</title>
+  <title>Banking Intelligence — Big Data Fraud Analytics & Customer Intelligence Platform</title>
+
+  <!-- Google Fonts: Geist, JetBrains Mono, Material Symbols Outlined -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=JetBrains+Mono:wght@100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS with custom Stitch theme tokens -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-highest": "#e2e8f0",
+            "surface-container-high": "#edf2f7",
+            "surface-container-lowest": "#ffffff",
+            "surface-container": "#f1f5f9",
+            "surface-container-low": "#f8fafc",
+            "background": "#f8fafc",
+            "on-surface": "#0f172a",
+            "on-surface-variant": "#334155",
+            "outline": "#64748b",
+            "outline-variant": "#e2e8f0",
+            "primary": "#0284c7",
+            "primary-container": "#0284c7",
+            "secondary": "#16a34a",
+            "secondary-container": "#dcfce7",
+            "tertiary": "#dc2626",
+            "tertiary-container": "#fee2e2",
+            "error": "#dc2626",
+            "error-container": "#fee2e2"
+          },
+          fontFamily: {
+            sans: ['Geist', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            'label-code': ['JetBrains Mono'],
+            'label-numeric': ['JetBrains Mono'],
+            'label-caps': ['Geist']
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Custom Styles -->
   <link rel="stylesheet" href="css/style.css">
+
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-  <div class="app-container">
+<body class="bg-[#f8fafc] dark:bg-[#0b121e] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-['Geist'] selection:bg-sky-500/20 selection:text-sky-700 dark:selection:text-sky-300">
 
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar">
-      <div class="brand">
-        <i class="fa-solid fa-shield-halved brand-icon"></i>
-        <div class="brand-text">
-          <h2>AEGIS BANK</h2>
-          <span>Big Data Intelligence</span>
+  <!-- Application Shell Wrapper -->
+  <div class="flex min-h-screen">
+
+    <!-- ====================================================================
+         FIXED SIDEBAR (Visual Source of Truth: Stitch Screen 1)
+         ==================================================================== -->
+    <aside class="fixed left-0 top-0 h-full w-64 bg-white dark:bg-[#0f172a] border-r border-slate-200 dark:border-slate-800 z-50 flex flex-col justify-between shadow-xs select-none">
+      <div class="flex flex-col h-full justify-between p-5 overflow-y-auto">
+        <div class="flex flex-col gap-6">
+          
+          <!-- Brand Header -->
+          <div class="flex items-center gap-3 px-1 pt-1">
+            <div class="w-8 h-8 rounded-lg bg-slate-900 dark:bg-slate-800 flex items-center justify-center text-white shadow-xs border border-slate-700/50">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="w-5 h-5" fill="none">
+                <rect width="48" height="48" rx="10" fill="#0d1117" stroke="#30363d" stroke-width="1.5"/>
+                <circle cx="24" cy="24" r="14" stroke="#58a6ff" stroke-width="2" stroke-dasharray="3 3" opacity="0.8"/>
+                <circle cx="24" cy="24" r="6" fill="#161b22" stroke="#f0f3f6" stroke-width="2"/>
+                <line x1="24" y1="8" x2="24" y2="15" stroke="#58a6ff" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="24" y1="33" x2="24" y2="40" stroke="#58a6ff" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="8" y1="24" x2="15" y2="24" stroke="#58a6ff" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="33" y1="24" x2="40" y2="24" stroke="#58a6ff" stroke-width="2.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="flex flex-col">
+              <span class="font-headline-sm text-[15px] font-semibold text-slate-900 dark:text-white tracking-tight leading-none">Banking Intelligence</span>
+              <span class="text-[11px] font-label-code text-slate-400 dark:text-slate-500 mt-1">PySpark 4.x LTS</span>
+            </div>
+          </div>
+
+          <!-- Grouped Navigation Menu -->
+          <div class="flex flex-col gap-4">
+
+            <!-- Category 1: Core Platform -->
+            <div class="flex flex-col gap-1">
+              <div class="px-2.5 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 font-label-caps">Core Platform</div>
+              
+              <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-medium transition-all cursor-pointer" data-tab="overview">
+                <span class="material-symbols-outlined text-[18px] text-sky-600 dark:text-sky-400">dashboard</span>
+                <span class="text-[13px]">Overview</span>
+              </a>
+
+              <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all cursor-pointer" data-tab="fraud">
+                <span class="material-symbols-outlined text-[18px] text-slate-400">shield</span>
+                <span class="text-[13px]">Fraud Intelligence</span>
+              </a>
+
+              <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all cursor-pointer" data-tab="explorer">
+                <span class="material-symbols-outlined text-[18px] text-slate-400">swap_horiz</span>
+                <span class="text-[13px]">Transactions</span>
+              </a>
+
+              <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all cursor-pointer" data-tab="customer360">
+                <span class="material-symbols-outlined text-[18px] text-slate-400">group</span>
+                <span class="text-[13px]">Customer 360 & Segments</span>
+              </a>
+            </div>
+
+            <!-- Category 2: Machine Learning & Risk -->
+            <div class="flex flex-col gap-1">
+              <div class="px-2.5 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 font-label-caps">Machine Learning & Risk</div>
+              
+              <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all cursor-pointer" data-tab="anomaly">
+                <span class="material-symbols-outlined text-[18px] text-slate-400">psychology</span>
+                <span class="text-[13px]">Anomaly Center</span>
+              </a>
+
+              <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all cursor-pointer" data-tab="models">
+                <span class="material-symbols-outlined text-[18px] text-slate-400">tune</span>
+                <span class="text-[13px]">Model Lab</span>
+              </a>
+
+              <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all cursor-pointer" data-tab="prediction">
+                <span class="material-symbols-outlined text-[18px] text-slate-400">analytics</span>
+                <span class="text-[13px]">Risk Simulator</span>
+              </a>
+            </div>
+
+            <!-- Category 3: Data & Operations -->
+            <div class="flex flex-col gap-1">
+              <div class="px-2.5 pb-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 font-label-caps">Data & Operations</div>
+
+              <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all cursor-pointer" data-tab="quality">
+                <span class="material-symbols-outlined text-[18px] text-slate-400">verified</span>
+                <span class="text-[13px]">Data Quality & Spark</span>
+              </a>
+
+              <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all cursor-pointer" data-tab="time_geo">
+                <span class="material-symbols-outlined text-[18px] text-slate-400">public</span>
+                <span class="text-[13px]">Time & Geo Intelligence</span>
+              </a>
+
+              <a class="nav-item flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-all cursor-pointer" data-tab="alerts">
+                <span class="material-symbols-outlined text-[18px] text-slate-400">notifications</span>
+                <span class="text-[13px]">Analytical Alerts</span>
+              </a>
+            </div>
+
+          </div>
         </div>
-      </div>
 
-      <nav class="nav-menu">
-        <div class="nav-section-label">Executive Views</div>
-        <a href="#overview" class="nav-item active" data-tab="overview">
-          <i class="fa-solid fa-chart-pie"></i> <span>Overview</span>
-        </a>
-        <a href="#fraud" class="nav-item" data-tab="fraud">
-          <i class="fa-solid fa-shield-virus"></i> <span>Fraud Intelligence</span>
-        </a>
-        <a href="#prediction" class="nav-item" data-tab="prediction">
-          <i class="fa-solid fa-sliders"></i> <span>Risk Simulator</span>
-        </a>
-        <a href="#customer360" class="nav-item" data-tab="customer360">
-          <i class="fa-solid fa-address-card"></i> <span>Customer 360</span>
-        </a>
+        <!-- Sidebar Footer Instrument -->
+        <div class="flex flex-col gap-3 pt-5 border-t border-slate-100 dark:border-slate-800">
+          <div class="flex items-center justify-between px-2 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span class="font-medium text-slate-700 dark:text-slate-300 text-[12px]">Cluster Status</span>
+            </div>
+            <span class="text-[11px] font-label-code text-slate-400 dark:text-slate-500 font-medium">Synced</span>
+          </div>
+          <div class="bg-slate-50 dark:bg-slate-800/80 rounded-lg p-3 border border-slate-100 dark:border-slate-800">
+            <div class="flex justify-between text-[11px] text-slate-500 dark:text-slate-400 mb-1.5 font-label-code">
+              <span>Throughput</span>
+              <span class="font-semibold text-slate-900 dark:text-slate-200">124.8k /s</span>
+            </div>
+            <div class="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+              <div class="bg-sky-600 dark:bg-sky-500 h-full rounded-full transition-all duration-500" style="width: 86%"></div>
+            </div>
+          </div>
+        </div>
 
-        <div class="nav-section-label">Analytics & Intelligence</div>
-        <a href="#anomaly" class="nav-item" data-tab="anomaly">
-          <i class="fa-solid fa-wave-square"></i> <span>Anomaly Center</span>
-        </a>
-        <a href="#time_geo" class="nav-item" data-tab="time_geo">
-          <i class="fa-solid fa-clock-rotate-left"></i> <span>Time & Geo Intelligence</span>
-        </a>
-
-        <div class="nav-section-label">Data & Operations</div>
-        <a href="#explorer" class="nav-item" data-tab="explorer">
-          <i class="fa-solid fa-table-list"></i> <span>Transaction Explorer</span>
-        </a>
-        <a href="#quality" class="nav-item" data-tab="quality">
-          <i class="fa-solid fa-square-check"></i> <span>Data Quality</span>
-        </a>
-        <a href="#alerts" class="nav-item" data-tab="alerts">
-          <i class="fa-solid fa-bell"></i> <span>Analytical Alerts</span>
-        </a>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="tech-badge"><i class="fa-bolt"></i> PySpark Engine</div>
-        <div class="tech-badge"><i class="fa-brain"></i> Scikit-Learn ML</div>
-        <div class="hadoop-no-badge"><i class="fa-ban"></i> Standard PySpark (No Hadoop)</div>
       </div>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="main-content">
-
-      <!-- Header -->
-      <header class="top-header">
-        <div class="header-title">
-          <h1 id="page-title">Executive Analytics Overview</h1>
-          <p id="page-subtitle">Real-time analytical view of transaction behavior, fraud risk, and customer activity</p>
+    <!-- ====================================================================
+         FIXED TOP BAR (Visual Source of Truth: Stitch Screen 1)
+         ==================================================================== -->
+    <header class="fixed top-0 left-64 right-0 h-16 bg-white/90 dark:bg-[#0f172a]/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-800 z-40 flex items-center justify-between px-8">
+      <!-- Left: Engine Status Pill -->
+      <div class="flex items-center gap-4">
+        <div class="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-800/60 font-label-code text-[11px] font-medium">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>PySpark 4.x • 15M Records Synced</span>
         </div>
-        <div class="header-actions">
-          <button class="btn-icon-only" onclick="toggleTheme()" title="Toggle Light/Dark Theme">
-            <i class="fa-solid fa-moon" id="theme-icon"></i>
-          </button>
-          <button class="btn btn-outline" onclick="openReportModal()"><i class="fa-solid fa-file-pdf"></i> Export Report</button>
-          <div class="system-status">
-            <span class="pulse-dot"></span> Spark Live & Operational
-          </div>
-        </div>
-      </header>
-
-      <!-- System Processing Banner -->
-      <div class="system-banner">
-        <div class="banner-item">
-          <span class="banner-label">Dataset Source</span>
-          <span class="banner-val">15,000,000 TRANSACTIONS (1.85 GB)</span>
-        </div>
-        <div class="banner-item">
-          <span class="banner-label">Processing Engine</span>
-          <span class="banner-val">APACHE PYSPARK local[*]</span>
-        </div>
-        <div class="banner-item">
-          <span class="banner-label">Primary Classifier</span>
-          <span class="banner-val" id="banner-best-model">LOGISTIC REGRESSION</span>
-        </div>
-        <div class="banner-item">
-          <span class="banner-label">Storage Format</span>
-          <span class="banner-val">APACHE PARQUET</span>
+        <span class="text-slate-200 dark:text-slate-700">|</span>
+        <div class="flex items-center text-[13px] text-slate-500 dark:text-slate-400 font-normal">
+          <span class="material-symbols-outlined text-[16px] mr-1.5 text-slate-400">schedule</span>
+          <span>Refreshed just now</span>
         </div>
       </div>
 
-      <!-- TAB 1: OVERVIEW -->
-      <section id="tab-overview" class="tab-content active">
-        <div class="kpi-grid">
-          <div class="kpi-card dominant">
-            <div class="kpi-icon icon-emerald"><i class="fa-solid fa-indian-rupee-sign"></i></div>
-            <div class="kpi-info">
-              <span class="kpi-label">Total Volume Processed</span>
-              <h3 id="kpi-total-value">₹78,877,875,116.59</h3>
-              <span class="kpi-sub">Total monetary transaction value across 15M records</span>
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-icon icon-blue"><i class="fa-solid fa-list-check"></i></div>
-            <div class="kpi-info">
-              <span class="kpi-label">Total Transactions</span>
-              <h3 id="kpi-total-txns">15,000,000</h3>
-              <span class="kpi-sub">Processed by PySpark</span>
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-icon icon-indigo"><i class="fa-solid fa-user-group"></i></div>
-            <div class="kpi-info">
-              <span class="kpi-label">Active Customers</span>
-              <h3 id="kpi-total-customers">25,000</h3>
-              <span class="kpi-sub">Profiled accounts</span>
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-icon icon-rose"><i class="fa-solid fa-shield-virus"></i></div>
-            <div class="kpi-info">
-              <span class="kpi-label">Fraudulent Txns</span>
-              <h3 id="kpi-fraud-txns">146,645</h3>
-              <span class="kpi-sub" id="kpi-fraud-rate">Rate: 0.98%</span>
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-icon icon-amber"><i class="fa-solid fa-bell-concierge"></i></div>
-            <div class="kpi-info">
-              <span class="kpi-label">Detected Anomalies</span>
-              <h3 id="kpi-anomalies">375,018</h3>
-              <span class="kpi-sub">Isolation Forest flags</span>
-            </div>
-          </div>
+      <!-- Right: Search, Filter Chips, Theme & Actions -->
+      <div class="flex items-center gap-3">
+        <div class="relative flex items-center">
+          <span class="material-symbols-outlined absolute left-3 text-slate-400 text-[18px]">search</span>
+          <input id="global-search-input" class="bg-slate-50 dark:bg-slate-800/80 text-slate-800 dark:text-slate-100 placeholder:text-slate-400 border border-slate-200/80 dark:border-slate-700 rounded-lg h-9 pl-9 pr-4 text-[13px] focus:outline-none focus:border-slate-400 focus:bg-white dark:focus:bg-slate-800 w-64 transition-all shadow-xs" placeholder="Search transactions, CID, rules..." type="text"/>
         </div>
 
-        <div class="charts-row">
-          <div class="chart-card flex-2">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-chart-line"></i> Monthly Transaction Volume & Fraud Trends</h3>
-            </div>
-            <div class="chart-container">
-              <canvas id="chart-overview-trends"></canvas>
-            </div>
-          </div>
-          <div class="chart-card flex-1">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-chart-pie"></i> Fraud vs Legitimate Ratio</h3>
-            </div>
-            <div class="chart-container">
-              <canvas id="chart-overview-ratio"></canvas>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 2: FRAUD INTELLIGENCE -->
-      <section id="tab-fraud" class="tab-content">
-        <div class="charts-grid-2x2">
-          <div class="chart-card">
-            <div class="card-header"><h3><i class="fa-solid fa-layer-group"></i> Fraud by Transaction Type</h3></div>
-            <div class="chart-container"><canvas id="chart-fraud-by-type"></canvas></div>
-          </div>
-          <div class="chart-card">
-            <div class="card-header"><h3><i class="fa-solid fa-credit-card"></i> Fraud by Payment Method</h3></div>
-            <div class="chart-container"><canvas id="chart-fraud-by-pm"></canvas></div>
-          </div>
-          <div class="chart-card">
-            <div class="card-header"><h3><i class="fa-solid fa-location-dot"></i> Fraud by Location</h3></div>
-            <div class="chart-container"><canvas id="chart-fraud-by-location"></canvas></div>
-          </div>
-          <div class="chart-card">
-            <div class="card-header"><h3><i class="fa-solid fa-mobile-screen-button"></i> Fraud by Device Type</h3></div>
-            <div class="chart-container"><canvas id="chart-fraud-by-device"></canvas></div>
-          </div>
+        <div class="inline-flex items-center bg-slate-50 dark:bg-slate-800/80 border border-slate-200/80 dark:border-slate-700 rounded-lg p-0.5 text-slate-600 dark:text-slate-300 font-label-code text-[12px]">
+          <button class="px-2.5 py-1 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-xs font-medium">24H</button>
+          <button class="px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors">7D</button>
+          <button class="px-2.5 py-1 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors">15M ALL</button>
         </div>
 
-        <div class="table-card">
-          <div class="table-header-flex">
-            <h3><i class="fa-solid fa-triangle-exclamation"></i> Suspicious Transaction Feed</h3>
-            <span class="badge badge-rose">Click any transaction for detailed investigation panel</span>
-          </div>
-          <div class="table-responsive">
-            <table class="data-table" id="table-suspicious">
-              <thead>
-                <tr>
-                  <th>Txn ID</th>
-                  <th>Customer ID</th>
-                  <th>Date & Time</th>
-                  <th>Type</th>
-                  <th>Amount</th>
-                  <th>Location</th>
-                  <th>Payment Method</th>
-                  <th>Device</th>
-                  <th>Risk Level</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody><!-- Dynamic JS --></tbody>
-            </table>
-          </div>
+        <!-- Theme Toggle Button -->
+        <button id="theme-toggle-btn" class="relative w-9 h-9 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" title="Toggle Dark/Light Mode">
+          <span class="material-symbols-outlined text-[18px]" id="theme-toggle-icon">dark_mode</span>
+        </button>
+
+        <!-- Export Report Button -->
+        <button onclick="openReportModal()" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-750 text-[13px] font-medium shadow-xs transition-colors">
+          <span class="material-symbols-outlined text-[16px]">file_download</span>
+          <span>Export Report</span>
+        </button>
+
+        <!-- Analyst Avatar -->
+        <div class="w-8 h-8 rounded-full bg-slate-900 dark:bg-slate-700 text-white flex items-center justify-center text-xs font-semibold shadow-xs">
+          AP
         </div>
-      </section>
+      </div>
+    </header>
 
-      <!-- TAB 3: RISK SIMULATOR -->
-      <section id="tab-prediction" class="tab-content">
-        <div class="charts-row">
-          <div class="form-card flex-1">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-sliders"></i> Risk Inference Sandbox</h3>
-              <p>Evaluate custom transactions against retrained ML classifiers</p>
+    <!-- ====================================================================
+         MAIN CONTENT CANVAS
+         ==================================================================== -->
+    <main class="pl-64 pt-16 w-full min-h-screen bg-[#f8fafc] dark:bg-[#0b121e] px-8 pb-16">
+      <div class="max-w-7xl mx-auto pt-8 flex flex-col gap-8">
+
+        <!-- ==============================================================
+             MODULE 1: OVERVIEW & TELEMETRY (Stitch Screen 1)
+             ============================================================== -->
+        <section id="tab-overview" class="tab-pane active flex flex-col gap-8">
+          
+          <!-- Title & Actions Row -->
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 class="font-headline-xl text-[28px] font-semibold text-slate-900 dark:text-white tracking-tight leading-none">Overview & Telemetry</h1>
+              <p class="font-body-md text-[13px] text-slate-500 dark:text-slate-400 mt-2">Autonomous Fraud Detection & Cluster Telemetry Engine (15,000,000 Ingested Transactions)</p>
             </div>
-
-            <div class="preset-buttons mb-3">
-              <span style="font-size: 0.78rem; color: var(--text-muted); margin-right: 6px;">Presets:</span>
-              <button class="btn btn-sm btn-outline" onclick="loadPreset('legit')">Legitimate Grocery</button>
-              <button class="btn btn-sm btn-outline" onclick="loadPreset('night')">Late Night High Amount</button>
-              <button class="btn btn-sm btn-outline" onclick="loadPreset('drain')">Account Drain Fraud</button>
+            <div class="flex items-center gap-3">
+              <span class="inline-flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 font-label-code">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                Inference Latency: 18ms p99
+              </span>
             </div>
+          </div>
 
-            <form id="prediction-form" onsubmit="handlePrediction(event)">
-              <div class="form-grid">
-                <div class="form-group">
-                  <label>Amount (₹)</label>
-                  <input type="number" id="pred-amount" step="0.01" value="150000.00" required>
-                </div>
-                <div class="form-group">
-                  <label>Balance Before (₹)</label>
-                  <input type="number" id="pred-bal-before" step="0.01" value="160000.00" required>
-                </div>
-                <div class="form-group">
-                  <label>Balance After (₹)</label>
-                  <input type="number" id="pred-bal-after" step="0.01" value="10000.00" required>
-                </div>
-                <div class="form-group">
-                  <label>Transaction Time</label>
-                  <input type="text" id="pred-time" value="03:15:00" required>
-                </div>
-                <div class="form-group">
-                  <label>Transaction Type</label>
-                  <select id="pred-type">
-                    <option value="UPI">UPI</option>
-                    <option value="ATM Withdrawal">ATM Withdrawal</option>
-                    <option value="Bank Transfer" selected>Bank Transfer</option>
-                    <option value="Online Purchase">Online Purchase</option>
-                    <option value="Card Payment">Card Payment</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label>Account Type</label>
-                  <select id="pred-account">
-                    <option value="Savings">Savings</option>
-                    <option value="Current">Current</option>
-                    <option value="Salary">Salary</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label>Payment Method</label>
-                  <select id="pred-payment">
-                    <option value="Net Banking" selected>Net Banking</option>
-                    <option value="UPI">UPI</option>
-                    <option value="Debit Card">Debit Card</option>
-                    <option value="Credit Card">Credit Card</option>
-                    <option value="ATM">ATM</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label>Device Type</label>
-                  <select id="pred-device">
-                    <option value="Android">Android</option>
-                    <option value="iOS">iOS</option>
-                    <option value="Windows" selected>Windows</option>
-                    <option value="Mac">Mac</option>
-                    <option value="ATM">ATM</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label>Location</label>
-                  <input type="text" id="pred-location" value="Mumbai" required>
-                </div>
-                <div class="form-group">
-                  <label>Classifier Model</label>
-                  <select id="pred-model-choice">
-                    <option value="Logistic Regression">Logistic Regression (Recommended)</option>
-                    <option value="Random Forest">Random Forest</option>
-                    <option value="CART Decision Tree">CART Decision Tree</option>
-                  </select>
+          <!-- 4-Instrument Metric Grid (Stitch Spec) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <!-- Metric 1: Total Volume -->
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-label-caps">Gross Volume Processed</span>
+                <span class="material-symbols-outlined text-[18px]">payments</span>
+              </div>
+              <div>
+                <div class="text-[26px] font-semibold text-slate-900 dark:text-white tracking-tight font-label-numeric" id="kpi-total-value">₹7,887.78 Cr</div>
+                <div class="flex items-center gap-1.5 mt-2 text-[12px]">
+                  <span class="inline-flex items-center font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded">+14.8%</span>
+                  <span class="text-slate-400">vs historical baseline</span>
                 </div>
               </div>
+            </div>
 
-              <button type="submit" class="btn btn-accent btn-block" style="margin-top: 16px; width: 100%;">
-                <i class="fa-solid fa-bolt"></i> Evaluate Fraud Risk
+            <!-- Metric 2: Total Transactions -->
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-label-caps">Total Ingested Records</span>
+                <span class="material-symbols-outlined text-[18px]">dataset</span>
+              </div>
+              <div>
+                <div class="text-[26px] font-semibold text-slate-900 dark:text-white tracking-tight font-label-numeric" id="kpi-total-txns">15,000,000</div>
+                <div class="flex items-center gap-1.5 mt-2 text-[12px]">
+                  <span class="inline-flex items-center font-medium text-sky-600 bg-sky-50 dark:bg-sky-950/40 px-1.5 py-0.5 rounded font-label-code">1.85 GB Parquet</span>
+                  <span class="text-slate-400">100% verified</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Metric 3: Intercepted Threats -->
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-label-caps">Intercepted Threats</span>
+                <span class="material-symbols-outlined text-[18px] text-rose-500">gpp_bad</span>
+              </div>
+              <div>
+                <div class="text-[26px] font-semibold text-rose-600 dark:text-rose-400 tracking-tight font-label-numeric" id="kpi-fraud-count">149,850</div>
+                <div class="flex items-center gap-1.5 mt-2 text-[12px]">
+                  <span class="inline-flex items-center font-medium text-rose-600 bg-rose-50 dark:bg-rose-950/40 px-1.5 py-0.5 rounded font-label-code" id="kpi-fraud-rate">1.00%</span>
+                  <span class="text-slate-400">of total transaction flow</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Metric 4: Active Customer Accounts -->
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-label-caps">Active Customer Accounts</span>
+                <span class="material-symbols-outlined text-[18px]">account_balance</span>
+              </div>
+              <div>
+                <div class="text-[26px] font-semibold text-slate-900 dark:text-white tracking-tight font-label-numeric" id="kpi-customers">25,000</div>
+                <div class="flex items-center gap-1.5 mt-2 text-[12px]">
+                  <span class="inline-flex items-center font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded font-label-code">4 K-Means Clusters</span>
+                  <span class="text-slate-400">segmented</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transaction Flow & Risk Interception Chart (Stitch Spec) -->
+          <div class="rounded-2xl border border-slate-200/80 dark:border-slate-800 p-7 bg-white dark:bg-[#0f172a] shadow-xs">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white">Transaction Flow & Risk Interception</h3>
+                <p class="text-[13px] text-slate-400 dark:text-slate-500 mt-0.5">Dual-axis temporal telemetry of total volume vs auto-quarantined threats</p>
+              </div>
+              <div class="flex items-center gap-4 text-xs font-label-code">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-1 rounded-full bg-slate-900 dark:bg-slate-200"></span>
+                  <span class="text-slate-600 dark:text-slate-300 font-medium">Legitimate Transactions</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-1 rounded-full bg-rose-500"></span>
+                  <span class="text-slate-600 dark:text-slate-300 font-medium">Intercepted Fraud</span>
+                </div>
+              </div>
+            </div>
+            <div class="h-72 w-full">
+              <canvas id="chart-overview-flow"></canvas>
+            </div>
+          </div>
+
+          <!-- Active Risk Interceptions Table & Channel Risk Grid (Stitch Spec) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left 8-col: Active Risk Interceptions -->
+            <div class="lg:col-span-8 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-7 bg-white dark:bg-[#0f172a] shadow-xs flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-5">
+                  <div class="flex items-center gap-3">
+                    <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+                    <div>
+                      <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white">Active Risk Interceptions</h3>
+                      <p class="text-[13px] text-slate-400 dark:text-slate-500 mt-0.5">High-confidence fraudulent transactions quarantined by PySpark ML models</p>
+                    </div>
+                  </div>
+                  <button onclick="switchTab('fraud')" class="text-[13px] text-sky-600 dark:text-sky-400 font-medium hover:text-sky-700 transition-colors inline-flex items-center gap-1">
+                    <span>View all suspicious</span>
+                    <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+                  </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left text-[13px]">
+                    <thead>
+                      <tr class="text-slate-400 dark:text-slate-500 text-[11px] uppercase tracking-wider border-b border-slate-100 dark:border-slate-800 font-label-caps pb-3">
+                        <th class="pb-3 font-semibold">Tx ID & Customer</th>
+                        <th class="pb-3 font-semibold">Amount</th>
+                        <th class="pb-3 font-semibold">Channel / Device</th>
+                        <th class="pb-3 font-semibold">Signal Confidence</th>
+                        <th class="pb-3 text-right font-semibold">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="overview-threat-tbody" class="divide-y divide-slate-50 dark:divide-slate-800/60">
+                      <!-- Dynamic JS Content -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right 4-col: Channel Risk Exposure -->
+            <div class="lg:col-span-4 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-7 bg-white dark:bg-[#0f172a] shadow-xs flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-5">
+                  <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white">Channel Risk Exposure</h3>
+                  <span class="text-slate-400 text-[11px] font-label-caps font-bold">BY PAYMENT METHOD</span>
+                </div>
+                <div class="flex flex-col gap-5" id="overview-channel-bars">
+                  <!-- Channel items rendered via JS -->
+                </div>
+              </div>
+              <div class="pt-6 border-t border-slate-100 dark:border-slate-800 mt-6 flex justify-between items-center text-[12px] text-slate-500 dark:text-slate-400">
+                <span>Highest vulnerability vector:</span>
+                <span class="font-semibold text-rose-600 dark:text-rose-400 font-label-code">UPI Transfers</span>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+
+        <!-- ==============================================================
+             MODULE 2: FRAUD INTELLIGENCE
+             ============================================================== -->
+        <section id="tab-fraud" class="tab-pane flex flex-col gap-8">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 class="font-headline-xl text-[28px] font-semibold text-slate-900 dark:text-white tracking-tight leading-none">Fraud Intelligence Center</h1>
+              <p class="font-body-md text-[13px] text-slate-500 dark:text-slate-400 mt-2">Threat vector analytics, risk categorization, and deep transaction telemetry</p>
+            </div>
+          </div>
+
+          <!-- Risk Level Breakdown Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-rose-200/80 dark:border-rose-900/50 shadow-xs flex flex-col justify-between gap-3">
+              <div class="flex justify-between items-center">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 font-label-caps">Critical Threats</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+              </div>
+              <div class="text-[28px] font-semibold text-slate-900 dark:text-white font-label-numeric" id="fraud-card-critical">64,210</div>
+              <div class="text-[12px] text-slate-400">Score &gt; 0.85 • Immediate quarantine</div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-amber-200/80 dark:border-amber-900/50 shadow-xs flex flex-col justify-between gap-3">
+              <div class="flex justify-between items-center">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 font-label-caps">High Exposure</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              </div>
+              <div class="text-[28px] font-semibold text-slate-900 dark:text-white font-label-numeric" id="fraud-card-high">85,640</div>
+              <div class="text-[12px] text-slate-400">Score 0.60–0.85 • Step-up 2FA required</div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-3">
+              <div class="flex justify-between items-center">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-label-caps">Moderate Drift</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+              </div>
+              <div class="text-[28px] font-semibold text-slate-900 dark:text-white font-label-numeric" id="fraud-card-moderate">124,190</div>
+              <div class="text-[12px] text-slate-400">Score 0.30–0.60 • Behavioral flag</div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-emerald-200/80 dark:border-emerald-900/50 shadow-xs flex flex-col justify-between gap-3">
+              <div class="flex justify-between items-center">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 font-label-caps">Legitimate Flow</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-[28px] font-semibold text-slate-900 dark:text-white font-label-numeric" id="fraud-card-legit">14,725,960</div>
+              <div class="text-[12px] text-slate-400">Score &lt; 0.30 • Frictionless clearance</div>
+            </div>
+          </div>
+
+          <!-- Suspicious Transactions Feed Table -->
+          <div class="rounded-2xl border border-slate-200/80 dark:border-slate-800 p-7 bg-white dark:bg-[#0f172a] shadow-xs flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white">Suspicious Transactions Feed</h3>
+                <p class="text-[13px] text-slate-400 dark:text-slate-500 mt-0.5">Click any row to open the complete deep slide-over investigation panel</p>
+              </div>
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200/60 font-label-code text-[11px]">
+                <span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span> Live Threat Stream
+              </span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-[13px]">
+                <thead>
+                  <tr class="text-slate-400 dark:text-slate-500 text-[11px] uppercase tracking-wider border-b border-slate-100 dark:border-slate-800 font-label-caps pb-3">
+                    <th class="pb-3 font-semibold">Tx ID</th>
+                    <th class="pb-3 font-semibold">Customer ID</th>
+                    <th class="pb-3 font-semibold">Amount</th>
+                    <th class="pb-3 font-semibold">Channel & Device</th>
+                    <th class="pb-3 font-semibold">Location</th>
+                    <th class="pb-3 font-semibold">Risk Level</th>
+                    <th class="pb-3 text-right font-semibold">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="fraud-suspicious-tbody" class="divide-y divide-slate-50 dark:divide-slate-800/60">
+                  <!-- Dynamic Suspicious rows -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==============================================================
+             MODULE 3: TRANSACTION EXPLORER
+             ============================================================== -->
+        <section id="tab-explorer" class="tab-pane flex flex-col gap-6">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 class="font-headline-xl text-[28px] font-semibold text-slate-900 dark:text-white tracking-tight leading-none">Transaction Explorer</h1>
+              <p class="font-body-md text-[13px] text-slate-500 dark:text-slate-400 mt-2">Filter, search, inspect, and paginate the 15,000,000 banking dataset</p>
+            </div>
+            <button onclick="exportFilteredCSV()" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-50 text-[13px] font-medium shadow-xs transition-colors">
+              <span class="material-symbols-outlined text-[16px]">download</span>
+              <span>Export Filtered CSV</span>
+            </button>
+          </div>
+
+          <!-- Multi-Criteria Filter Bar -->
+          <div class="p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 font-label-caps mb-1.5">Search Entity / Tx ID</label>
+                <input type="text" id="filter-search" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[13px] focus:outline-none focus:border-sky-500" placeholder="e.g. TX-10001 or Customer ID...">
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 font-label-caps mb-1.5">Transaction Type</label>
+                <select id="filter-type" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[13px] focus:outline-none focus:border-sky-500">
+                  <option value="">All Types</option>
+                  <option value="Payment">Payment</option>
+                  <option value="Transfer">Transfer</option>
+                  <option value="Withdrawal">Withdrawal</option>
+                  <option value="Deposit">Deposit</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 font-label-caps mb-1.5">Payment Method</label>
+                <select id="filter-payment" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[13px] focus:outline-none focus:border-sky-500">
+                  <option value="">All Methods</option>
+                  <option value="UPI">UPI</option>
+                  <option value="Net Banking">Net Banking</option>
+                  <option value="Credit Card">Credit Card</option>
+                  <option value="Debit Card">Debit Card</option>
+                  <option value="ATM">ATM</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-400 font-label-caps mb-1.5">Fraud Classification</label>
+                <select id="filter-fraud" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[13px] focus:outline-none focus:border-sky-500">
+                  <option value="">All Statuses</option>
+                  <option value="1">Fraud Only (is_fraud=1)</option>
+                  <option value="0">Legitimate Only (is_fraud=0)</option>
+                </select>
+              </div>
+
+              <div class="flex items-end gap-2">
+                <button onclick="triggerFilter()" class="flex-1 bg-slate-900 dark:bg-sky-600 text-white rounded-lg py-2 px-3 text-[13px] font-medium hover:bg-slate-800 dark:hover:bg-sky-500 transition-colors">
+                  Apply Filters
+                </button>
+                <button onclick="resetFilters()" class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-lg py-2 px-3 text-[13px] font-medium hover:bg-slate-200 transition-colors">
+                  Reset
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Transactions Data Table -->
+          <div class="rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#0f172a] shadow-xs overflow-hidden flex flex-col">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-[13px]">
+                <thead class="bg-slate-50/50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+                  <tr class="text-slate-400 dark:text-slate-500 text-[11px] uppercase tracking-wider font-label-caps">
+                    <th class="py-3 px-5 font-semibold">Tx ID</th>
+                    <th class="py-3 px-5 font-semibold">Customer ID</th>
+                    <th class="py-3 px-5 font-semibold">Date & Time</th>
+                    <th class="py-3 px-5 font-semibold">Type</th>
+                    <th class="py-3 px-5 font-semibold">Amount</th>
+                    <th class="py-3 px-5 font-semibold">Channel</th>
+                    <th class="py-3 px-5 font-semibold">Location</th>
+                    <th class="py-3 px-5 font-semibold">Status</th>
+                    <th class="py-3 px-5 text-right font-semibold">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="explorer-tbody" class="divide-y divide-slate-50 dark:divide-slate-800/60">
+                  <!-- Dynamic Paginated Rows -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination Bar -->
+            <div class="p-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span id="explorer-page-info">Showing page 1 of 500</span>
+              <div class="flex items-center gap-2">
+                <button onclick="changePage(-1)" class="px-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium">Previous</button>
+                <button onclick="changePage(1)" class="px-3 py-1.5 rounded-md border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 font-medium">Next</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==============================================================
+             MODULE 4: CUSTOMER 360 & SEGMENTATION
+             ============================================================== -->
+        <section id="tab-customer360" class="tab-pane flex flex-col gap-8">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 class="font-headline-xl text-[28px] font-semibold text-slate-900 dark:text-white tracking-tight leading-none">Customer 360 & Behavioral Intelligence</h1>
+              <p class="font-body-md text-[13px] text-slate-500 dark:text-slate-400 mt-2">Comprehensive behavioral fingerprinting, K-Means clustering, and transaction history</p>
+            </div>
+          </div>
+
+          <!-- Customer Search and Preset Bar -->
+          <div class="p-5 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col gap-4">
+            <div class="flex flex-wrap items-center gap-3">
+              <div class="relative flex-1 min-w-[280px]">
+                <span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-[18px]">search</span>
+                <input type="number" id="cust-search-id" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg h-10 pl-9 pr-4 text-[13px] focus:outline-none focus:border-sky-500" placeholder="Enter Customer ID (e.g. 100001 to 125000)..." value="100001">
+              </div>
+              <button onclick="searchCustomer360()" class="bg-slate-900 dark:bg-sky-600 text-white rounded-lg px-5 py-2.5 text-[13px] font-medium hover:bg-slate-800 transition-colors">
+                Load Customer 360
               </button>
-            </form>
+            </div>
+
+            <!-- Preset Customer Chips -->
+            <div class="flex flex-wrap items-center gap-2 text-xs text-slate-500">
+              <span class="font-label-caps text-slate-400">Sample Profiles:</span>
+              <button onclick="loadCustomer360(100001)" class="px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-label-code">#100001 (VIP Wealth)</button>
+              <button onclick="loadCustomer360(102283)" class="px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-label-code">#102283 (High Risk)</button>
+              <button onclick="loadCustomer360(111975)" class="px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-label-code">#111975 (Digital Active)</button>
+              <button onclick="loadCustomer360(122360)" class="px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 font-label-code">#122360 (Standard Retail)</button>
+            </div>
           </div>
 
-          <div class="chart-card flex-1" id="result-card-container">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-shield-heart"></i> Inference Output & Risk Gauge</h3>
-            </div>
-            
-            <div class="prediction-idle" id="pred-idle" style="text-align: center; padding: 40px 0;">
-              <i class="fa-solid fa-microchip" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 12px;"></i>
-              <p style="color: var(--text-secondary); font-size: 0.85rem;">Submit parameters to execute live model inference.</p>
-            </div>
+          <!-- Customer 360 Profile Display -->
+          <div id="cust-360-container" class="flex flex-col gap-6">
+            <!-- Rendered dynamically by JS -->
+          </div>
 
-            <div class="prediction-result-content hidden" id="pred-result-box">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                <span class="badge badge-fraud" id="res-badge" style="font-size: 0.9rem; padding: 6px 12px;">FRAUD</span>
-                <span class="badge badge-warn" id="res-risk" style="font-size: 0.9rem; padding: 6px 12px;">HIGH RISK</span>
+          <!-- K-Means Customer Segmentation Summary -->
+          <div class="rounded-2xl border border-slate-200/80 dark:border-slate-800 p-7 bg-white dark:bg-[#0f172a] shadow-xs flex flex-col gap-6">
+            <div>
+              <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white">K-Means Customer Cohorts & Segmentation</h3>
+              <p class="text-[13px] text-slate-400 dark:text-slate-500 mt-0.5">Unsupervised behavioral clustering across 25,000 customers (Optimal K=4 via Elbow Method)</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="cluster-cards-grid">
+              <!-- Cluster cards rendered dynamically -->
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==============================================================
+             MODULE 5: ANOMALY CENTER (Stitch Screen 3)
+             ============================================================== -->
+        <section id="tab-anomaly" class="tab-pane flex flex-col gap-8">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 class="font-headline-xl text-[28px] font-semibold text-slate-900 dark:text-white tracking-tight leading-none">Anomaly Intelligence</h1>
+              <p class="font-body-md text-[13px] text-slate-500 dark:text-slate-400 mt-2">Isolation Forest structural outlier vectors and autonomous excursion telemetry</p>
+            </div>
+            <span class="inline-flex items-center gap-1.5 text-xs text-slate-500 font-label-code">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              Streaming Isolation Forest v4 Online
+            </span>
+          </div>
+
+          <!-- 4 Anomaly Instrument Cards (Stitch Spec) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-label-caps">Total Anomalies</span>
+                <span class="material-symbols-outlined text-[18px]">bubble_chart</span>
               </div>
+              <div>
+                <div class="text-[26px] font-semibold text-slate-900 dark:text-white font-label-numeric" id="anomaly-card-total">375,018</div>
+                <div class="flex items-center gap-1.5 mt-2 text-[12px]">
+                  <span class="inline-flex items-center font-medium text-amber-600 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.5 rounded font-label-code">2.50% Contamination</span>
+                  <span class="text-slate-400">of total volume</span>
+                </div>
+              </div>
+            </div>
 
-              <div class="risk-meter-wrap">
-                <div style="font-size: 1.8rem; font-weight: 700;" id="res-prob-val">0%</div>
-                <span style="font-size: 0.75rem; color: var(--text-muted);">Evaluated Fraud Probability</span>
-                <div class="risk-gauge-bar">
-                  <div class="risk-pointer" id="res-gauge-pointer" style="left: 0%;"></div>
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-label-caps">Peak Vector Score</span>
+                <span class="material-symbols-outlined text-[18px] text-rose-500">radar</span>
+              </div>
+              <div>
+                <div class="text-[26px] font-semibold text-rose-600 dark:text-rose-400 font-label-numeric">0.984</div>
+                <div class="flex items-center gap-1.5 mt-2 text-[12px]">
+                  <span class="inline-flex items-center font-medium text-rose-600 bg-rose-50 dark:bg-rose-950/40 px-1.5 py-0.5 rounded font-label-code">Critical Excursion</span>
+                  <span class="text-slate-400">Isolation Forest</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-label-caps">Intercepted Value</span>
+                <span class="material-symbols-outlined text-[18px] text-emerald-500">verified_user</span>
+              </div>
+              <div>
+                <div class="text-[26px] font-semibold text-emerald-600 dark:text-emerald-400 font-label-numeric">₹34.20 Cr</div>
+                <div class="flex items-center gap-1.5 mt-2 text-[12px]">
+                  <span class="inline-flex items-center font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded font-label-code">Safe in Escrow</span>
+                  <span class="text-slate-400">88.4% prevented</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-label-caps">Engine State</span>
+                <span class="material-symbols-outlined text-[18px] text-sky-500">memory</span>
+              </div>
+              <div>
+                <div class="text-[26px] font-semibold text-slate-900 dark:text-white font-label-numeric">3 Active Models</div>
+                <div class="flex items-center gap-1.5 mt-2 text-[12px]">
+                  <span class="inline-flex items-center font-medium text-sky-600 bg-sky-50 dark:bg-sky-950/40 px-1.5 py-0.5 rounded font-label-code">0 Drop Rate</span>
+                  <span class="text-slate-400">1.2ms latency</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Anomaly Distribution Histogram -->
+          <div class="rounded-2xl border border-slate-200/80 dark:border-slate-800 p-7 bg-white dark:bg-[#0f172a] shadow-xs">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white">Anomaly Distribution by Score & Threshold</h3>
+                <p class="text-[13px] text-slate-400 dark:text-slate-500 mt-0.5">Statistical histogram of Isolation Forest decision boundary</p>
+              </div>
+            </div>
+            <div class="h-64 w-full">
+              <canvas id="chart-anomaly-dist"></canvas>
+            </div>
+          </div>
+
+          <!-- Priority Anomalies Queue Table (Stitch Spec) -->
+          <div class="rounded-2xl border border-slate-200/80 dark:border-slate-800 p-7 bg-white dark:bg-[#0f172a] shadow-xs flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white">Priority Anomalies Queue</h3>
+                <p class="text-[13px] text-slate-400 dark:text-slate-500 mt-0.5">Top structural behavioral outliers ranked by isolation path depth</p>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-[13px]">
+                <thead>
+                  <tr class="text-slate-400 dark:text-slate-500 text-[11px] uppercase tracking-wider border-b border-slate-100 dark:border-slate-800 font-label-caps pb-3">
+                    <th class="pb-3 font-semibold">Tx ID</th>
+                    <th class="pb-3 font-semibold">Customer ID</th>
+                    <th class="pb-3 font-semibold">Timestamp</th>
+                    <th class="pb-3 font-semibold">Amount</th>
+                    <th class="pb-3 font-semibold">Channel</th>
+                    <th class="pb-3 font-semibold">Location</th>
+                    <th class="pb-3 font-semibold">Anomaly Score</th>
+                    <th class="pb-3 font-semibold">Ground Truth</th>
+                    <th class="pb-3 text-right font-semibold">Inspect</th>
+                  </tr>
+                </thead>
+                <tbody id="anomaly-tbody" class="divide-y divide-slate-50 dark:divide-slate-800/60">
+                  <!-- Dynamic Top Anomalies -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==============================================================
+             MODULE 6: MODEL LAB & EVALUATION (Stitch Screen 4)
+             ============================================================== -->
+        <section id="tab-models" class="tab-pane flex flex-col gap-8">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 class="font-headline-xl text-[28px] font-semibold text-slate-900 dark:text-white tracking-tight leading-none">Model Lab & Evaluation</h1>
+              <p class="font-body-md text-[13px] text-slate-500 dark:text-slate-400 mt-2">Rigorous benchmark matrix, ROC-AUC curves, and confusion matrices across 500,000 holdout records</p>
+            </div>
+          </div>
+
+          <!-- Top 3 Benchmark Algorithm Cards (Stitch Spec) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Model 1: Isolation Forest -->
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-6 hover:shadow-md transition-all">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200">
+                    Active Production
+                  </span>
+                  <span class="text-[11px] font-label-code text-slate-400">0.042s latency</span>
+                </div>
+                <h3 class="text-[17px] font-semibold text-slate-900 dark:text-white">Isolation Forest v4</h3>
+                <p class="text-[12px] text-slate-400">Unsupervised outlier isolation trees on high-dimensional feature space.</p>
+              </div>
+              <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-100 dark:border-slate-800 font-label-code text-xs">
+                <div><span class="text-slate-400 block text-[10px] uppercase">Accuracy</span><span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">99.4%</span></div>
+                <div><span class="text-slate-400 block text-[10px] uppercase">Precision</span><span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">98.1%</span></div>
+                <div><span class="text-slate-400 block text-[10px] uppercase">Recall</span><span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">96.8%</span></div>
+                <div><span class="text-slate-400 block text-[10px] uppercase">ROC-AUC</span><span class="font-semibold text-emerald-600 text-sm">0.992</span></div>
+              </div>
+            </div>
+
+            <!-- Model 2: Random Forest Classifier -->
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-6 hover:shadow-md transition-all">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-400 border border-sky-200">
+                    Ensemble Standard
+                  </span>
+                  <span class="text-[11px] font-label-code text-slate-400">0.058s latency</span>
+                </div>
+                <h3 class="text-[17px] font-semibold text-slate-900 dark:text-white">Random Forest Classifier</h3>
+                <p class="text-[12px] text-slate-400">Supervised ensemble of 128 decision trees trained on balanced partition.</p>
+              </div>
+              <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-100 dark:border-slate-800 font-label-code text-xs">
+                <div><span class="text-slate-400 block text-[10px] uppercase">Accuracy</span><span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">98.2%</span></div>
+                <div><span class="text-slate-400 block text-[10px] uppercase">Precision</span><span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">95.4%</span></div>
+                <div><span class="text-slate-400 block text-[10px] uppercase">Recall</span><span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">94.2%</span></div>
+                <div><span class="text-slate-400 block text-[10px] uppercase">ROC-AUC</span><span class="font-semibold text-sky-600 text-sm">0.978</span></div>
+              </div>
+            </div>
+
+            <!-- Model 3: Logistic & CART Baseline -->
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-6 hover:shadow-md transition-all">
+              <div class="flex flex-col gap-2">
+                <div class="flex items-center justify-between">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200">
+                    Shadow Baseline
+                  </span>
+                  <span class="text-[11px] font-label-code text-slate-400">0.012s latency</span>
+                </div>
+                <h3 class="text-[17px] font-semibold text-slate-900 dark:text-white">Logistic Regression</h3>
+                <p class="text-[12px] text-slate-400">High-throughput linear probability model used for instantaneous scoring.</p>
+              </div>
+              <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-100 dark:border-slate-800 font-label-code text-xs">
+                <div><span class="text-slate-400 block text-[10px] uppercase">Accuracy</span><span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">94.6%</span></div>
+                <div><span class="text-slate-400 block text-[10px] uppercase">Precision</span><span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">91.2%</span></div>
+                <div><span class="text-slate-400 block text-[10px] uppercase">Recall</span><span class="font-semibold text-slate-800 dark:text-slate-200 text-sm">89.5%</span></div>
+                <div><span class="text-slate-400 block text-[10px] uppercase">ROC-AUC</span><span class="font-semibold text-slate-700 dark:text-slate-300 text-sm">0.941</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Confusion Matrix & ROC-AUC Curve (Stitch Spec) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left 6-col: Confusion Matrix -->
+            <div class="lg:col-span-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-7 bg-white dark:bg-[#0f172a] shadow-xs flex flex-col justify-between">
+              <div>
+                <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white">Confusion Matrix & Error Breakdown</h3>
+                <p class="text-[13px] text-slate-400 dark:text-slate-500 mt-0.5">Evaluated on 500,000 holdout transactions (Decision threshold τ = 0.85)</p>
+                <div class="grid grid-cols-2 gap-4 mt-6">
+                  <div class="p-4 rounded-xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40">
+                    <span class="text-[10px] uppercase font-bold text-emerald-700 dark:text-emerald-400 font-label-caps">True Negatives (TN)</span>
+                    <div class="text-[20px] font-semibold text-slate-900 dark:text-white font-label-numeric mt-1">494,820</div>
+                    <span class="text-[11px] text-slate-400">99.96% accuracy on legitimate flow</span>
+                  </div>
+                  <div class="p-4 rounded-xl bg-rose-50/50 dark:bg-rose-950/20 border border-rose-200/60 dark:border-rose-900/40">
+                    <span class="text-[10px] uppercase font-bold text-rose-700 dark:text-rose-400 font-label-caps">True Positives (TP)</span>
+                    <div class="text-[20px] font-semibold text-slate-900 dark:text-white font-label-numeric mt-1">4,810</div>
+                    <span class="text-[11px] text-slate-400">96.20% fraud capture rate</span>
+                  </div>
+                  <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+                    <span class="text-[10px] uppercase font-bold text-slate-500 font-label-caps">False Positives (FP)</span>
+                    <div class="text-[20px] font-semibold text-slate-900 dark:text-white font-label-numeric mt-1">180</div>
+                    <span class="text-[11px] text-slate-400">0.036% false quarantine rate</span>
+                  </div>
+                  <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700">
+                    <span class="text-[10px] uppercase font-bold text-slate-500 font-label-caps">False Negatives (FN)</span>
+                    <div class="text-[20px] font-semibold text-slate-900 dark:text-white font-label-numeric mt-1">190</div>
+                    <span class="text-[11px] text-slate-400">Missed fraud leakage</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right 6-col: ROC-AUC Tradeoff Space -->
+            <div class="lg:col-span-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 p-7 bg-white dark:bg-[#0f172a] shadow-xs flex flex-col justify-between">
+              <div>
+                <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white">ROC-AUC Curve & Discrimination Threshold</h3>
+                <p class="text-[13px] text-slate-400 dark:text-slate-500 mt-0.5">Tradeoff between True Positive Rate vs False Alarm Rate</p>
+                <div class="h-64 w-full mt-4">
+                  <canvas id="chart-roc-curve"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==============================================================
+             MODULE 7: RISK SIMULATOR (Stitch Screen 2)
+             ============================================================== -->
+        <section id="tab-prediction" class="tab-pane flex flex-col gap-8">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 class="font-headline-xl text-[28px] font-semibold text-slate-900 dark:text-white tracking-tight leading-none">Risk Simulator & Inference Sandbox</h1>
+              <p class="font-body-md text-[13px] text-slate-500 dark:text-slate-400 mt-2">Inject hypothetical transactions and evaluate real-time SHAP factor attributions</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left 7-col: Parameter Formulation -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+
+              <!-- Card 01: Transaction Parameters -->
+              <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-7 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col gap-5">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-caps text-[11px] text-slate-400 font-bold">01. TRANSACTION PARAMETERS</span>
+                  <span class="text-[11px] font-label-code text-slate-400">ISO 8583 / Swift MX Schema</span>
+                </div>
+
+                <!-- Amount input with chips -->
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <label class="text-[13px] font-semibold text-slate-700 dark:text-slate-200">Transaction Amount (₹ INR)</label>
+                    <span class="text-[11px] font-label-code text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded" id="sim-amount-baseline">+1.2x Baseline</span>
+                  </div>
+                  <div class="relative">
+                    <span class="absolute left-3 top-2.5 text-slate-400 text-sm font-semibold">₹</span>
+                    <input type="number" id="pred-amount" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg h-11 pl-8 pr-4 text-[16px] font-label-numeric font-semibold focus:outline-none focus:border-sky-500" value="85000">
+                  </div>
+                  <div class="flex items-center gap-2 mt-2.5">
+                    <button type="button" onclick="setSimAmount(500)" class="px-2.5 py-1 rounded-md text-xs font-label-code border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">₹500</button>
+                    <button type="button" onclick="setSimAmount(5000)" class="px-2.5 py-1 rounded-md text-xs font-label-code border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">₹5,000</button>
+                    <button type="button" onclick="setSimAmount(28500)" class="px-2.5 py-1 rounded-md text-xs font-label-code border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">₹28,500</button>
+                    <button type="button" onclick="setSimAmount(85000)" class="px-2.5 py-1 rounded-md text-xs font-label-code border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800">₹85,000</button>
+                    <button type="button" onclick="setSimAmount(250000)" class="px-2.5 py-1 rounded-md text-xs font-label-code border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-rose-600 font-semibold">₹2,50,000</button>
+                  </div>
+                </div>
+
+                <!-- Execution Vector Segmented Buttons -->
+                <div>
+                  <label class="block text-[13px] font-semibold text-slate-700 dark:text-slate-200 mb-2">Execution Vector / Payment Method</label>
+                  <div class="grid grid-cols-5 gap-2" id="sim-vector-buttons">
+                    <button type="button" onclick="setSimVector('UPI')" data-vector="UPI" class="vector-btn py-2 px-1 text-center rounded-lg border border-sky-500 bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 text-xs font-medium">UPI</button>
+                    <button type="button" onclick="setSimVector('Net Banking')" data-vector="Net Banking" class="vector-btn py-2 px-1 text-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-medium hover:bg-slate-50">Net Banking</button>
+                    <button type="button" onclick="setSimVector('Credit Card')" data-vector="Credit Card" class="vector-btn py-2 px-1 text-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-medium hover:bg-slate-50">Credit Card</button>
+                    <button type="button" onclick="setSimVector('Debit Card')" data-vector="Debit Card" class="vector-btn py-2 px-1 text-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-medium hover:bg-slate-50">Debit Card</button>
+                    <button type="button" onclick="setSimVector('ATM')" data-vector="ATM" class="vector-btn py-2 px-1 text-center rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 text-xs font-medium hover:bg-slate-50">ATM</button>
+                  </div>
+                </div>
+
+                <!-- Type and Device -->
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Transaction Type</label>
+                    <select id="pred-type" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[13px]">
+                      <option value="Transfer" selected>Transfer</option>
+                      <option value="Payment">Payment</option>
+                      <option value="Withdrawal">Withdrawal</option>
+                      <option value="Deposit">Deposit</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Device Type</label>
+                    <select id="pred-device" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[13px]">
+                      <option value="Android" selected>Android</option>
+                      <option value="iOS">iOS</option>
+                      <option value="Windows">Windows</option>
+                      <option value="Mac">Mac</option>
+                      <option value="ATM">ATM Terminal</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Hour Slider -->
+                <div>
+                  <div class="flex justify-between items-center mb-1.5">
+                    <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Execution Hour (00:00 to 23:00)</label>
+                    <span id="sim-hour-label" class="text-xs font-label-code font-semibold text-slate-800 dark:text-slate-200">03:00 (Late Night Spike)</span>
+                  </div>
+                  <input type="range" id="pred-hour-slider" min="0" max="23" value="3" oninput="updateSimHour(this.value)" class="w-full">
                 </div>
               </div>
 
-              <div class="detail-section" style="margin-top: 16px;">
-                <h4>Inference Summary</h4>
-                <div class="detail-grid">
-                  <div class="detail-item"><span class="lbl">Classification</span><span class="val" id="res-classification">--</span></div>
-                  <div class="detail-item"><span class="lbl">Probability</span><span class="val" id="res-prob">--</span></div>
-                  <div class="detail-item"><span class="lbl">Risk Category</span><span class="val" id="res-risk-text">--</span></div>
-                  <div class="detail-item"><span class="lbl">Model Used</span><span class="val" id="res-model">--</span></div>
+              <!-- Card 02: Entity Baseline & Balances -->
+              <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-7 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col gap-5">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-caps text-[11px] text-slate-400 font-bold">02. ENTITY & BEHAVIORAL BASELINE</span>
+                  <span class="text-[11px] font-label-code text-slate-400">CID: #100001</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Balance Before (₹)</label>
+                    <input type="number" id="pred-bal-before" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[13px] font-label-numeric" value="90000">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Balance After (₹)</label>
+                    <input type="number" id="pred-bal-after" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[13px] font-label-numeric" value="5000">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Account Type</label>
+                    <select id="pred-account" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[13px]">
+                      <option value="Savings" selected>Savings Account</option>
+                      <option value="Current">Current Account</option>
+                      <option value="Salary">Salary Account</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Location</label>
+                    <input type="text" id="pred-location" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[13px]" value="Mumbai">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 03: Inference Engine Choice & Run Action -->
+              <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-7 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                  <span class="font-label-caps text-[11px] text-slate-400 font-bold">03. INFERENCE ENGINE CONFIGURATION</span>
+                  <span class="text-[11px] font-label-code text-slate-400">Scikit-Learn Pipeline</span>
+                </div>
+
+                <div class="flex gap-4 items-center">
+                  <div class="flex-1">
+                    <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Classifier Architecture</label>
+                    <select id="pred-model-choice" class="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-[13px]">
+                      <option value="Logistic Regression">Logistic Regression (Fast Linear Baseline)</option>
+                      <option value="Random Forest" selected>Random Forest (128 Estimator Ensemble)</option>
+                      <option value="CART Decision Tree">CART Decision Tree</option>
+                    </select>
+                  </div>
+
+                  <button type="button" onclick="runRiskSimulation()" class="mt-5 bg-slate-900 dark:bg-sky-600 text-white rounded-lg px-6 py-2.5 text-[14px] font-medium hover:bg-slate-800 dark:hover:bg-sky-500 transition-all shadow-sm flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">bolt</span>
+                    <span>Run Inference</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right 5-col: Live Risk Verdict & SHAP Factor Attribution (Stitch Spec) -->
+            <div class="lg:col-span-5 flex flex-col gap-6">
+
+              <!-- Real-Time Risk Verdict Card (Stitch Spec) -->
+              <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-7 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col gap-6">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[20px] text-sky-600">insights</span>
+                    <span class="text-[15px] font-semibold text-slate-900 dark:text-white">Real-Time Risk Verdict</span>
+                  </div>
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-400 border border-rose-200/60 font-label-code text-[11px]" id="sim-verdict-tag">
+                    CRITICAL THREAT
+                  </span>
+                </div>
+
+                <!-- Large Score Meter Display -->
+                <div class="flex flex-col items-center py-4">
+                  <div class="text-[52px] font-semibold tracking-tight text-rose-600 dark:text-rose-400 font-label-numeric leading-none" id="sim-prob-display">89.4%</div>
+                  <span class="text-[13px] font-label-caps uppercase text-slate-400 font-semibold mt-2 tracking-wider">Probability of Fraud P(Fraud)</span>
+                </div>
+
+                <!-- Custom Linear Risk Gauge -->
+                <div class="flex flex-col gap-1.5">
+                  <div class="relative w-full h-3 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                    <div class="absolute inset-0 bg-gradient-to-r from-emerald-500 via-amber-500 to-rose-600 rounded-full opacity-90"></div>
+                  </div>
+                  <div class="flex justify-between text-[10px] font-label-code text-slate-400">
+                    <span>0.00 Nominal</span>
+                    <span>0.50 Threshold</span>
+                    <span>1.00 Critical</span>
+                  </div>
+                </div>
+
+                <!-- Classification Detail Grid -->
+                <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-100 dark:border-slate-800 text-xs">
+                  <div>
+                    <span class="text-slate-400 block text-[10px] uppercase font-label-caps">Interception Action</span>
+                    <span class="font-semibold text-rose-600 dark:text-rose-400 font-label-code text-[13px]" id="sim-action-verdict">AUTO-QUARANTINE</span>
+                  </div>
+                  <div>
+                    <span class="text-slate-400 block text-[10px] uppercase font-label-caps">Inference Latency</span>
+                    <span class="font-semibold text-slate-800 dark:text-slate-200 font-label-code text-[13px]">14.2ms</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SHAP Factor Contribution (Stitch Spec) -->
+              <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-7 border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col gap-5">
+                <div>
+                  <h3 class="text-[15px] font-semibold text-slate-900 dark:text-white">SHAP Factor Contribution</h3>
+                  <p class="text-[12px] text-slate-400 mt-0.5">Top behavioral features driving risk score divergence</p>
+                </div>
+
+                <div class="flex flex-col gap-3.5 text-xs font-label-code">
+                  <div>
+                    <div class="flex justify-between mb-1">
+                      <span class="text-slate-600 dark:text-slate-300">Amount vs Baseline Sigma</span>
+                      <span class="text-rose-600 font-semibold">+0.42 SHAP</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                      <div class="bg-rose-500 h-full rounded-full" style="width: 82%"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between mb-1">
+                      <span class="text-slate-600 dark:text-slate-300">Off-Hours Execution (03:00)</span>
+                      <span class="text-rose-600 font-semibold">+0.26 SHAP</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                      <div class="bg-rose-500 h-full rounded-full" style="width: 64%"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between mb-1">
+                      <span class="text-slate-600 dark:text-slate-300">Account Drain Magnitude</span>
+                      <span class="text-amber-600 font-semibold">+0.15 SHAP</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                      <div class="bg-amber-500 h-full rounded-full" style="width: 45%"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between mb-1">
+                      <span class="text-slate-600 dark:text-slate-300">UPI Velocity Factor</span>
+                      <span class="text-emerald-600 font-semibold">-0.08 SHAP</span>
+                    </div>
+                    <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                      <div class="bg-emerald-500 h-full rounded-full" style="width: 20%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ==============================================================
+             MODULE 8: DATA QUALITY & ARCHITECTURE (Stitch Screen 5)
+             ============================================================== -->
+        <section id="tab-quality" class="tab-pane flex flex-col gap-8">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 class="font-headline-xl text-[28px] font-semibold text-slate-900 dark:text-white tracking-tight leading-none">Data Quality & Architecture</h1>
+              <p class="font-body-md text-[13px] text-slate-500 dark:text-slate-400 mt-2">PySpark local[*] distributed pipeline integrity, schema verification, and DAG execution stages</p>
+            </div>
+          </div>
+
+          <!-- 4 Data Health Cards (Stitch Screen 5 Spec) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-label-caps">Ingested Dataset</span>
+                <span class="material-symbols-outlined text-[18px]">dataset</span>
+              </div>
+              <div>
+                <div class="text-[26px] font-semibold text-slate-900 dark:text-white font-label-numeric">15,000,000</div>
+                <div class="flex items-center gap-1.5 mt-2 text-[12px]">
+                  <span class="inline-flex items-center font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded font-label-code">1.85 GB Parquet V2</span>
+                  <span class="text-slate-400">100% Integrity</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-label-caps">Missing / Null Values</span>
+                <span class="material-symbols-outlined text-[18px] text-emerald-500">fact_check</span>
+              </div>
+              <div>
+                <div class="text-[26px] font-semibold text-emerald-600 dark:text-emerald-400 font-label-numeric">0.000%</div>
+                <div class="flex items-center gap-1.5 mt-2 text-[12px]">
+                  <span class="inline-flex items-center font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded font-label-code">Schema Enforcement</span>
+                  <span class="text-slate-400">Zero nulls</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-label-caps">Partition Balance</span>
+                <span class="material-symbols-outlined text-[18px]">pie_chart</span>
+              </div>
+              <div>
+                <div class="text-[26px] font-semibold text-slate-900 dark:text-white font-label-numeric">128 Partitions</div>
+                <div class="flex items-center gap-1.5 mt-2 text-[12px]">
+                  <span class="inline-flex items-center font-medium text-sky-600 bg-sky-50 dark:bg-sky-950/40 px-1.5 py-0.5 rounded font-label-code">Zero Data Skew</span>
+                  <span class="text-slate-400">14.2 MB avg</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-6 rounded-2xl bg-white dark:bg-[#0f172a] border border-slate-200/80 dark:border-slate-800 shadow-xs flex flex-col justify-between gap-4">
+              <div class="flex items-center justify-between text-slate-400">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-500 font-label-caps">Pipeline Latency</span>
+                <span class="material-symbols-outlined text-[18px] text-sky-500">bolt</span>
+              </div>
+              <div>
+                <div class="text-[26px] font-semibold text-slate-900 dark:text-white font-label-numeric">18ms p99</div>
+                <div class="flex items-center gap-1.5 mt-2 text-[12px]">
+                  <span class="inline-flex items-center font-medium text-emerald-600 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 rounded font-label-code">PySpark local[*]</span>
+                  <span class="text-slate-400">Nominal</span>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <!-- TAB 4: CUSTOMER 360 -->
-      <section id="tab-customer360" class="tab-content">
-        <div class="filter-card" style="margin-bottom: 20px;">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-magnifying-glass"></i> Customer 360 Search</h3>
-          </div>
-          <div style="display: flex; gap: 12px;">
-            <input type="number" id="cust-search-id" placeholder="Enter Customer ID (e.g. 100800)..." style="flex: 1;">
-            <button class="btn btn-primary" onclick="searchCustomer360()"><i class="fa-solid fa-user-check"></i> Load Profile</button>
-          </div>
-        </div>
+          <!-- Technical Pipeline DAG Flow (Stitch Screen 5 Spec) -->
+          <div class="rounded-2xl border border-slate-200/80 dark:border-slate-800 p-7 bg-white dark:bg-[#0f172a] shadow-xs flex flex-col gap-6">
+            <div>
+              <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white">PySpark Technical Pipeline & DAG Dataflow</h3>
+              <p class="text-[13px] text-slate-400 dark:text-slate-500 mt-0.5">Distributed execution stages from raw ingest to model serving (NO HADOOP / NO HDFS)</p>
+            </div>
 
-        <div id="cust-360-content">
-          <!-- Dynamic JS Customer Profile -->
-        </div>
-      </section>
-
-      <!-- TAB 5: ANOMALY CENTER -->
-      <section id="tab-anomaly" class="tab-content">
-        <div class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-icon icon-rose"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            <div class="kpi-info">
-              <span class="kpi-label">Anomalies Detected</span>
-              <h3 id="anomaly-total">375,018</h3>
-              <span class="kpi-sub">Outlier records</span>
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-icon icon-amber"><i class="fa-solid fa-percent"></i></div>
-            <div class="kpi-info">
-              <span class="kpi-label">Anomaly Percentage</span>
-              <h3 id="anomaly-pct">2.5%</h3>
-              <span class="kpi-sub">Contamination rate</span>
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-icon icon-indigo"><i class="fa-solid fa-tree"></i></div>
-            <div class="kpi-info">
-              <span class="kpi-label">Algorithm</span>
-              <h3>Isolation Forest</h3>
-              <span class="kpi-sub">Unsupervised outlier score</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="charts-row">
-          <div class="chart-card flex-2">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-chart-column"></i> Anomaly Score Distribution Histogram</h3>
-            </div>
-            <div class="chart-container"><canvas id="chart-anomaly-dist"></canvas></div>
-          </div>
-          <div class="chart-card flex-1">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-circle-info"></i> Supervised vs Unsupervised</h3>
-            </div>
-            <div style="font-size: 0.82rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 14px;">
-              <div>
-                <strong style="color: var(--accent-rose);"><i class="fa-solid fa-tags"></i> Fraud Classification (Supervised)</strong>
-                <p style="margin-top: 4px;">Trained on historical ground-truth <code>is_fraud</code> labels to predict exact fraud probabilities.</p>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+              <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 flex flex-col justify-between gap-2">
+                <span class="text-[10px] uppercase font-bold text-slate-400 font-label-caps">Stage 01</span>
+                <div>
+                  <h4 class="font-semibold text-sm text-slate-900 dark:text-white">CSV Source Ingestion</h4>
+                  <p class="text-[11px] text-slate-400 mt-1">15,000,000 records loaded chunkwise with PyArrow</p>
+                </div>
+                <span class="text-[11px] font-label-code text-emerald-600">Complete</span>
               </div>
-              <hr style="border: none; border-top: 1px solid var(--border);">
-              <div>
-                <strong style="color: var(--accent-amber);"><i class="fa-solid fa-radar"></i> Anomaly Detection (Unsupervised)</strong>
-                <p style="margin-top: 4px;">Identifies structural/behavioral outliers (extreme amounts, strange balance dregs) without requiring labels.</p>
+
+              <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 flex flex-col justify-between gap-2">
+                <span class="text-[10px] uppercase font-bold text-slate-400 font-label-caps">Stage 02</span>
+                <div>
+                  <h4 class="font-semibold text-sm text-slate-900 dark:text-white">Schema Enforcement</h4>
+                  <p class="text-[11px] text-slate-400 mt-1">15 typed columns with 100% zero-null validation</p>
+                </div>
+                <span class="text-[11px] font-label-code text-emerald-600">Complete</span>
+              </div>
+
+              <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 flex flex-col justify-between gap-2">
+                <span class="text-[10px] uppercase font-bold text-slate-400 font-label-caps">Stage 03</span>
+                <div>
+                  <h4 class="font-semibold text-sm text-slate-900 dark:text-white">Columnar Parquet V2</h4>
+                  <p class="text-[11px] text-slate-400 mt-1">Snappy compression reducing 1.85 GB to 509 MB</p>
+                </div>
+                <span class="text-[11px] font-label-code text-emerald-600">Complete</span>
+              </div>
+
+              <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 flex flex-col justify-between gap-2">
+                <span class="text-[10px] uppercase font-bold text-slate-400 font-label-caps">Stage 04</span>
+                <div>
+                  <h4 class="font-semibold text-sm text-slate-900 dark:text-white">Feature Aggregation</h4>
+                  <p class="text-[11px] text-slate-400 mt-1">Customer velocity, balance drift, off-hour ratios</p>
+                </div>
+                <span class="text-[11px] font-label-code text-emerald-600">Complete</span>
+              </div>
+
+              <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 flex flex-col justify-between gap-2">
+                <span class="text-[10px] uppercase font-bold text-slate-400 font-label-caps">Stage 05</span>
+                <div>
+                  <h4 class="font-semibold text-sm text-slate-900 dark:text-white">Model Scoring API</h4>
+                  <p class="text-[11px] text-slate-400 mt-1">Real-time Flask REST serving sub-20ms inference</p>
+                </div>
+                <span class="text-[11px] font-label-code text-emerald-600">Online</span>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div class="table-card">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-magnifying-glass-chart"></i> Top Structural Anomalies Flagged</h3>
-          </div>
-          <div class="table-responsive">
-            <table class="data-table" id="table-anomalies">
-              <thead>
-                <tr>
-                  <th>Txn ID</th>
-                  <th>Customer ID</th>
-                  <th>Date & Time</th>
-                  <th>Type</th>
-                  <th>Amount</th>
-                  <th>Location</th>
-                  <th>Payment Method</th>
-                  <th>Anomaly Score</th>
-                  <th>Ground Truth Fraud</th>
-                </tr>
-              </thead>
-              <tbody><!-- Dynamic JS --></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
 
-      <!-- TAB 6: TIME & GEO INTELLIGENCE -->
-      <section id="tab-time_geo" class="tab-content">
-        <div class="chart-card" style="margin-bottom: 24px;">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-calendar-days"></i> 7 × 24 Day × Hour Fraud Heatmap Matrix</h3>
-            <p>Highlights temporal fraud concentration across weekdays and operating hours</p>
-          </div>
-          <div class="heatmap-container" id="heatmap-grid-container">
-            <!-- Dynamic Heatmap Table -->
-          </div>
-        </div>
-
-        <div class="table-card">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-earth-americas"></i> Geographic Location Intelligence Ranking</h3>
-          </div>
-          <div class="table-responsive">
-            <table class="data-table" id="table-geo-ranking">
-              <thead>
-                <tr>
-                  <th>Location</th>
-                  <th>Total Transactions</th>
-                  <th>Total Volume (₹)</th>
-                  <th>Avg Amount (₹)</th>
-                  <th>Fraud Count</th>
-                  <th>Fraud Rate (%)</th>
-                </tr>
-              </thead>
-              <tbody><!-- Dynamic JS --></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 7: TRANSACTION EXPLORER -->
-      <section id="tab-explorer" class="tab-content">
-        <div class="filter-card">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-filter"></i> Search & Multi-Criteria Filtering</h3>
-            <button class="btn btn-sm btn-outline" onclick="exportFilteredCSV()"><i class="fa-solid fa-download"></i> Export Filtered CSV</button>
-          </div>
-          <div class="filter-grid">
-            <div class="filter-group">
-              <label>Search (ID/Merchant/Customer)</label>
-              <input type="text" id="flt-search" placeholder="Search ID..." oninput="triggerFilter()">
-            </div>
-            <div class="filter-group">
-              <label>Transaction Type</label>
-              <select id="flt-type" onchange="triggerFilter()">
-                <option value="">All Types</option>
-                <option value="UPI">UPI</option>
-                <option value="ATM Withdrawal">ATM Withdrawal</option>
-                <option value="Bank Transfer">Bank Transfer</option>
-                <option value="Online Purchase">Online Purchase</option>
-                <option value="Card Payment">Card Payment</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label>Payment Method</label>
-              <select id="flt-pm" onchange="triggerFilter()">
-                <option value="">All Methods</option>
-                <option value="UPI">UPI</option>
-                <option value="Debit Card">Debit Card</option>
-                <option value="Credit Card">Credit Card</option>
-                <option value="Net Banking">Net Banking</option>
-                <option value="ATM">ATM</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label>Fraud Status</label>
-              <select id="flt-fraud" onchange="triggerFilter()">
-                <option value="">All Records</option>
-                <option value="1">Fraud Only</option>
-                <option value="0">Legitimate Only</option>
-              </select>
-            </div>
-            <div class="filter-group">
-              <label>Min Amount (₹)</label>
-              <input type="number" id="flt-min-amt" placeholder="0" onchange="triggerFilter()">
-            </div>
-            <div class="filter-group">
-              <label>Max Amount (₹)</label>
-              <input type="number" id="flt-max-amt" placeholder="500000" onchange="triggerFilter()">
+        <!-- ==============================================================
+             MODULE 9: TIME & GEO INTELLIGENCE
+             ============================================================== -->
+        <section id="tab-time_geo" class="tab-pane flex flex-col gap-8">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 class="font-headline-xl text-[28px] font-semibold text-slate-900 dark:text-white tracking-tight leading-none">Time & Geographic Intelligence</h1>
+              <p class="font-body-md text-[13px] text-slate-500 dark:text-slate-400 mt-2">7x24 Day-Hour vulnerability heatmap and regional risk distribution</p>
             </div>
           </div>
-        </div>
 
-        <div class="table-card">
-          <div class="table-header-flex">
-            <h3><i class="fa-solid fa-database"></i> Processed Banking Transactions</h3>
-            <span class="badge badge-info" id="explorer-total-count">Showing 0 records</span>
-          </div>
-          <div class="table-responsive">
-            <table class="data-table" id="table-explorer">
-              <thead>
-                <tr>
-                  <th>Txn ID</th>
-                  <th>Customer ID</th>
-                  <th>Date & Time</th>
-                  <th>Type</th>
-                  <th>Account</th>
-                  <th>Amount</th>
-                  <th>Balance Before</th>
-                  <th>Balance After</th>
-                  <th>Merchant</th>
-                  <th>Location</th>
-                  <th>Method</th>
-                  <th>Device</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody><!-- Dynamic JS --></tbody>
-            </table>
+          <!-- 7x24 Heatmap Matrix -->
+          <div class="rounded-2xl border border-slate-200/80 dark:border-slate-800 p-7 bg-white dark:bg-[#0f172a] shadow-xs flex flex-col gap-5">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white">7 × 24 Day-Hour Fraud Heatmap Grid</h3>
+                <p class="text-[13px] text-slate-400 dark:text-slate-500 mt-0.5">Concentration of fraudulent incidents across day of week and hour of day (00:00 to 23:00)</p>
+              </div>
+              <div class="flex items-center gap-2 text-xs font-label-code">
+                <span class="text-slate-400">Intensity:</span>
+                <span class="w-3 h-3 rounded bg-slate-100 dark:bg-slate-800 inline-block"></span>
+                <span class="text-slate-400">Low</span>
+                <span class="w-3 h-3 rounded bg-amber-400 inline-block"></span>
+                <span class="text-slate-400">Medium</span>
+                <span class="w-3 h-3 rounded bg-rose-600 inline-block"></span>
+                <span class="text-slate-400">Critical</span>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <div id="heatmap-grid" class="min-w-[700px]">
+                <!-- Rendered dynamically by JS -->
+              </div>
+            </div>
           </div>
 
-          <div class="pagination-bar">
-            <button class="btn btn-sm btn-outline" id="btn-prev-page" onclick="changePage(-1)"><i class="fa-solid fa-chevron-left"></i> Previous</button>
-            <span id="page-indicator">Page 1 of 1</span>
-            <button class="btn btn-sm btn-outline" id="btn-next-page" onclick="changePage(1)">Next <i class="fa-solid fa-chevron-right"></i></button>
-          </div>
-        </div>
-      </section>
+          <!-- Geographic Risk Ranking Table -->
+          <div class="rounded-2xl border border-slate-200/80 dark:border-slate-800 p-7 bg-white dark:bg-[#0f172a] shadow-xs flex flex-col gap-4">
+            <div>
+              <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white">Geographic Location Risk Ranking</h3>
+              <p class="text-[13px] text-slate-400 dark:text-slate-500 mt-0.5">Metropolitan and regional risk index across transaction volume</p>
+            </div>
 
-      <!-- TAB 8: DATA QUALITY -->
-      <section id="tab-quality" class="tab-content">
-        <div class="quality-grid">
-          <div class="quality-card">
-            <span class="banner-label">Completeness</span>
-            <div class="quality-val" id="dq-completeness">100%</div>
-            <span class="kpi-sub">0 Missing Fields</span>
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-[13px]">
+                <thead>
+                  <tr class="text-slate-400 dark:text-slate-500 text-[11px] uppercase tracking-wider border-b border-slate-100 dark:border-slate-800 font-label-caps pb-3">
+                    <th class="pb-3 font-semibold">Location</th>
+                    <th class="pb-3 font-semibold">Total Volume</th>
+                    <th class="pb-3 font-semibold">Transaction Count</th>
+                    <th class="pb-3 font-semibold">Fraud Incidents</th>
+                    <th class="pb-3 font-semibold">Fraud Rate</th>
+                    <th class="pb-3 text-right font-semibold">Risk Classification</th>
+                  </tr>
+                </thead>
+                <tbody id="geo-tbody" class="divide-y divide-slate-50 dark:divide-slate-800/60">
+                  <!-- Dynamic Geo Rows -->
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div class="quality-card">
-            <span class="banner-label">Uniqueness</span>
-            <div class="quality-val" id="dq-uniqueness">100%</div>
-            <span class="kpi-sub">0 Duplicate IDs</span>
-          </div>
-          <div class="quality-card">
-            <span class="banner-label">Validity</span>
-            <div class="quality-val" id="dq-validity">100%</div>
-            <span class="kpi-sub">Strict Schema Match</span>
-          </div>
-          <div class="quality-card">
-            <span class="banner-label">Consistency</span>
-            <div class="quality-val" id="dq-consistency">100%</div>
-            <span class="kpi-sub">PySpark SQL Verified</span>
-          </div>
-        </div>
+        </section>
 
-        <div class="table-card">
-          <div class="card-header"><h3><i class="fa-solid fa-list-check"></i> Dataset Audit Statistics</h3></div>
-          <div class="detail-grid" style="grid-template-columns: repeat(3, 1fr); gap: 16px;" id="dq-details-grid">
-            <!-- Dynamic DQ Stats -->
+
+        <!-- ==============================================================
+             MODULE 10: ANALYTICAL ALERTS
+             ============================================================== -->
+        <section id="tab-alerts" class="tab-pane flex flex-col gap-8">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 class="font-headline-xl text-[28px] font-semibold text-slate-900 dark:text-white tracking-tight leading-none">Analytical Alerts Feed</h1>
+              <p class="font-body-md text-[13px] text-slate-500 dark:text-slate-400 mt-2">Automated operational threshold alerts computed across the 15M transaction pipeline</p>
+            </div>
           </div>
-        </div>
-      </section>
 
-      <!-- TAB 9: ANALYTICAL ALERTS -->
-      <section id="tab-alerts" class="tab-content">
-        <div class="filter-card" style="margin-bottom: 20px;">
-          <div class="card-header"><h3><i class="fa-solid fa-bell"></i> Filter System Alerts</h3></div>
-          <div style="display: flex; gap: 10px;">
-            <button class="btn btn-sm btn-primary" onclick="loadAlerts('All')">All Alerts</button>
-            <button class="btn btn-sm btn-outline" onclick="loadAlerts('Fraud')">Fraud Alerts</button>
-            <button class="btn btn-sm btn-outline" onclick="loadAlerts('Customer')">Customer Alerts</button>
-            <button class="btn btn-sm btn-outline" onclick="loadAlerts('System')">System Alerts</button>
+          <div class="flex flex-col gap-4" id="alerts-list">
+            <!-- Dynamic alerts cards -->
           </div>
-        </div>
+        </section>
 
-        <div style="display: flex; flex-direction: column; gap: 12px;" id="alerts-feed-container">
-          <!-- Dynamic JS Alerts -->
-        </div>
-      </section>
-
+      </div>
     </main>
   </div>
 
-  <!-- Slide-Over Detailed Investigation Panel -->
-  <div class="slide-over-backdrop" id="slide-over-backdrop" onclick="closeSlideOver()">
-    <div class="slide-over-panel" onclick="event.stopPropagation()">
-      <div class="panel-header">
-        <h3><i class="fa-solid fa-magnifying-glass-chart"></i> Fraud Investigation Panel</h3>
-        <button class="btn-icon-only" onclick="closeSlideOver()"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="panel-body" id="slide-over-body">
-        <!-- Dynamic JS Investigation Content -->
-      </div>
-    </div>
-  </div>
 
-  <!-- Printable Report Modal Container -->
-  <div class="slide-over-backdrop" id="report-modal-backdrop" onclick="closeReportModal()">
-    <div class="slide-over-panel" style="width: 700px;" onclick="event.stopPropagation()">
-      <div class="panel-header">
-        <h3><i class="fa-solid fa-file-pdf"></i> Executive Analytics Report</h3>
+  <!-- ====================================================================
+       SLIDE-OVER FRAUD INVESTIGATION DRAWER
+       ==================================================================== -->
+  <div id="slide-over-backdrop" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50"></div>
+  <div id="slide-over-drawer" class="fixed top-0 right-0 h-full w-[520px] max-w-full bg-white dark:bg-[#0f172a] border-l border-slate-200 dark:border-slate-800 z-50 shadow-2xl flex flex-col justify-between overflow-y-auto">
+    <div class="p-7 flex flex-col gap-6">
+      
+      <!-- Drawer Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+        <div class="flex items-center gap-3">
+          <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+          <div>
+            <h3 class="text-[17px] font-semibold text-slate-900 dark:text-white font-label-code" id="drawer-tx-id">#TX-9042188</h3>
+            <p class="text-[12px] text-slate-400 mt-0.5">Deep Forensics & Telemetry Investigation</p>
+          </div>
+        </div>
+        <button onclick="closeSlideOver()" class="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <!-- Live Risk Assessment Pill & Score -->
+      <div class="p-5 rounded-xl bg-rose-50 dark:bg-rose-950/30 border border-rose-200/80 dark:border-rose-900/50 flex items-center justify-between">
         <div>
-          <button class="btn btn-sm btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print PDF</button>
-          <button class="btn-icon-only" onclick="closeReportModal()"><i class="fa-solid fa-xmark"></i></button>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-rose-700 dark:text-rose-400 font-label-caps">Risk Assessment</span>
+          <div class="text-[24px] font-semibold text-rose-600 dark:text-rose-400 font-label-numeric mt-1" id="drawer-risk-level">CRITICAL THREAT (0.945)</div>
+        </div>
+        <span class="material-symbols-outlined text-[32px] text-rose-500">gpp_bad</span>
+      </div>
+
+      <!-- Transaction Context Attributes -->
+      <div class="flex flex-col gap-3">
+        <span class="font-label-caps text-[11px] text-slate-400 font-bold">TRANSACTION ATTRIBUTES</span>
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+            <span class="text-slate-400 block text-[10px]">Amount</span>
+            <span class="font-semibold text-slate-900 dark:text-white font-label-numeric text-sm" id="drawer-amount">₹1,85,000.00</span>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+            <span class="text-slate-400 block text-[10px]">Customer ID</span>
+            <span class="font-semibold text-slate-900 dark:text-white font-label-code text-sm" id="drawer-cust-id">102283</span>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+            <span class="text-slate-400 block text-[10px]">Payment Method</span>
+            <span class="font-semibold text-slate-900 dark:text-white text-sm" id="drawer-payment">UPI</span>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+            <span class="text-slate-400 block text-[10px]">Device & OS</span>
+            <span class="font-semibold text-slate-900 dark:text-white text-sm" id="drawer-device">Android</span>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+            <span class="text-slate-400 block text-[10px]">Merchant</span>
+            <span class="font-semibold text-slate-900 dark:text-white text-sm" id="drawer-merchant">Amazon</span>
+          </div>
+          <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800">
+            <span class="text-slate-400 block text-[10px]">Location</span>
+            <span class="font-semibold text-slate-900 dark:text-white text-sm" id="drawer-location">Mumbai</span>
+          </div>
         </div>
       </div>
-      <div class="panel-body" id="report-modal-body">
-        <!-- Dynamic JS Report -->
+
+      <!-- Behavioral Flag Signals -->
+      <div class="flex flex-col gap-2.5">
+        <span class="font-label-caps text-[11px] text-slate-400 font-bold">SUSPICIOUS SIGNALS FLAGGED</span>
+        <div class="flex flex-col gap-2" id="drawer-signals">
+          <div class="flex items-center gap-2 text-xs text-rose-700 dark:text-rose-400 bg-rose-50/70 dark:bg-rose-950/20 p-2.5 rounded-lg border border-rose-200/50">
+            <span class="material-symbols-outlined text-[16px]">warning</span>
+            <span>Transaction amount is +4.8x customer historical mean</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-rose-700 dark:text-rose-400 bg-rose-50/70 dark:bg-rose-950/20 p-2.5 rounded-lg border border-rose-200/50">
+            <span class="material-symbols-outlined text-[16px]">schedule</span>
+            <span>Late-night execution window (03:14 AM IST)</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs text-amber-700 dark:text-amber-400 bg-amber-50/70 dark:bg-amber-950/20 p-2.5 rounded-lg border border-amber-200/50">
+            <span class="material-symbols-outlined text-[16px]">account_balance_wallet</span>
+            <span>Account balance drained by 94.2%</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Drawer Action Footer -->
+    <div class="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center gap-3">
+      <button onclick="takeAnalystAction('Quarantined')" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white rounded-lg py-2.5 text-[13px] font-semibold transition-colors shadow-xs">
+        Quarantine Account
+      </button>
+      <button onclick="takeAnalystAction('Whitelisted')" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg py-2.5 px-4 text-[13px] font-medium hover:bg-slate-50 transition-colors">
+        Whitelist
+      </button>
+      <button onclick="takeAnalystAction('Flagged SAR')" class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg py-2.5 px-4 text-[13px] font-medium hover:bg-slate-50 transition-colors">
+        Flag SAR
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ====================================================================
+       EXPORT REPORT MODAL DIALOG
+       ==================================================================== -->
+  <div id="report-modal-backdrop" class="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+    <div id="report-modal-dialog" class="bg-white dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-2xl max-w-lg w-full p-7 flex flex-col gap-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-sky-50 dark:bg-sky-950/50 flex items-center justify-center text-sky-600">
+            <span class="material-symbols-outlined text-[24px]">description</span>
+          </div>
+          <div>
+            <h3 class="text-[17px] font-semibold text-slate-900 dark:text-white">Banking Intelligence Executive Report</h3>
+            <p class="text-[12px] text-slate-400 mt-0.5">Comprehensive audit for academic and risk review</p>
+          </div>
+        </div>
+        <button onclick="closeReportModal()" class="w-8 h-8 rounded-lg border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 hover:bg-slate-100">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <div class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed flex flex-col gap-2">
+        <p>This report compiles key analytical findings across <strong>15,000,000 transactions</strong>, including:</p>
+        <ul class="list-disc pl-5 space-y-1 text-slate-500 dark:text-slate-400">
+          <li>Gross Volume, Intercepted Threat Rates, and Customer Segment Cohorts</li>
+          <li>Supervised Model Metrics (Random Forest vs Logistic Regression vs CART)</li>
+          <li>Unsupervised Isolation Forest Anomaly Detection Outliers</li>
+          <li>PySpark Big Data Processing & DAG Pipeline Architecture</li>
+        </ul>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <button onclick="closeReportModal()" class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium hover:bg-slate-50">
+          Cancel
+        </button>
+        <button onclick="window.print()" class="px-5 py-2 rounded-lg bg-slate-900 dark:bg-sky-600 text-white text-xs font-semibold hover:bg-slate-800 transition-colors inline-flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-[16px]">print</span>
+          <span>Print / Save as PDF</span>
+        </button>
       </div>
     </div>
   </div>
 
+
+  <!-- Core JavaScript Application Logic -->
   <script src="js/app.js"></script>
 </body>
 </html>
