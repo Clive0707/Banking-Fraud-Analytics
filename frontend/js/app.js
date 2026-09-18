@@ -78,16 +78,12 @@ function switchTab(tabId) {
     overview: ["Executive Analytics Overview", "Real-time analytical view of transaction behavior, fraud risk, and customer activity"],
     fraud: ["Fraud Intelligence Center", "Categorical risk breakdowns and suspicious transaction feed"],
     prediction: ["Risk Inference Simulator", "Evaluate custom transactions against retrained ML classifiers"],
-    customer360: ["Customer 360 Profile", "Complete behavioral history, risk indicators, and segment label"],
-    segmentation: ["Customer Segmentation", "Unsupervised K-Means clustering and behavioral profiles"],
+    customer360: ["Customer 360 Profile", "Complete behavioral history, risk indicators, and profile details"],
     anomaly: ["Anomaly Intelligence Center", "Isolation Forest structural outlier scores"],
-    performance: ["Machine Learning Model Lab", "Supervised classification evaluation matrix and confusion matrices"],
     time_geo: ["Time & Geographic Intelligence", "7x24 Day × Hour fraud heatmap and location rankings"],
     explorer: ["Transaction Explorer", "Searchable and filterable 15M transaction dataset"],
     quality: ["Data Quality Center", "Completeness, uniqueness, validity, and consistency audit"],
-    processing: ["Spark Processing Monitor", "Apache PySpark pipeline execution metadata"],
-    alerts: ["Analytical Alerts Feed", "Real-time automated threshold alerts"],
-    viva: ["Academic Methodology & Viva Mode", "Big Data Analytics vs Machine Learning component breakdown"]
+    alerts: ["Analytical Alerts Feed", "Real-time automated threshold alerts"]
   };
 
   if (titles[tabId]) {
@@ -99,13 +95,10 @@ function switchTab(tabId) {
   if (tabId === 'overview') loadOverview();
   else if (tabId === 'fraud') loadFraudAnalytics();
   else if (tabId === 'customer360') loadCustomer360(100800);
-  else if (tabId === 'segmentation') loadSegmentation();
   else if (tabId === 'anomaly') loadAnomalyCenter();
-  else if (tabId === 'performance') loadModelPerformance();
   else if (tabId === 'time_geo') loadTimeGeoIntelligence();
   else if (tabId === 'explorer') loadTransactionExplorer();
   else if (tabId === 'quality') loadDataQuality();
-  else if (tabId === 'processing') loadSparkMonitor();
   else if (tabId === 'alerts') loadAlerts('All');
 }
 

@@ -39,15 +39,9 @@
           <i class="fa-solid fa-address-card"></i> <span>Customer 360</span>
         </a>
 
-        <div class="nav-section-label">Analytics & ML</div>
-        <a href="#segmentation" class="nav-item" data-tab="segmentation">
-          <i class="fa-solid fa-users"></i> <span>Customer Segments</span>
-        </a>
+        <div class="nav-section-label">Analytics & Intelligence</div>
         <a href="#anomaly" class="nav-item" data-tab="anomaly">
           <i class="fa-solid fa-wave-square"></i> <span>Anomaly Center</span>
-        </a>
-        <a href="#performance" class="nav-item" data-tab="performance">
-          <i class="fa-solid fa-microchip"></i> <span>Model Lab</span>
         </a>
         <a href="#time_geo" class="nav-item" data-tab="time_geo">
           <i class="fa-solid fa-clock-rotate-left"></i> <span>Time & Geo Intelligence</span>
@@ -60,14 +54,8 @@
         <a href="#quality" class="nav-item" data-tab="quality">
           <i class="fa-solid fa-square-check"></i> <span>Data Quality</span>
         </a>
-        <a href="#processing" class="nav-item" data-tab="processing">
-          <i class="fa-solid fa-network-wired"></i> <span>Spark Monitor</span>
-        </a>
         <a href="#alerts" class="nav-item" data-tab="alerts">
           <i class="fa-solid fa-bell"></i> <span>Analytical Alerts</span>
-        </a>
-        <a href="#viva" class="nav-item" data-tab="viva">
-          <i class="fa-solid fa-graduation-cap"></i> <span>Viva / Methodology</span>
         </a>
       </nav>
 
@@ -368,7 +356,7 @@
             <h3><i class="fa-solid fa-magnifying-glass"></i> Customer 360 Search</h3>
           </div>
           <div style="display: flex; gap: 12px;">
-            <input type="number" id="cust-search-id" placeholder="Enter Customer ID (e.g. 10001)..." style="flex: 1;">
+            <input type="number" id="cust-search-id" placeholder="Enter Customer ID (e.g. 100800)..." style="flex: 1;">
             <button class="btn btn-primary" onclick="searchCustomer360()"><i class="fa-solid fa-user-check"></i> Load Profile</button>
           </div>
         </div>
@@ -378,30 +366,7 @@
         </div>
       </section>
 
-      <!-- TAB 5: CUSTOMER SEGMENTATION -->
-      <section id="tab-segmentation" class="tab-content">
-        <div class="charts-row">
-          <div class="chart-card flex-1">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-chart-line"></i> K-Means Elbow Curve Analysis</h3>
-              <p>Optimal cluster determination via inertia minimization (K=2 to 8)</p>
-            </div>
-            <div class="chart-container"><canvas id="chart-elbow"></canvas></div>
-          </div>
-          <div class="chart-card flex-1">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-chart-pie"></i> Customer Segment Distribution</h3>
-            </div>
-            <div class="chart-container"><canvas id="chart-cluster-pie"></canvas></div>
-          </div>
-        </div>
-
-        <div class="clusters-cards-grid" id="cluster-cards-container">
-          <!-- Dynamic JS Cluster Cards -->
-        </div>
-      </section>
-
-      <!-- TAB 6: ANOMALY CENTER -->
+      <!-- TAB 5: ANOMALY CENTER -->
       <section id="tab-anomaly" class="tab-content">
         <div class="kpi-grid">
           <div class="kpi-card">
@@ -480,53 +445,7 @@
         </div>
       </section>
 
-      <!-- TAB 7: MODEL LAB -->
-      <section id="tab-performance" class="tab-content">
-        <div class="charts-row">
-          <div class="chart-card flex-2">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-chart-bar"></i> Algorithm Performance Benchmark</h3>
-              <p>Comparing Logistic Regression, CART Decision Tree, and Random Forest</p>
-            </div>
-            <div class="chart-container"><canvas id="chart-model-comp"></canvas></div>
-          </div>
-          <div class="chart-card flex-1">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-trophy"></i> Best Performing Model</h3>
-            </div>
-            <div style="text-align: center; padding: 20px 0;">
-              <i class="fa-solid fa-award" style="font-size: 3rem; color: var(--accent-amber); margin-bottom: 10px;"></i>
-              <h2 id="best-model-title" style="font-size: 1.4rem; font-weight: 700;">Logistic Regression</h2>
-              <p id="best-model-desc" style="font-size: 0.82rem; color: var(--text-secondary); margin-top: 6px;">Highest overall F1-score & ROC-AUC performance on test partition under class-weighted metrics.</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="table-card">
-          <div class="card-header"><h3><i class="fa-solid fa-table"></i> Detailed Metric Evaluation Matrix</h3></div>
-          <div class="table-responsive">
-            <table class="data-table" id="table-model-metrics">
-              <thead>
-                <tr>
-                  <th>Algorithm</th>
-                  <th>Accuracy</th>
-                  <th>Precision</th>
-                  <th>Recall</th>
-                  <th>F1-Score</th>
-                  <th>ROC-AUC</th>
-                </tr>
-              </thead>
-              <tbody><!-- Dynamic JS --></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;" id="cm-cards-container">
-          <!-- Dynamic Confusion Matrix Cards -->
-        </div>
-      </section>
-
-      <!-- TAB 8: TIME & GEO INTELLIGENCE -->
+      <!-- TAB 6: TIME & GEO INTELLIGENCE -->
       <section id="tab-time_geo" class="tab-content">
         <div class="chart-card" style="margin-bottom: 24px;">
           <div class="card-header">
@@ -560,7 +479,7 @@
         </div>
       </section>
 
-      <!-- TAB 9: TRANSACTION EXPLORER -->
+      <!-- TAB 7: TRANSACTION EXPLORER -->
       <section id="tab-explorer" class="tab-content">
         <div class="filter-card">
           <div class="card-header">
@@ -649,7 +568,7 @@
         </div>
       </section>
 
-      <!-- TAB 10: DATA QUALITY -->
+      <!-- TAB 8: DATA QUALITY -->
       <section id="tab-quality" class="tab-content">
         <div class="quality-grid">
           <div class="quality-card">
@@ -682,49 +601,7 @@
         </div>
       </section>
 
-      <!-- TAB 11: SPARK PROCESSING MONITOR -->
-      <section id="tab-processing" class="tab-content">
-        <div class="tech-flow-card">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-diagram-project"></i> 15M Transaction Processing Pipeline Architecture</h3>
-          </div>
-          <div class="flow-step-list">
-            <div class="flow-step">
-              <h5>1. Raw CSV Ingestion</h5>
-              <p>15,000,000 Rows (1.85 GB)</p>
-            </div>
-            <i class="fa-solid fa-arrow-right" style="color: var(--text-muted);"></i>
-            <div class="flow-step">
-              <h5>2. PySpark Schema</h5>
-              <p>StructType Enforcement</p>
-            </div>
-            <i class="fa-solid fa-arrow-right" style="color: var(--text-muted);"></i>
-            <div class="flow-step">
-              <h5>3. Distributed Cleaning</h5>
-              <p>dropDuplicates on ID</p>
-            </div>
-            <i class="fa-solid fa-arrow-right" style="color: var(--text-muted);"></i>
-            <div class="flow-step">
-              <h5>4. PyArrow Parquet</h5>
-              <p>Chunked 250k Streaming</p>
-            </div>
-            <i class="fa-solid fa-arrow-right" style="color: var(--text-muted);"></i>
-            <div class="flow-step">
-              <h5>5. Stratified ML</h5>
-              <p>500k Partition (80/20)</p>
-            </div>
-          </div>
-        </div>
-
-        <div class="table-card">
-          <div class="card-header"><h3><i class="fa-solid fa-terminal"></i> Spark Execution Metadata</h3></div>
-          <div class="detail-grid" style="grid-template-columns: repeat(2, 1fr); gap: 14px;" id="spark-meta-grid">
-            <!-- Dynamic Spark Metadata -->
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 12: ANALYTICAL ALERTS -->
+      <!-- TAB 9: ANALYTICAL ALERTS -->
       <section id="tab-alerts" class="tab-content">
         <div class="filter-card" style="margin-bottom: 20px;">
           <div class="card-header"><h3><i class="fa-solid fa-bell"></i> Filter System Alerts</h3></div>
@@ -738,47 +615,6 @@
 
         <div style="display: flex; flex-direction: column; gap: 12px;" id="alerts-feed-container">
           <!-- Dynamic JS Alerts -->
-        </div>
-      </section>
-
-      <!-- TAB 13: VIVA / METHODOLOGY MODE -->
-      <section id="tab-viva" class="tab-content">
-        <div class="tech-flow-card">
-          <div class="card-header">
-            <h3><i class="fa-solid fa-graduation-cap"></i> Academic Viva & Professor Technical Details</h3>
-          </div>
-          <div style="font-size: 0.88rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 16px;">
-            <p>This section explicitly details the **Big Data Analytics (BDA)** data engineering component vs the **Machine Learning (ML)** inference pipeline for evaluation.</p>
-            
-            <div class="detail-grid" style="grid-template-columns: repeat(2, 1fr); gap: 16px;">
-              <div class="detail-section">
-                <h4 style="color: var(--accent-primary);"><i class="fa-solid fa-bolt"></i> Big Data Engineering Component</h4>
-                <ul style="margin-left: 18px; margin-top: 8px; font-size: 0.82rem; display: flex; flex-direction: column; gap: 6px;">
-                  <li><strong>Processing Engine</strong>: Apache PySpark 4.x in local standalone mode (<code>local[*]</code>).</li>
-                  <li><strong>Dataset Size</strong>: 15,000,000 transaction records (~1.85 GB raw CSV).</li>
-                  <li><strong>No-Hadoop Compliance</strong>: Executes without Hadoop/HDFS/YARN by leveraging local Spark worker threads.</li>
-                  <li><strong>Memory Optimization</strong>: Streams PySpark DataFrame partitions into columnar Apache Parquet using PyArrow in 250,000-row chunks.</li>
-                </ul>
-              </div>
-
-              <div class="detail-section">
-                <h4 style="color: var(--accent-emerald);"><i class="fa-solid fa-brain"></i> Machine Learning Component</h4>
-                <ul style="margin-left: 18px; margin-top: 8px; font-size: 0.82rem; display: flex; flex-direction: column; gap: 6px;">
-                  <li><strong>Sampling Strategy</strong>: 500,000-record reproducible stratified partition preserving exact ground-truth <code>is_fraud</code> class distribution (0.98%).</li>
-                  <li><strong>Classifiers</strong>: Logistic Regression, CART Decision Tree, Random Forest.</li>
-                  <li><strong>Segmentation</strong>: K-Means Clustering ($K=4$) with Elbow Method ($K=2..8$).</li>
-                  <li><strong>Anomaly Detection</strong>: Isolation Forest (2.5% contamination rate).</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="detail-section">
-              <h4>Synthetic Dataset Disclaimer</h4>
-              <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
-                This dataset is a synthetically generated banking transaction dataset created for academic research, benchmark evaluation, and demonstration of large-scale analytics platforms.
-              </p>
-            </div>
-          </div>
         </div>
       </section>
 
