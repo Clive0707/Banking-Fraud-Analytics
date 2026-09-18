@@ -698,7 +698,7 @@ async function loadTimeGeoIntelligence() {
     const heatmap = resTime.heatmap || [];
     
     let html = `<table class="heatmap-table"><thead><tr><th>Day / Hour</th>`;
-    for (let h = 0; h < 24; h++) html += `<th>${h:02d}:00</th>`;
+    for (let h = 0; h < 24; h++) html += `<th>${String(h).padStart(2, '0')}:00</th>`;
     html += `</tr></thead><tbody>`;
 
     heatmap.forEach(dayRow => {
