@@ -1,0 +1,116 @@
+{
+  "locations": [
+    {
+      "location": "Mumbai",
+      "count": 3289755,
+      "total_amount": 17285360617.75,
+      "avg_amount": 5254.3,
+      "fraud_count": 31145,
+      "fraud_rate": 0.95
+    },
+    {
+      "location": "Delhi",
+      "count": 2129493,
+      "total_amount": 10960716899.95,
+      "avg_amount": 5147.1,
+      "fraud_count": 20895,
+      "fraud_rate": 0.98
+    },
+    {
+      "location": "Bengaluru",
+      "count": 1972826,
+      "total_amount": 10516828637.1,
+      "avg_amount": 5330.84,
+      "fraud_count": 19539,
+      "fraud_rate": 0.99
+    },
+    {
+      "location": "Hyderabad",
+      "count": 1450460,
+      "total_amount": 7700199115.96,
+      "avg_amount": 5308.8,
+      "fraud_count": 12695,
+      "fraud_rate": 0.88
+    },
+    {
+      "location": "Pune",
+      "count": 1441738,
+      "total_amount": 7663627325.07,
+      "avg_amount": 5315.55,
+      "fraud_count": 12473,
+      "fraud_rate": 0.87
+    },
+    {
+      "location": "Chennai",
+      "count": 1184571,
+      "total_amount": 6085641800.23,
+      "avg_amount": 5137.42,
+      "fraud_count": 10348,
+      "fraud_rate": 0.87
+    },
+    {
+      "location": "Kolkata",
+      "count": 1021161,
+      "total_amount": 5634065279.01,
+      "avg_amount": 5517.31,
+      "fraud_count": 9008,
+      "fraud_rate": 0.88
+    },
+    {
+      "location": "Ahmedabad",
+      "count": 961656,
+      "total_amount": 5303163238.13,
+      "avg_amount": 5514.62,
+      "fraud_count": 8555,
+      "fraud_rate": 0.89
+    },
+    {
+      "location": "Nashik",
+      "count": 727597,
+      "total_amount": 3537949327.76,
+      "avg_amount": 4862.51,
+      "fraud_count": 6330,
+      "fraud_rate": 0.87
+    },
+    {
+      "location": "Nagpur",
+      "count": 606732,
+      "total_amount": 3068026376.16,
+      "avg_amount": 5056.64,
+      "fraud_count": 5281,
+      "fraud_rate": 0.87
+    },
+    {
+      "location": "London",
+      "count": 53740,
+      "total_amount": 281255838.52,
+      "avg_amount": 5233.64,
+      "fraud_count": 2619,
+      "fraud_rate": 4.87
+    },
+    {
+      "location": "Dubai",
+      "count": 53586,
+      "total_amount": 282614507.12,
+      "avg_amount": 5274.04,
+      "fraud_count": 2642,
+      "fraud_rate": 4.93
+    },
+    {
+      "location": "Singapore",
+      "count": 53575,
+      "total_amount": 278350853.67,
+      "avg_amount": 5195.54,
+      "fraud_count": 2574,
+      "fraud_rate": 4.8
+    },
+    {
+      "location": "New York",
+      "count": 53110,
+      "total_amount": 280075300.16,
+      "avg_amount": 5273.49,
+      "fraud_count": 2541,
+      "fraud_rate": 4.78
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "ALT-001",
+    "type": "Fraud",
+    "severity": "Critical",
+    "title": "Late-Night Fraud Spike Detected (23:00 - 05:00)",
+    "description": "Transactions occurring between 11 PM and 5 AM exhibit a fraud rate of 2.41%, which is 2.4x higher than the baseline average (0.98%).",
+    "metric": "2.41% Fraud Rate",
+    "timestamp": "Real-time Threshold Rule"
+  },
+  {
+    "id": "ALT-002",
+    "type": "Fraud",
+    "severity": "High",
+    "title": "Account Drain Activity Highlighted (Zero Balance After)",
+    "description": "28,490 transactions resulted in account draining (balance_after = 0.0), strongly correlated with ATM and Net Banking fraud.",
+    "metric": "28.4k Drained Accounts",
+    "timestamp": "Real-time Threshold Rule"
+  },
+  {
+    "id": "ALT-003",
+    "type": "Customer",
+    "severity": "Medium",
+    "title": "High-Risk Customer Cluster Activity (Cluster 2)",
+    "description": "K-Means Cluster 2 ('High Risk / Fraud Prone Customers') shows an elevated average fraud frequency of 7.03 cases per customer account.",
+    "metric": "7.03 Avg Fraud/Cust",
+    "timestamp": "Cluster Profile Rule"
+  },
+  {
+    "id": "ALT-004",
+    "type": "System",
+    "severity": "Info",
+    "title": "PySpark Distributed Pipeline Completed",
+    "description": "Successfully processed all 15,000,000 records across 25,000 customer profiles into Parquet format.",
+    "metric": "15M Records Processed",
+    "timestamp": "Pipeline Status Rule"
+  }
+]

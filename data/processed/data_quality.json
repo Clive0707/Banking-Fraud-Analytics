@@ -1,0 +1,23 @@
+{
+  "dataset_name": "banking_transactions_15m.csv",
+  "total_records": 15000000,
+  "total_columns": 15,
+  "raw_file_size_gb": 1.85,
+  "completeness_score": 100.0,
+  "uniqueness_score": 100.0,
+  "validity_score": 100.0,
+  "consistency_score": 100.0,
+  "missing_values_count": 0,
+  "duplicate_records_count": 0,
+  "unique_customers": 25000,
+  "unique_merchants": 12,
+  "unique_locations": 14,
+  "min_amount": 50.0,
+  "max_amount": 250000.0,
+  "average_amount": 5258.53,
+  "date_range": "2025-01-01 to 2025-12-31",
+  "processing_engine": "Apache PySpark local[*]",
+  "spark_memory": "8GB Driver / 8GB Executor",
+  "arrow_acceleration": true,
+  "storage_format": "Apache Parquet (Columnar snappy/pyarrow)"
+}

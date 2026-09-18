@@ -1,0 +1,71 @@
+{
+  "payment_method": [
+    {
+      "payment_method": "UPI",
+      "count": 5698319,
+      "total_amount": 29983620471.91,
+      "fraud_count": 55704,
+      "fraud_rate": 0.98
+    },
+    {
+      "payment_method": "Debit Card",
+      "count": 3751953,
+      "total_amount": 19700785485.84,
+      "fraud_count": 36739,
+      "fraud_rate": 0.98
+    },
+    {
+      "payment_method": "Net Banking",
+      "count": 2248932,
+      "total_amount": 11840613237.4,
+      "fraud_count": 21934,
+      "fraud_rate": 0.98
+    },
+    {
+      "payment_method": "Credit Card",
+      "count": 1798986,
+      "total_amount": 9450983124.13,
+      "fraud_count": 17660,
+      "fraud_rate": 0.98
+    },
+    {
+      "payment_method": "ATM",
+      "count": 1501810,
+      "total_amount": 7901872797.31,
+      "fraud_count": 14608,
+      "fraud_rate": 0.97
+    }
+  ],
+  "device_type": [
+    {
+      "device_type": "Android",
+      "count": 6750706,
+      "fraud_count": 64030,
+      "fraud_rate": 0.95
+    },
+    {
+      "device_type": "iOS",
+      "count": 2997845,
+      "fraud_count": 28638,
+      "fraud_rate": 0.96
+    },
+    {
+      "device_type": "Windows",
+      "count": 2700523,
+      "fraud_count": 29696,
+      "fraud_rate": 1.1
+    },
+    {
+      "device_type": "ATM",
+      "count": 1502740,
+      "fraud_count": 14274,
+      "fraud_rate": 0.95
+    },
+    {
+      "device_type": "Mac",
+      "count": 1048186,
+      "fraud_count": 10007,
+      "fraud_rate": 0.95
+    }
+  ]
+}

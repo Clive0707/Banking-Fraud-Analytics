@@ -4,5 +4,11 @@
   "total_customers": 25000,
   "fraudulent_transactions": 146645,
   "average_transaction_amount": 5258.53,
+  "min_amount": 50.0,
+  "max_amount": 250000.0,
+  "min_date": "2025-01-01",
+  "max_date": "2025-12-31",
+  "unique_merchants": 12,
+  "unique_locations": 14,
   "fraud_rate": 0.98
 }
