@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-10-02T20:05:17",
+  "spark_version": "4.2.0",
+  "spark_master": "local[*]",
+  "driver_memory": "8g",
+  "executor_memory": "8g",
+  "shuffle_partitions": "64",
+  "hadoop": "NOT USED",
+  "hdfs": "NOT USED",
+  "arrow_enabled": true,
+  "input_file": "banking_transactions_15m.csv",
+  "input_rows": 15000000,
+  "rows_after_dedup": 15000000,
+  "full_export_enabled": false,
+  "total_seconds": 242.99,
+  "stages": [
+    {
+      "stage": "spark_session_init",
+      "seconds": 11.04
+    },
+    {
+      "stage": "load_and_count",
+      "seconds": 5.27,
+      "rows_processed": 15000000,
+      "rows_per_second": 2848483
+    },
+    {
+      "stage": "dedup_and_enrich",
+      "seconds": 83.33,
+      "rows_processed": 15000000,
+      "rows_per_second": 180005
+    },
+    {
+      "stage": "data_quality",
+      "seconds": 30.96
+    },
+    {
+      "stage": "summary_stats",
+      "seconds": 38.12
+    },
+    {
+      "stage": "categorical_aggregations",
+      "seconds": 17.48
+    },
+    {
+      "stage": "segment_lift",
+      "seconds": 2.1
+    },
+    {
+      "stage": "time_analytics",
+      "seconds": 4.91
+    },
+    {
+      "stage": "customer_profiles",
+      "seconds": 43.18,
+      "rows_processed": 25000,
+      "rows_per_second": 578
+    },
+    {
+      "stage": "stratified_sample",
+      "seconds": 6.6,
+      "rows_processed": 499684,
+      "rows_per_second": 75721
+    },
+    {
+      "stage": "alerts",
+      "seconds": 0.0
+    }
+  ]
+}

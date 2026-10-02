@@ -1,0 +1,195 @@
+/* ==========================================================================
+   BANKING INTELLIGENCE — MINIMALIST FINANCIAL PRODUCT THEME
+   Inspired by Apple / Linear / Stripe Design Principles
+   ========================================================================== */
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Tab Navigation State — Strict Specificity */
+.tab-pane {
+  display: none !important;
+}
+
+.tab-pane.active {
+  display: flex !important;
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide-Over Drawer */
+#slide-over-backdrop {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+#slide-over-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#slide-over-drawer {
+  transform: translateX(100%);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#slide-over-drawer.active {
+  transform: translateX(0);
+}
+
+/* Modal Dialog */
+#report-modal-backdrop {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+#report-modal-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#report-modal-dialog {
+  opacity: 0;
+  transform: scale(0.98) translateY(8px);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#report-modal-backdrop.active #report-modal-dialog {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* Model Drawer (Secondary Information) */
+#model-drawer-backdrop {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+#model-drawer-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+#model-drawer {
+  transform: translateX(100%);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+#model-drawer.active {
+  transform: translateX(0);
+}
+
+/* Subtle Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Custom Range Slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background: #e2e8f0;
+  height: 4px;
+  border-radius: 9999px;
+}
+
+.dark input[type="range"]::-webkit-slider-runnable-track {
+  background: #334155;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -6px;
+  background-color: #0284c7;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  cursor: grab;
+}
+
+/* Print Styles for Executive Audit Report */
+@media print {
+  aside, 
+  header, 
+  #slide-over-backdrop, 
+  #slide-over-drawer, 
+  #model-drawer-backdrop,
+  #model-drawer,
+  .no-print,
+  main > div > section {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 11pt !important;
+  }
+
+  #report-modal-backdrop {
+    display: block !important;
+    position: static !important;
+    background: none !important;
+    padding: 0 !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+
+  #report-modal-dialog {
+    display: block !important;
+    position: static !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}

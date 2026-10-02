@@ -1,0 +1,35 @@
+# Lint configuration.
+#
+# An explicit rule selection keeps CI deterministic across ruff releases and
+# keeps the signal useful: correctness and import hygiene, not stylistic noise.
+
+line-length = 110
+target-version = "py310"
+
+[lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes (undefined names, unused imports/variables)
+    "W",    # pycodestyle warnings
+    "I",    # import sorting
+    "B",    # flake8-bugbear (likely bugs)
+    "UP",   # pyupgrade
+    "C4",   # comprehension simplifications
+]
+ignore = [
+    "E501",  # line length is handled by the formatter, not enforced here
+    "B008",  # function calls in argument defaults (used intentionally for paths)
+]
+
+[lint.per-file-ignores]
+# Spark and config modules must set JAVA_HOME and PATH before importing pyspark,
+# so their imports legitimately follow executable statements.
+"src/preprocessing/preprocess.py" = ["E402"]
+"run.py" = ["E402"]
+# The Flask app inserts the project root on sys.path before importing its
+# own packages.
+"backend/app.py" = ["E402"]
+"tests/*" = ["F811"]  # pytest fixtures shadow their defining names by design
+
+[lint.isort]
+known-first-party = ["src", "backend"]

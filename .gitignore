@@ -1,0 +1,35 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PySpark / temp / log files (no Hadoop, HDFS or YARN is used)
+.spark-staging/
+metastore_db/
+derby.log
+spark-warehouse/
+*.log
+
+# Large raw datasets and the full processed export (>100MB GitHub limit)
+data/raw/
+data/processed/transactions_processed.parquet
+data/processed/transactions_by_month/
+
+# Generated reports
+reports/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.venv/
+venv/
+env/
+
+# OS & IDE files
+.DS_Store
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,43 @@
+{
+  "dataset_name": "banking_transactions_15m.csv",
+  "total_records_raw": 15000000,
+  "total_records_after_dedup": 15000000,
+  "total_columns": 15,
+  "measured": true,
+  "completeness_score": 100.0,
+  "uniqueness_score": 100.0,
+  "validity_score": 100.0,
+  "consistency_score": 95.0255,
+  "missing_values_count": 0,
+  "missing_values_by_column": {},
+  "duplicate_records_count": 0,
+  "validity_violations": {
+    "non_positive_amount": 0,
+    "negative_balance_before": 0,
+    "negative_balance_after": 0,
+    "invalid_target": 0,
+    "unparseable_date": 0,
+    "invalid_hour": 0
+  },
+  "validity_rules": [
+    "amount > 0",
+    "balance_before >= 0",
+    "balance_after >= 0",
+    "is_fraud in {0, 1}",
+    "transaction_date parses as yyyy-MM-dd",
+    "hour in [0, 23]"
+  ],
+  "consistency_check": {
+    "rule": "balance_before - balance_after == amount (tolerance 0.01)",
+    "violations": 746174,
+    "violation_pct": 4.9745,
+    "violations_that_are_account_drains": 746174,
+    "finding": "Rows where the account is drained to a zero balance do not satisfy the ledger identity: balance_after is set to 0 rather than balance_before - amount. This is a genuine defect in the source data and is the reason consistency scores below 100%."
+  },
+  "processing_engine": "Apache PySpark local[*]",
+  "spark_memory": "8g driver / 8g executor",
+  "hadoop": "NOT USED",
+  "hdfs": "NOT USED",
+  "arrow_acceleration": true,
+  "storage_format": "Apache Parquet (columnar, snappy, pyarrow)"
+}

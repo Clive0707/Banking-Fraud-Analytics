@@ -1,0 +1,96 @@
+{
+  "payment_method": [
+    {
+      "payment_method": "UPI",
+      "count": 5698319,
+      "total_amount": 29983620471.91,
+      "avg_amount": 5261.84,
+      "fraud_count": 55704,
+      "fraud_rate": 0.9776,
+      "lift": 1.0
+    },
+    {
+      "payment_method": "Debit Card",
+      "count": 3751953,
+      "total_amount": 19700785485.84,
+      "avg_amount": 5250.81,
+      "fraud_count": 36739,
+      "fraud_rate": 0.9792,
+      "lift": 1.002
+    },
+    {
+      "payment_method": "Net Banking",
+      "count": 2248932,
+      "total_amount": 11840613237.4,
+      "avg_amount": 5264.99,
+      "fraud_count": 21934,
+      "fraud_rate": 0.9753,
+      "lift": 0.998
+    },
+    {
+      "payment_method": "Credit Card",
+      "count": 1798986,
+      "total_amount": 9450983124.13,
+      "avg_amount": 5253.51,
+      "fraud_count": 17660,
+      "fraud_rate": 0.9817,
+      "lift": 1.004
+    },
+    {
+      "payment_method": "ATM",
+      "count": 1501810,
+      "total_amount": 7901872797.31,
+      "avg_amount": 5261.57,
+      "fraud_count": 14608,
+      "fraud_rate": 0.9727,
+      "lift": 0.995
+    }
+  ],
+  "device_type": [
+    {
+      "device_type": "Android",
+      "count": 6750706,
+      "total_amount": 35500606511.53,
+      "avg_amount": 5258.8,
+      "fraud_count": 64030,
+      "fraud_rate": 0.9485,
+      "lift": 0.97
+    },
+    {
+      "device_type": "iOS",
+      "count": 2997845,
+      "total_amount": 15759788722.82,
+      "avg_amount": 5257.04,
+      "fraud_count": 28638,
+      "fraud_rate": 0.9553,
+      "lift": 0.977
+    },
+    {
+      "device_type": "Windows",
+      "count": 2700523,
+      "total_amount": 14210475597.48,
+      "avg_amount": 5262.12,
+      "fraud_count": 29696,
+      "fraud_rate": 1.0996,
+      "lift": 1.125
+    },
+    {
+      "device_type": "ATM",
+      "count": 1502740,
+      "total_amount": 7905582263.93,
+      "avg_amount": 5260.78,
+      "fraud_count": 14274,
+      "fraud_rate": 0.9499,
+      "lift": 0.972
+    },
+    {
+      "device_type": "Mac",
+      "count": 1048186,
+      "total_amount": 5501422020.83,
+      "avg_amount": 5248.52,
+      "fraud_count": 10007,
+      "fraud_rate": 0.9547,
+      "lift": 0.977
+    }
+  ]
+}

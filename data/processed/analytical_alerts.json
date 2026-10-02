@@ -1,0 +1,65 @@
+[
+  {
+    "id": "ALT-001",
+    "type": "Fraud",
+    "severity": "Critical",
+    "title": "Late-night fraud concentration (00:00-04:59)",
+    "description": "92,544 of 3,124,950 overnight transactions are fraudulent (2.9615%), 3.029x the portfolio baseline of 0.9776%.",
+    "metric": "2.9615% fraud rate",
+    "evidence": "segment_lift.json -> Night (00:00-04:59)"
+  },
+  {
+    "id": "ALT-002",
+    "type": "Fraud",
+    "severity": "High",
+    "title": "Cross-border transactions carry elevated fraud risk",
+    "description": "Transactions in Dubai, London, New York, Singapore show a 4.8483% fraud rate across 214,011 transactions -- 4.959x baseline.",
+    "metric": "4.959x lift",
+    "evidence": "segment_lift.json -> International location"
+  },
+  {
+    "id": "ALT-003",
+    "type": "Fraud",
+    "severity": "High",
+    "title": "High-value transactions above 100,000",
+    "description": "15,054 transactions exceed the high-value threshold and 7.4731% of them are fraudulent -- 7.644x baseline, the strongest single signal measured.",
+    "metric": "7.4731% fraud rate",
+    "evidence": "segment_lift.json -> High amount"
+  },
+  {
+    "id": "ALT-004",
+    "type": "Data Quality",
+    "severity": "Medium",
+    "title": "Ledger arithmetic violated on account-drain transactions",
+    "description": "746,174 transactions (4.9745%) fail the check balance_before - balance_after == amount; 746,174 of them drain the account to a zero balance. Consistency score 95.0255%.",
+    "metric": "4.9745% of rows",
+    "evidence": "data_quality.json -> consistency_check"
+  },
+  {
+    "id": "ALT-005",
+    "type": "Fraud",
+    "severity": "Medium",
+    "title": "Account-drain events",
+    "description": "746,180 transactions left the account at a zero balance, with a 1.2738% fraud rate (1.303x baseline).",
+    "metric": "746,180 drain events",
+    "evidence": "segment_lift.json -> Account drained to zero"
+  },
+  {
+    "id": "ALT-006",
+    "type": "Fraud",
+    "severity": "Info",
+    "title": "Peak fraud hour is 04:00",
+    "description": "Hour 04:00 records the highest fraud rate of the day at 2.9974% across 623,810 transactions.",
+    "metric": "2.9974% at 04:00",
+    "evidence": "time_analytics.json -> hourly"
+  },
+  {
+    "id": "ALT-007",
+    "type": "System",
+    "severity": "Info",
+    "title": "PySpark pipeline completed",
+    "description": "Processed 15,000,000 transactions across 25,000 customers in local[*] mode. Hadoop and HDFS not used.",
+    "metric": "15M records",
+    "evidence": "pipeline_benchmark.json"
+  }
+]

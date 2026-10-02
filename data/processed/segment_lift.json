@@ -1,0 +1,62 @@
+{
+  "baseline_fraud_rate_pct": 0.9776,
+  "segments": [
+    {
+      "segment": "International AND High amount",
+      "transactions": 207,
+      "frauds": 22,
+      "fraud_rate_pct": 10.628,
+      "lift_vs_baseline": 10.871
+    },
+    {
+      "segment": "Night AND High amount",
+      "transactions": 3150,
+      "frauds": 290,
+      "fraud_rate_pct": 9.2063,
+      "lift_vs_baseline": 9.417
+    },
+    {
+      "segment": "High amount (> 100,000)",
+      "transactions": 15054,
+      "frauds": 1125,
+      "fraud_rate_pct": 7.4731,
+      "lift_vs_baseline": 7.644
+    },
+    {
+      "segment": "Night AND International",
+      "transactions": 44748,
+      "frauds": 3073,
+      "fraud_rate_pct": 6.8673,
+      "lift_vs_baseline": 7.024
+    },
+    {
+      "segment": "International location",
+      "transactions": 214011,
+      "frauds": 10376,
+      "fraud_rate_pct": 4.8483,
+      "lift_vs_baseline": 4.959
+    },
+    {
+      "segment": "Night (00:00-04:59)",
+      "transactions": 3124950,
+      "frauds": 92544,
+      "fraud_rate_pct": 2.9615,
+      "lift_vs_baseline": 3.029
+    },
+    {
+      "segment": "Account drained to zero",
+      "transactions": 746180,
+      "frauds": 9505,
+      "fraud_rate_pct": 1.2738,
+      "lift_vs_baseline": 1.303
+    },
+    {
+      "segment": "No risk flag set",
+      "transactions": 11694048,
+      "frauds": 45982,
+      "fraud_rate_pct": 0.3932,
+      "lift_vs_baseline": 0.402
+    }
+  ],
+  "note": "Lift is the segment's fraud rate divided by the portfolio baseline. These measurements define the engineered risk flags used by the fraud models."
+}

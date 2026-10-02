@@ -1,0 +1,12 @@
+data/raw/
+data/processed/
+models/*.pkl
+docs/images/
+.git/
+.github/
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+*.log

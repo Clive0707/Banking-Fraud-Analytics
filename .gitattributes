@@ -1,0 +1,13 @@
+# Normalise line endings so Windows and CI checkouts produce identical diffs.
+* text=auto eol=lf
+
+# Binary artefacts
+*.parquet binary
+*.pkl     binary
+*.png     binary
+*.jpg     binary
+*.csv     text eol=lf
+
+# Keep generated analytics JSON out of diff summaries; it is machine-written.
+data/processed/*.json linguist-generated=true
+models/*.json         linguist-generated=true

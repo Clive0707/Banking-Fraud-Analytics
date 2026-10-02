@@ -1,0 +1,126 @@
+{
+  "dataset_rows_analysed": 499684,
+  "target": "is_fraud",
+  "status_leakage": {
+    "available": true,
+    "column": "transaction_status",
+    "breakdown": [
+      {
+        "status": "Declined",
+        "legitimate": 0,
+        "fraudulent": 977,
+        "total": 977,
+        "fraud_rate_pct": 100.0
+      },
+      {
+        "status": "Flagged",
+        "legitimate": 0,
+        "fraudulent": 2722,
+        "total": 2722,
+        "fraud_rate_pct": 100.0
+      },
+      {
+        "status": "Completed",
+        "legitimate": 480042,
+        "fraudulent": 1200,
+        "total": 481242,
+        "fraud_rate_pct": 0.2494
+      },
+      {
+        "status": "Pending",
+        "legitimate": 14743,
+        "fraudulent": 0,
+        "total": 14743,
+        "fraud_rate_pct": 0.0
+      }
+    ],
+    "zero_model_rule": {
+      "rule": "transaction_status in ['Declined', 'Flagged']",
+      "transactions_matched": 3699,
+      "frauds_matched": 3699,
+      "precision": 1.0,
+      "recall": 0.755052,
+      "false_positives": 0
+    },
+    "verdict": "LEAKING -- excluded from all deployment features",
+    "explanation": "transaction_status encodes the outcome of the bank's existing fraud controls, so it is only populated after a fraud decision has been taken. At scoring time an incoming transaction is still Pending, which means the field cannot be used for prediction even though it separates the training labels almost perfectly."
+  },
+  "categorical_purity_scan": {
+    "columns_scanned": [
+      "transaction_date",
+      "transaction_time",
+      "transaction_type",
+      "account_type",
+      "merchant",
+      "location",
+      "payment_method",
+      "device_type",
+      "transaction_status",
+      "date_parsed",
+      "month"
+    ],
+    "purity_threshold_pct": 98.0,
+    "min_support": 50,
+    "suspicious_levels": [
+      {
+        "column": "transaction_status",
+        "level": "Declined",
+        "support": 977,
+        "fraud_rate_pct": 100.0
+      },
+      {
+        "column": "transaction_status",
+        "level": "Flagged",
+        "support": 2722,
+        "fraud_rate_pct": 100.0
+      }
+    ]
+  },
+  "excluded_from_features": [
+    "transaction_status"
+  ],
+  "leaky_vs_clean": {
+    "clean_no_status": {
+      "n_features": 35,
+      "roc_auc": 0.728416,
+      "pr_auc": 0.025881,
+      "precision": 0.029453,
+      "recall": 0.711224,
+      "f1_score": 0.056563,
+      "confusion_matrix": [
+        [
+          75989,
+          22968
+        ],
+        [
+          283,
+          697
+        ]
+      ]
+    },
+    "leaky_with_status": {
+      "n_features": 39,
+      "roc_auc": 0.929318,
+      "pr_auc": 0.772733,
+      "precision": 0.331152,
+      "recall": 0.77449,
+      "f1_score": 0.463936,
+      "confusion_matrix": [
+        [
+          97424,
+          1533
+        ],
+        [
+          221,
+          759
+        ]
+      ]
+    },
+    "inflation": {
+      "pr_auc_multiple": 29.86,
+      "f1_multiple": 8.2,
+      "precision_delta": 0.301699,
+      "interpretation": "The leaky model's headline metrics are the ones a naive benchmark would publish. They are unreachable in production because the feature driving them is not available at scoring time."
+    }
+  }
+}

@@ -1,0 +1,20 @@
+# ---- Big Data processing (PySpark local[*] -- no Hadoop/HDFS/YARN) ----
+pyspark>=3.4.0
+pyarrow>=12.0.0          # required by preprocess.py Parquet streaming + Spark Arrow
+
+# ---- Data / numerics ----
+pandas>=2.0.0
+numpy>=1.24.0
+
+# ---- Machine learning ----
+scikit-learn>=1.2.0
+xgboost>=2.0.0           # gradient-boosted trees for the fraud benchmark
+lightgbm>=4.0.0          # second GBDT family for the benchmark
+joblib>=1.3.0
+
+# ---- Web backend ----
+flask>=2.3.0
+waitress>=2.1.0          # production WSGI server (Windows-friendly alternative to gunicorn)
+
+# ---- Testing ----
+pytest>=7.4.0
