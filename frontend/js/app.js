@@ -1072,13 +1072,56 @@ function loadAnomalyDistChart(scoreDist) {
 // 8. TAB 5: TRANSACTIONS (Practical Explorer)
 // ==========================================================================
 
+/**
+ * Fill the explorer's filter dropdowns from the categorical aggregation, so the
+ * options can never drift from the values actually present in the data.
+ */
+async function initTransactionFilters() {
+  const typeSel = document.getElementById('filter-type');
+  const paySel = document.getElementById('filter-payment');
+  if (!typeSel || typeSel.dataset.populated) return;
+
+  try {
+    const res = await fetch('/api/fraud').then(r => r.json());
+    const fill = (sel, rows, key, label) => {
+      if (!sel || !Array.isArray(rows)) return;
+      const existing = sel.value;
+      sel.innerHTML = `<option value="">${label}</option>` + rows
+        .map(r => r[key])
+        .filter(Boolean)
+        .sort()
+        .map(v => `<option value="${v}">${v}</option>`)
+        .join('');
+      sel.value = existing;
+    };
+    fill(typeSel, res.transaction_type, 'transaction_type', 'All Types');
+    fill(paySel, res.payment_method, 'payment_method', 'All Channels');
+    typeSel.dataset.populated = '1';
+  } catch (e) {
+    console.warn('Could not populate transaction filters:', e);
+  }
+}
+
 async function loadTransactions() {
+  await initTransactionFilters();
+
   const search = document.getElementById('filter-search')?.value || '';
   const type = document.getElementById('filter-type')?.value || '';
   const payment = document.getElementById('filter-payment')?.value || '';
   const fraud = document.getElementById('filter-fraud')?.value || '';
 
-  const url = `/api/transactions?page=${state.currentPage}&per_page=${state.pageSize}&search=${encodeURIComponent(search)}&type=${encodeURIComponent(type)}&payment_method=${encodeURIComponent(payment)}&is_fraud=${encodeURIComponent(fraud)}`;
+  // The backend parameter is `transaction_type`. This previously sent `type`,
+  // which Flask ignored, so selecting a transaction type changed nothing.
+  const params = new URLSearchParams({
+    page: state.currentPage,
+    per_page: state.pageSize
+  });
+  if (search) params.set('search', search);
+  if (type) params.set('transaction_type', type);
+  if (payment) params.set('payment_method', payment);
+  if (fraud !== '') params.set('is_fraud', fraud);
+
+  const url = `/api/transactions?${params.toString()}`;
 
   try {
     const res = await fetch(url).then(r => r.json());
@@ -1087,12 +1130,18 @@ async function loadTransactions() {
     const tbody = document.getElementById('explorer-tbody');
     if (!tbody) return;
 
-    if (!res.transactions || res.transactions.length === 0) {
+    // The API returns the page under `data`. Reading `res.transactions` meant
+    // this branch always fired, so the transaction explorer showed "No matching
+    // transactions found" for every query and never reached the paging line.
+    const rows = res.data || [];
+    if (rows.length === 0) {
       tbody.innerHTML = '<tr><td colspan="9" class="py-8 text-center text-slate-400 font-mono text-xs">No matching transactions found.</td></tr>';
+      const emptyInfo = document.getElementById('explorer-page-info');
+      if (emptyInfo) emptyInfo.innerText = `No records match the current filters`;
       return;
     }
 
-    tbody.innerHTML = res.transactions.map(t => {
+    tbody.innerHTML = rows.map(t => {
       const isFraud = t.is_fraud === 1;
       return `
         <tr class="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors cursor-pointer" onclick="openInvestigation('${t.transaction_id}')">
@@ -1147,7 +1196,21 @@ function changePage(delta) {
 }
 
 function exportFilteredCSV() {
-  window.open('/api/transactions/export', '_blank');
+  // Export the filtered view, not the whole table. This previously ignored
+  // every active filter.
+  const search = document.getElementById('filter-search')?.value || '';
+  const type = document.getElementById('filter-type')?.value || '';
+  const payment = document.getElementById('filter-payment')?.value || '';
+  const fraud = document.getElementById('filter-fraud')?.value || '';
+
+  const params = new URLSearchParams();
+  if (search) params.set('search', search);
+  if (type) params.set('transaction_type', type);
+  if (payment) params.set('payment_method', payment);
+  if (fraud !== '') params.set('is_fraud', fraud);
+
+  const qs = params.toString();
+  window.open(`/api/transactions/export${qs ? '?' + qs : ''}`, '_blank');
 }
 
 // ==========================================================================
@@ -1286,21 +1349,152 @@ function closeModelDrawer() {
 // 11. AUDIT REPORT MODAL DIALOG
 // ==========================================================================
 
+/**
+ * Executive audit report.
+ *
+ * Everything below the title was previously static HTML, including a classifier
+ * table whose figures were invented -- it credited Random Forest with 95.4%
+ * precision against a real 3.0%, roughly 32x the true value -- and an executive
+ * summary asserting a "99.4% normal clearance accuracy" and a Rs 50,000 rule
+ * that no computation produced. This is the document a reader is most likely to
+ * print, so every number in it now comes from the API.
+ */
 async function openReportModal() {
   const backdrop = document.getElementById('report-modal-backdrop');
   if (backdrop) backdrop.classList.add('active');
 
-  try {
-    const summary = await fetch('/api/summary').then(r => r.json());
-    if (summary && !summary.error) {
-      const vol = document.getElementById('report-vol');
-      if (vol) vol.innerText = formatINR(summary.total_transaction_value);
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.innerText = value;
+  };
+  const setHTML = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = value;
+  };
 
-      const frd = document.getElementById('report-fraud');
-      if (frd) frd.innerText = `${formatNumber(summary.fraudulent_transactions)} (${summary.fraud_rate != null ? summary.fraud_rate.toFixed(2) : '—'}%)`;
+  try {
+    const [summary, perf, lift] = await Promise.all([
+      fetch('/api/summary').then(r => r.json()).catch(() => ({})),
+      fetch('/api/model-performance').then(r => r.json()).catch(() => ({})),
+      fetch('/api/segment-lift').then(r => r.json()).catch(() => ({}))
+    ]);
+
+    // --- Macro summary ---
+    if (summary && !summary.error) {
+      setText('report-vol', formatINRCompact(summary.total_transaction_value));
+      setText('report-records', formatNumber(summary.total_transactions));
+      setText('report-fraud',
+        `${formatNumber(summary.fraudulent_transactions)} (${summary.fraud_rate != null ? summary.fraud_rate.toFixed(2) : '—'}%)`);
+      setText('report-customers', `${formatNumber(summary.total_customers)} accounts`);
     }
+
+    // --- Classifier table ---
+    if (perf && perf.models) {
+      const names = Object.keys(perf.models)
+        .sort((a, b) => perf.models[b].ranking.pr_auc - perf.models[a].ranking.pr_auc);
+      const base = perf.no_skill_baseline || {};
+
+      const rows = names.map(n => {
+        const m = perf.models[n];
+        const pt = m.at_default_threshold || {};
+        const t1 = (m.precision_at_k || []).find(r => r.capacity_fraction === 0.01) || {};
+        const best = n === perf.best_model;
+        return `
+          <tr class="${best ? 'bg-emerald-50/50 dark:bg-emerald-900/10' : ''}">
+            <td class="py-2 px-3 font-sans font-medium">${n}${best ? ' <span class="text-[9px] text-emerald-600 font-semibold">BEST</span>' : ''}</td>
+            <td class="py-2 px-3 font-semibold">${m.ranking.pr_auc}</td>
+            <td class="py-2 px-3">${m.ranking.roc_auc}</td>
+            <td class="py-2 px-3">${(pt.precision * 100).toFixed(2)}%</td>
+            <td class="py-2 px-3">${(pt.recall * 100).toFixed(1)}%</td>
+            <td class="py-2 px-3 text-emerald-600 font-semibold">${t1.lift ? t1.lift.toFixed(2) + '×' : '—'}</td>
+          </tr>`;
+      }).join('');
+
+      setHTML('report-models', `
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 dark:bg-slate-800/40 text-slate-400 text-[10px] uppercase">
+            <tr>
+              <th class="py-2 px-3 font-medium">Model</th>
+              <th class="py-2 px-3 font-medium">PR-AUC</th>
+              <th class="py-2 px-3 font-medium">ROC-AUC</th>
+              <th class="py-2 px-3 font-medium">Precision</th>
+              <th class="py-2 px-3 font-medium">Recall</th>
+              <th class="py-2 px-3 font-medium">Top-1% lift</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-mono text-[11px]">${rows}</tbody>
+        </table>`);
+
+      const prevalence = base.prevalence_pct;
+      const noSkill = base.always_negative ? (base.always_negative.accuracy * 100).toFixed(2) : null;
+      setText('report-models-note',
+        `Trained on ${formatNumber(perf.train_rows)} rows, tested on ${formatNumber(perf.test_rows)}. `
+        + `Models are selected on PR-AUC, not accuracy: at ${prevalence}% prevalence a constant `
+        + `"never fraud" predictor already scores ${noSkill}% accuracy. Precision and recall are `
+        + `shown at the 0.5 threshold; the deployed operating point is tuned for expected net saving.`);
+    }
+
+    // --- Risk segments ---
+    if (lift && lift.segments) {
+      const top = lift.segments
+        .filter(s => s.lift_vs_baseline > 1)
+        .sort((a, b) => b.lift_vs_baseline - a.lift_vs_baseline)
+        .slice(0, 5);
+      setHTML('report-segments', `
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-50 dark:bg-slate-800/40 text-slate-400 text-[10px] uppercase">
+            <tr>
+              <th class="py-2 px-3 font-medium">Segment</th>
+              <th class="py-2 px-3 font-medium">Transactions</th>
+              <th class="py-2 px-3 font-medium">Fraud rate</th>
+              <th class="py-2 px-3 font-medium">Lift</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-mono text-[11px]">
+            ${top.map(s => `
+              <tr>
+                <td class="py-2 px-3 font-sans">${s.segment}</td>
+                <td class="py-2 px-3">${formatNumber(s.transactions)}</td>
+                <td class="py-2 px-3">${s.fraud_rate_pct}%</td>
+                <td class="py-2 px-3 text-rose-600 font-semibold">${s.lift_vs_baseline.toFixed(2)}×</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>`);
+    }
+
+    // --- Executive summary, composed from the figures just loaded ---
+    const best = perf.models ? perf.models[perf.best_model] : null;
+    const cost = best && best.cost_analysis ? best.cost_analysis.cost_optimal : null;
+    const strongest = lift.segments
+      ? lift.segments.slice().sort((a, b) => b.lift_vs_baseline - a.lift_vs_baseline)[0]
+      : null;
+
+    const parts = [];
+    if (strongest) {
+      parts.push(
+        `Fraud concentrates by timing, geography and value rather than by channel: `
+        + `<strong>${strongest.segment.toLowerCase()}</strong> runs at ${strongest.fraud_rate_pct}% `
+        + `against a ${lift.baseline_fraud_rate_pct}% portfolio baseline `
+        + `(${strongest.lift_vs_baseline.toFixed(1)}× lift).`);
+    }
+    if (best && cost) {
+      const t1 = (best.precision_at_k || []).find(r => r.capacity_fraction === 0.01);
+      parts.push(
+        `The deployed model (${perf.best_model}) is used to rank rather than classify: `
+        + `reviewing the riskiest 1% of transactions surfaces fraud at `
+        + `${t1 ? t1.lift.toFixed(1) : '—'}× the base rate. At the cost-optimal threshold of `
+        + `${cost.threshold.toFixed(3)} it raises ${formatNumber(cost.alerts_raised)} alerts and `
+        + `returns an expected net saving of ${formatINRCompact(cost.net_saving)} over the held-out set.`);
+    }
+    parts.push(
+      `<code>transaction_status</code> is excluded from every feature set: it records the bank's own `
+      + `fraud verdict and is unavailable at scoring time.`);
+
+    setHTML('report-summary-note',
+      `<strong>Executive summary:</strong> ${parts.join(' ')}`);
+
   } catch (e) {
-    console.warn('Report populate error:', e);
+    console.error('Report populate error:', e);
   }
 }
 

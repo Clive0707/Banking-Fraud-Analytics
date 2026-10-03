@@ -47,16 +47,42 @@ function labTheme() {
   };
 }
 
+/**
+ * Fetch JSON with an in-flight cache.
+ *
+ * The panel renderers run concurrently under Promise.allSettled, so caching
+ * only the resolved value let them all miss together: opening the Model Lab
+ * fetched /api/model-performance -- a ~105 KB payload -- six times. Caching the
+ * promise itself collapses those into one request.
+ */
 async function getJSON(url, cacheKey) {
-  if (cacheKey && lab.cache[cacheKey]) return lab.cache[cacheKey];
-  const res = await fetch(url);
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error(body.error || `${url} returned ${res.status}`);
+  if (!cacheKey) {
+    const res = await fetch(url);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || `${url} returned ${res.status}`);
+    }
+    return res.json();
   }
-  const data = await res.json();
-  if (cacheKey) lab.cache[cacheKey] = data;
-  return data;
+
+  if (lab.cache[cacheKey]) return lab.cache[cacheKey];
+
+  lab.cache[cacheKey] = (async () => {
+    const res = await fetch(url);
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.error || `${url} returned ${res.status}`);
+    }
+    return res.json();
+  })();
+
+  try {
+    return await lab.cache[cacheKey];
+  } catch (err) {
+    // Do not cache a failure, so a later render can retry.
+    delete lab.cache[cacheKey];
+    throw err;
+  }
 }
 
 function destroyChart(key) {

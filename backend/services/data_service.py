@@ -341,7 +341,15 @@ class DataService:
         return self.feature_importance or {"error": "Feature importance not found."}
 
     def get_spark_ml(self):
-        """Spark MLlib benchmark trained on the complete 15M-row dataset."""
+        """
+        Spark MLlib benchmark trained on the complete 15M-row dataset.
+
+        Artefacts are cached at startup, but this one is produced by a job that
+        typically runs long after the server is up. Re-read it on demand when it
+        is still missing, so a finished run appears without a restart.
+        """
+        if self.spark_ml_comparison is None:
+            self.spark_ml_comparison = _load_json(config.SPARK_ML_COMPARISON_JSON)
         return self.spark_ml_comparison or {
             "error": "Spark MLlib benchmark not found. Run: python run.py --spark-ml"
         }

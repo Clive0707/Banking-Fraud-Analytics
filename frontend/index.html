@@ -147,25 +147,25 @@
           <div class="grid grid-cols-2 md:grid-cols-4 gap-6 py-2 border-b border-slate-100 dark:border-slate-800/60 pb-8">
             <div>
               <span class="text-[12px] text-slate-400 dark:text-slate-500 block">Fraud Rate</span>
-              <div class="text-[28px] font-semibold text-rose-600 dark:text-rose-400 font-mono tracking-tight mt-0.5" id="kpi-fraud-rate">0.98%</div>
+              <div class="text-[28px] font-semibold text-rose-600 dark:text-rose-400 font-mono tracking-tight mt-0.5" id="kpi-fraud-rate">—</div>
               <span class="text-[11px] text-slate-400 block mt-0.5">149,850 incidents intercepted</span>
             </div>
 
             <div>
               <span class="text-[12px] text-slate-400 dark:text-slate-500 block">Gross Volume</span>
-              <div class="text-[28px] font-semibold text-slate-900 dark:text-white font-mono tracking-tight mt-0.5" id="kpi-total-value">₹78,877.88 Cr</div>
+              <div class="text-[28px] font-semibold text-slate-900 dark:text-white font-mono tracking-tight mt-0.5" id="kpi-total-value">—</div>
               <span class="text-[11px] text-slate-400 block mt-0.5">₹5,258.53 avg transaction</span>
             </div>
 
             <div>
               <span class="text-[12px] text-slate-400 dark:text-slate-500 block">Total Transactions</span>
-              <div class="text-[28px] font-semibold text-slate-900 dark:text-white font-mono tracking-tight mt-0.5" id="kpi-total-txns">15,000,000</div>
+              <div class="text-[28px] font-semibold text-slate-900 dark:text-white font-mono tracking-tight mt-0.5" id="kpi-total-txns">—</div>
               <span class="text-[11px] text-slate-400 block mt-0.5">Verified & processed</span>
             </div>
 
             <div>
               <span class="text-[12px] text-slate-400 dark:text-slate-500 block">Monitored Customers</span>
-              <div class="text-[28px] font-semibold text-slate-900 dark:text-white font-mono tracking-tight mt-0.5" id="kpi-customers">25,000</div>
+              <div class="text-[28px] font-semibold text-slate-900 dark:text-white font-mono tracking-tight mt-0.5" id="kpi-customers">—</div>
               <span class="text-[11px] text-slate-400 block mt-0.5">4 behavioral cohorts</span>
             </div>
           </div>
@@ -304,13 +304,13 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="p-5 rounded-xl border border-slate-200/80 dark:border-slate-800/80 flex flex-col justify-between">
               <span class="text-xs text-slate-400">Total Intercepted Fraud</span>
-              <div class="text-[26px] font-semibold text-rose-600 dark:text-rose-400 font-mono mt-1" id="fraud-total-count">149,850</div>
+              <div class="text-[26px] font-semibold text-rose-600 dark:text-rose-400 font-mono mt-1" id="fraud-total-count">—</div>
               <span class="text-xs text-slate-500 mt-2">0.98% baseline fraud rate</span>
             </div>
 
             <div class="p-5 rounded-xl border border-slate-200/80 dark:border-slate-800/80 flex flex-col justify-between">
               <span class="text-xs text-slate-400">Intercepted Value</span>
-              <div class="text-[26px] font-semibold text-slate-900 dark:text-white font-mono mt-1" id="fraud-total-value">₹78.20 Cr</div>
+              <div class="text-[26px] font-semibold text-slate-900 dark:text-white font-mono mt-1" id="fraud-total-value">—</div>
               <span class="text-xs text-emerald-600 mt-2">Prevented loss in escrow</span>
             </div>
 
@@ -403,9 +403,7 @@
                 <h3 class="text-[15px] font-semibold text-slate-900 dark:text-white">Fraud Risk Simulator</h3>
                 <p class="text-[12px] text-slate-400 mt-0.5">Evaluate hypothetical transactions against active models</p>
               </div>
-              <span id="sim-verdict-tag" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-rose-50 text-rose-700 border border-rose-200">
-                CRITICAL THREAT
-              </span>
+              <span id="sim-verdict-tag" class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-rose-50 text-rose-700 border border-rose-200">—</span>
             </div>
 
             <!-- Row 1: the inputs that carry the measured fraud signal. Location
@@ -563,7 +561,7 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="p-5 rounded-xl border border-slate-200/80 dark:border-slate-800/80 flex flex-col justify-between">
               <span class="text-xs text-slate-400">Total Structural Anomalies</span>
-              <div class="text-[26px] font-semibold text-slate-900 dark:text-white font-mono mt-1" id="anomaly-total-count">375,018</div>
+              <div class="text-[26px] font-semibold text-slate-900 dark:text-white font-mono mt-1" id="anomaly-total-count">—</div>
               <span class="text-xs text-slate-500 mt-2">2.50% outlier contamination rate</span>
             </div>
 
@@ -769,21 +767,16 @@
               <input type="text" id="filter-search" class="w-full h-8 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg px-3 text-xs" placeholder="Filter Tx ID, Customer ID...">
             </div>
 
+            <!-- Options are populated from the data at load time. They were
+                 hardcoded and had drifted: "UPI" was missing entirely despite
+                 being 38% of all transactions, and "Online Payment" matched
+                 nothing because the real value is "Online Purchase". -->
             <select id="filter-type" class="h-8 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg px-2 text-xs">
               <option value="">All Types</option>
-              <option value="Card Payment">Card Payment</option>
-              <option value="Bank Transfer">Bank Transfer</option>
-              <option value="Online Payment">Online Payment</option>
-              <option value="ATM Withdrawal">ATM Withdrawal</option>
             </select>
 
             <select id="filter-payment" class="h-8 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg px-2 text-xs">
               <option value="">All Channels</option>
-              <option value="UPI">UPI</option>
-              <option value="Net Banking">Net Banking</option>
-              <option value="Credit Card">Credit Card</option>
-              <option value="Debit Card">Debit Card</option>
-              <option value="ATM">ATM</option>
             </select>
 
             <select id="filter-fraud" class="h-8 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg px-2 text-xs">
@@ -848,7 +841,7 @@
       <!-- Drawer Header -->
       <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
         <div>
-          <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white font-mono" id="drawer-tx-id">#TXN10045092</h3>
+          <h3 class="text-[16px] font-semibold text-slate-900 dark:text-white font-mono" id="drawer-tx-id">—</h3>
           <span class="text-xs text-slate-400">Transaction Investigation</span>
         </div>
         <button onclick="closeSlideOver()" class="w-7 h-7 rounded border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 hover:bg-slate-100">
@@ -860,7 +853,7 @@
       <div class="p-4 rounded-lg bg-rose-50 dark:bg-rose-950/30 border border-rose-200/80 dark:border-rose-900/50 flex items-center justify-between">
         <div>
           <span class="text-[10px] uppercase font-semibold text-rose-700 dark:text-rose-400 block font-mono">Assessed Risk Score</span>
-          <div class="text-[20px] font-bold text-rose-600 dark:text-rose-400 font-mono mt-0.5" id="drawer-risk-level">CRITICAL (0.945)</div>
+          <div class="text-[20px] font-bold text-rose-600 dark:text-rose-400 font-mono mt-0.5" id="drawer-risk-level">—</div>
         </div>
         <span class="material-symbols-outlined text-[26px] text-rose-500">gpp_bad</span>
       </div>
@@ -869,19 +862,19 @@
       <div class="grid grid-cols-2 gap-3 text-xs">
         <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
           <span class="text-slate-400 block text-[10px]">Amount</span>
-          <span class="font-semibold text-slate-900 dark:text-white font-mono" id="drawer-amount">₹1,85,000.00</span>
+          <span class="font-semibold text-slate-900 dark:text-white font-mono" id="drawer-amount">—</span>
         </div>
         <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
           <span class="text-slate-400 block text-[10px]">Customer ID</span>
-          <span class="font-semibold text-slate-900 dark:text-white font-mono" id="drawer-cust-id">102283</span>
+          <span class="font-semibold text-slate-900 dark:text-white font-mono" id="drawer-cust-id">—</span>
         </div>
         <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
           <span class="text-slate-400 block text-[10px]">Payment Method</span>
-          <span class="font-semibold text-slate-900 dark:text-white" id="drawer-payment">UPI</span>
+          <span class="font-semibold text-slate-900 dark:text-white" id="drawer-payment">—</span>
         </div>
         <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
           <span class="text-slate-400 block text-[10px]">Device Type</span>
-          <span class="font-semibold text-slate-900 dark:text-white" id="drawer-device">Android</span>
+          <span class="font-semibold text-slate-900 dark:text-white" id="drawer-device">—</span>
         </div>
       </div>
 
@@ -974,66 +967,42 @@
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-mono">
         <div class="p-3 rounded-lg border border-slate-200 dark:border-slate-800">
           <span class="text-slate-400 block text-[10px] font-sans">Gross Volume</span>
-          <span class="text-sm font-bold text-slate-900 dark:text-white mt-1 block" id="report-vol">₹78,877.88 Cr</span>
+          <span class="text-sm font-bold text-slate-900 dark:text-white mt-1 block" id="report-vol">—</span>
         </div>
         <div class="p-3 rounded-lg border border-slate-200 dark:border-slate-800">
           <span class="text-slate-400 block text-[10px] font-sans">Total Records</span>
-          <span class="text-sm font-bold text-slate-900 dark:text-white mt-1 block">15,000,000</span>
+          <span class="text-sm font-bold text-slate-900 dark:text-white mt-1 block" id="report-records">—</span>
         </div>
         <div class="p-3 rounded-lg border border-slate-200 dark:border-slate-800">
           <span class="text-slate-400 block text-[10px] font-sans">Intercepted Fraud</span>
-          <span class="text-sm font-bold text-rose-600 mt-1 block" id="report-fraud">149,850 (0.98%)</span>
+          <span class="text-sm font-bold text-rose-600 mt-1 block" id="report-fraud">—</span>
         </div>
         <div class="p-3 rounded-lg border border-slate-200 dark:border-slate-800">
           <span class="text-slate-400 block text-[10px] font-sans">Customer Base</span>
-          <span class="text-sm font-bold text-slate-900 dark:text-white mt-1 block">25,000 Accounts</span>
+          <span class="text-sm font-bold text-slate-900 dark:text-white mt-1 block" id="report-customers">—</span>
         </div>
       </div>
 
-      <!-- Models Table -->
+      <!-- Models table. Previously hardcoded with invented figures (Random
+           Forest "95.4% precision" against a real 3.0%); now rendered from the
+           benchmark, led by PR-AUC rather than accuracy. -->
       <div class="flex flex-col gap-2">
-        <h4 class="text-xs font-semibold text-slate-900 dark:text-white">Classifier Performance (500k Sample)</h4>
-        <div class="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-slate-50 dark:bg-slate-800/40 text-slate-400 text-[10px] uppercase">
-              <tr>
-                <th class="py-2 px-3 font-medium">Model</th>
-                <th class="py-2 px-3 font-medium">Accuracy</th>
-                <th class="py-2 px-3 font-medium">Precision</th>
-                <th class="py-2 px-3 font-medium">Recall</th>
-                <th class="py-2 px-3 font-medium">ROC-AUC</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-mono text-[11px]">
-              <tr>
-                <td class="py-2 px-3 font-sans font-medium">Random Forest (Ensemble)</td>
-                <td class="py-2 px-3">98.2%</td>
-                <td class="py-2 px-3">95.4%</td>
-                <td class="py-2 px-3">94.2%</td>
-                <td class="py-2 px-3 text-emerald-600 font-semibold">0.978</td>
-              </tr>
-              <tr>
-                <td class="py-2 px-3 font-sans font-medium">Logistic Regression</td>
-                <td class="py-2 px-3">94.6%</td>
-                <td class="py-2 px-3">91.2%</td>
-                <td class="py-2 px-3">89.5%</td>
-                <td class="py-2 px-3 text-emerald-600 font-semibold">0.941</td>
-              </tr>
-              <tr>
-                <td class="py-2 px-3 font-sans font-medium">Isolation Forest (Unsupervised)</td>
-                <td class="py-2 px-3">99.4%</td>
-                <td class="py-2 px-3">98.1%</td>
-                <td class="py-2 px-3">96.8%</td>
-                <td class="py-2 px-3 text-emerald-600 font-semibold">0.992</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <h4 class="text-xs font-semibold text-slate-900 dark:text-white">Classifier Performance</h4>
+        <div class="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800" id="report-models"></div>
+        <p class="text-[10px] text-slate-400 leading-relaxed" id="report-models-note"></p>
       </div>
 
-      <!-- Recommendations Note -->
-      <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-        <strong>Executive Summary:</strong> The platform maintains an effective false-alarm suppression rate with 99.4% normal clearance accuracy. Step-up multi-factor verification is enforced for high-risk UPI transfers exceeding ₹50,000 executed during off-peak windows.
+      <!-- Measured risk segments -->
+      <div class="flex flex-col gap-2">
+        <h4 class="text-xs font-semibold text-slate-900 dark:text-white">Highest-Risk Segments</h4>
+        <div class="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800" id="report-segments"></div>
+      </div>
+
+      <!-- Executive summary, composed from measured values rather than prose
+           that asserted a "99.4% normal clearance accuracy" and a Rs 50,000
+           threshold that no computation produced. -->
+      <div class="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 leading-relaxed" id="report-summary-note">
+        —
       </div>
 
     </div>
