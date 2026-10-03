@@ -7,9 +7,13 @@ pandas>=2.0.0
 numpy>=1.24.0
 
 # ---- Machine learning ----
-scikit-learn>=1.2.0
-xgboost>=2.0.0           # gradient-boosted trees for the fraud benchmark
-lightgbm>=4.0.0          # second GBDT family for the benchmark
+# Upper bounds are pinned to the current major versions because this repository
+# ships trained model pickles. A new major of any of these can change the
+# serialisation format and make the committed artefacts unloadable; a minor
+# mismatch only warns (CI currently unpickles 1.9.0 artefacts under 1.9.1).
+scikit-learn>=1.2.0,<2
+xgboost>=2.0.0,<4        # gradient-boosted trees for the fraud benchmark
+lightgbm>=4.0.0,<6       # second GBDT family for the benchmark
 joblib>=1.3.0
 
 # ---- Web backend ----

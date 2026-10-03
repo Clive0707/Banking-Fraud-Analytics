@@ -51,6 +51,27 @@ class TestPurityScan:
         df = synthetic_transactions.drop(columns=["transaction_status"])
         assert la.scan_categorical_purity(df)["suspicious_levels"] == []
 
+    @pytest.mark.parametrize("dtype", ["object", "category", "string"])
+    def test_detects_the_leak_for_every_string_dtype(self, synthetic_transactions, dtype):
+        """
+        The scan must not depend on how pandas stores text.
+
+        Testing `dtype == object` worked on pandas 2 but silently matched
+        nothing on pandas 3, where string columns carry a dedicated `str`
+        dtype -- the detector reported a clean dataset for a leaking one.
+        """
+        df = synthetic_transactions.copy()
+        df["transaction_status"] = df["transaction_status"].astype(dtype)
+        flagged = {f["level"] for f in la.scan_categorical_purity(df)["suspicious_levels"]}
+        assert "Flagged" in flagged, f"leak missed for {dtype} dtype"
+        assert "Declined" in flagged, f"leak missed for {dtype} dtype"
+
+    def test_numeric_columns_are_not_scanned(self, synthetic_transactions):
+        """Guard the other direction: the widened check must not pull in numbers."""
+        scanned = la.scan_categorical_purity(synthetic_transactions)["columns_scanned"]
+        for numeric in ("amount", "balance_before", "balance_after"):
+            assert numeric not in scanned
+
 
 class TestLeakyVsClean:
     def test_leak_inflates_the_metrics(self, synthetic_transactions):

@@ -389,7 +389,7 @@ Every generator parameter was measured from the original file, not invented: the
 
 Two mechanics are reproduced exactly because the analysis depends on them:
 
-- **The ledger defect.** A transaction larger than the available balance zeroes it rather than overdrawing. Drains and overdrafts are the same set of rows — a 100% correspondence in the source data — which is what drops the consistency score to ~95%.
+- **The ledger defect.** A transaction larger than the available balance zeroes it rather than overdrawing, which is what drops the consistency score to ~95%. A balance reaches zero exactly when the amount meets or exceeds it; spending it to the rupee also lands on zero, but by ordinary subtraction, so that case is a drain without being a ledger violation.
 - **The target leak.** `Declined` and `Flagged` occur only on fraudulent rows, so the leakage audit in §2 has something to find.
 
 This reproduces the dataset's *statistical structure*, not its exact bytes. A fresh draw lands near the headline figures rather than on them — the 0.9776% fraud rate, 746,174 ledger violations and 95.03% consistency quoted above were measured on the original file. The generator's `--verify` step checks each property against an explicit tolerance band and fails loudly if one drifts:

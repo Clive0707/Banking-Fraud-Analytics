@@ -23,7 +23,8 @@ invented, and the generator reproduces:
   high-value), reproducing the measured 3x / 5x / 9x lifts and their interactions
 * the account-drain defect: a transaction larger than the available balance
   zeroes it instead of overdrawing, which is the real source of the ~95%
-  consistency score the pipeline reports
+  consistency score the pipeline reports. Spending the balance exactly also
+  reaches zero, but by ordinary subtraction, so it is not a ledger violation
 * the `transaction_status` target leak: Declined and Flagged occur only on
   fraudulent rows, so the leakage audit has something to find
 
@@ -149,6 +150,20 @@ COLUMNS = config.RAW_COLUMNS
 CHUNK_ROWS = 1_000_000
 
 
+def _zero_pad(values):
+    """Two-digit zero-padded strings, using numpy so the dtype is predictable."""
+    return np.char.zfill(values.astype(str), 2)
+
+
+def _time_strings(hour, minute, second):
+    """HH:MM:SS for a whole chunk, without going through pandas string dtypes."""
+    colon = ":"
+    out = np.char.add(_zero_pad(hour), colon)
+    out = np.char.add(out, _zero_pad(minute))
+    out = np.char.add(out, colon)
+    return np.char.add(out, _zero_pad(second))
+
+
 def _draw(rng, spec, size):
     values, probs = spec
     probs = np.asarray(probs, dtype=float)
@@ -205,9 +220,10 @@ def generate_chunk(rng, n, start_id, date_index):
         "transaction_id": np.char.add("TXN", txn_id.astype(str)),
         "customer_id": customer_id,
         "transaction_date": dates,
-        "transaction_time": pd.Series(hour).map("{:02d}".format).values
-                            + ":" + pd.Series(minute).map("{:02d}".format).values
-                            + ":" + pd.Series(second).map("{:02d}".format).values,
+        # Built with numpy rather than pandas .map().values: pandas 3 returns a
+        # dedicated string array there, whose concatenation semantics differ
+        # from the object ndarray pandas 2 produced.
+        "transaction_time": _time_strings(hour, minute, second),
         "transaction_type": _draw(rng, CATEGORICALS["transaction_type"], n),
         "account_type": _draw(rng, CATEGORICALS["account_type"], n),
         "amount": amount,
@@ -335,10 +351,15 @@ def verify(path=None, sample_rows=2_000_000):
     chk("ledger defect ~5%", 0.03 < violation_rate < 0.07, f"{violation_rate * 100:.3f}%")
     chk("all ledger violations are drains",
         bool((df.loc[~ledger_ok, "balance_after"] == 0).all()))
-    # The defining property: drains and overdrafts are the same set of rows.
-    overdraft = df["amount"] > df["balance_before"]
+    # The defining property: a balance reaches zero exactly when the transaction
+    # meets or exceeds it. Spending the balance exactly also lands on zero, but
+    # through ordinary arithmetic -- it is a drain without being an overdraft,
+    # and the ledger identity still holds for it. Asserting equality with the
+    # strict `>` was wrong and failed on the one row in 400,000 that spends the
+    # balance to the rupee.
     drained = df["balance_after"] == 0
-    chk("drains correspond exactly to overdrafts", bool((overdraft == drained).all()))
+    chk("balance hits zero exactly when amount >= balance",
+        bool((drained == (df["amount"] >= df["balance_before"])).all()))
     chk("no negative balances", bool((df["balance_after"] >= 0).all()))
 
     chk("no nulls", int(df.isna().sum().sum()) == 0)

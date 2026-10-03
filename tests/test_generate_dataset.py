@@ -99,10 +99,18 @@ class TestLedgerDefect:
         )
         assert 0.03 < (1 - ok.mean()) < 0.07
 
-    def test_drains_and_overdrafts_are_the_same_rows(self, generated):
-        overdraft = generated["amount"] > generated["balance_before"]
+    def test_balance_hits_zero_exactly_when_amount_meets_balance(self, generated):
+        """
+        Spending the balance exactly also lands on zero, but by ordinary
+        subtraction -- a drain that is not an overdraft, and not a ledger
+        violation. Asserting equality against the strict `>` was wrong.
+        """
         drained = generated["balance_after"] == 0
-        assert (overdraft == drained).all()
+        assert (drained == (generated["amount"] >= generated["balance_before"])).all()
+
+    def test_overdrafts_are_always_drained(self, generated):
+        overdraft = generated["amount"] > generated["balance_before"]
+        assert (generated.loc[overdraft, "balance_after"] == 0).all()
 
     def test_every_violation_is_a_drain(self, generated):
         ok = np.isclose(

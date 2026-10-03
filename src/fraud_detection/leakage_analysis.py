@@ -106,6 +106,27 @@ def status_leakage_report(df):
     }
 
 
+def _is_categorical_like(series):
+    """
+    True for columns that behave as categories, across pandas versions.
+
+    Testing `dtype == object` is not portable: pandas 3 gives string columns a
+    dedicated `str` dtype, so that check silently excluded every categorical
+    column and the scan returned no findings at all. A leak detector that
+    quietly finds nothing is worse than one that fails loudly, so this tests
+    what the column *is not* -- numeric, boolean or temporal -- rather than
+    enumerating the dtypes it might be.
+    """
+    from pandas.api import types as ptypes
+
+    return not (
+        ptypes.is_numeric_dtype(series)
+        or ptypes.is_bool_dtype(series)
+        or ptypes.is_datetime64_any_dtype(series)
+        or ptypes.is_timedelta64_dtype(series)
+    )
+
+
 def scan_categorical_purity(df, exclude=None):
     """
     Generic leak detector: flag categorical levels that are almost pure in the
@@ -114,7 +135,7 @@ def scan_categorical_purity(df, exclude=None):
     target = config.TARGET_COL
     exclude = set(exclude or []) | {target, "transaction_id", "customer_id"}
     candidates = [c for c in df.columns
-                  if c not in exclude and (df[c].dtype == object or str(df[c].dtype) == "category")]
+                  if c not in exclude and _is_categorical_like(df[c])]
 
     findings = []
     for col in candidates:
