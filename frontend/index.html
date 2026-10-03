@@ -316,8 +316,11 @@
 
             <div class="p-5 rounded-xl border border-slate-200/80 dark:border-slate-800/80 flex flex-col justify-between">
               <span class="text-xs text-slate-400">Highest Threat Channel</span>
-              <div class="text-[26px] font-semibold text-slate-900 dark:text-white font-mono mt-1">UPI Transfers</div>
-              <span class="text-xs text-rose-600 mt-2">0.98% vulnerability index</span>
+              <!-- Previously hardcoded to "UPI Transfers / 0.98%", which was also
+                   the wrong channel: Credit Card carries the highest rate. Now
+                   derived from the Spark aggregation. -->
+              <div class="text-[22px] font-semibold text-slate-900 dark:text-white font-mono mt-1 leading-tight" id="fraud-top-channel">—</div>
+              <span class="text-xs text-rose-600 mt-2" id="fraud-top-channel-rate">—</span>
             </div>
           </div>
 
@@ -405,14 +408,46 @@
               </span>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <!-- Row 1: the inputs that carry the measured fraud signal. Location
+                 and balance were previously hardcoded, which made the strongest
+                 feature (5x international lift) impossible to exercise. -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <label class="block text-xs text-slate-500 mb-1">Nominal Amount (₹)</label>
-                <input type="number" id="pred-amount" class="w-full h-9 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg px-3 text-xs font-mono font-semibold" value="85000">
+                <label class="block text-xs text-slate-500 mb-1">Amount (₹)</label>
+                <input type="number" id="pred-amount" min="1" step="100"
+                       class="w-full h-9 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg px-3 text-xs font-mono font-semibold"
+                       value="85000">
               </div>
 
               <div>
-                <label class="block text-xs text-slate-500 mb-1">Payment Method</label>
+                <label class="block text-xs text-slate-500 mb-1">Opening balance (₹)</label>
+                <input type="number" id="pred-balance" min="0" step="1000"
+                       class="w-full h-9 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg px-3 text-xs font-mono font-semibold"
+                       value="90000">
+              </div>
+
+              <div>
+                <label class="block text-xs text-slate-500 mb-1">Location</label>
+                <select id="pred-location" class="w-full h-9 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg px-2 text-xs">
+                  <optgroup label="Domestic">
+                    <option value="Mumbai">Mumbai</option>
+                    <option value="Delhi">Delhi</option>
+                    <option value="Bengaluru">Bengaluru</option>
+                    <option value="Hyderabad">Hyderabad</option>
+                    <option value="Chennai">Chennai</option>
+                    <option value="Pune">Pune</option>
+                  </optgroup>
+                  <optgroup label="International (~5× baseline)">
+                    <option value="Dubai">Dubai</option>
+                    <option value="Singapore">Singapore</option>
+                    <option value="New York">New York</option>
+                    <option value="London">London</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs text-slate-500 mb-1">Payment method</label>
                 <select id="pred-payment" class="w-full h-9 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg px-2 text-xs">
                   <option value="UPI">UPI</option>
                   <option value="Net Banking">Net Banking</option>
@@ -421,30 +456,46 @@
                   <option value="ATM">ATM</option>
                 </select>
               </div>
+            </div>
 
-              <div>
-                <label class="block text-xs text-slate-500 mb-1">Execution Hour (00–23)</label>
-                <input type="range" id="pred-hour-slider" min="0" max="23" value="3" oninput="updateSimHour(this.value)" class="w-full mt-2">
-                <span id="sim-hour-label" class="text-[11px] font-mono text-slate-400">03:00 (Late Night)</span>
+            <!-- Row 2: timing, model choice, and the derived closing balance. -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+              <div class="md:col-span-2">
+                <label class="block text-xs text-slate-500 mb-1">Execution hour</label>
+                <input type="range" id="pred-hour-slider" min="0" max="23" value="3" class="w-full">
+                <span id="sim-hour-label" class="text-[11px] font-mono text-slate-400">03:00</span>
               </div>
 
-              <div class="flex items-end">
-                <button type="button" onclick="runRiskSimulation()" class="w-full h-9 bg-slate-900 dark:bg-sky-600 text-white rounded-lg text-xs font-medium hover:bg-slate-800 transition-colors">
-                  Evaluate Risk
-                </button>
+              <div>
+                <label class="block text-xs text-slate-500 mb-1">Model</label>
+                <select id="pred-model" class="w-full h-9 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 rounded-lg px-2 text-xs">
+                  <!-- populated from /api/model-performance, best model selected -->
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs text-slate-500 mb-1">Closing balance</label>
+                <div id="sim-derived-balance" class="h-9 flex items-center px-3 text-xs font-mono text-slate-500 bg-slate-50/60 dark:bg-slate-800/30 border border-slate-200/70 dark:border-slate-700/70 rounded-lg">—</div>
               </div>
             </div>
 
-            <!-- Simulation Result Output -->
-            <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800/60 text-xs">
-              <div class="flex items-center gap-3">
-                <span class="text-slate-400">Probability of Fraud:</span>
-                <span class="text-base font-semibold font-mono text-rose-600 dark:text-rose-400" id="sim-prob-display">92.3%</span>
+            <!-- Result -->
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-800/60">
+              <div class="flex items-center justify-between flex-wrap gap-3 text-xs">
+                <div class="flex items-center gap-3">
+                  <span class="text-slate-400">Fraud probability</span>
+                  <span class="text-base font-semibold font-mono text-slate-400" id="sim-prob-display">—</span>
+                  <span id="sim-threshold-note" class="text-[11px] font-mono text-slate-400"></span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-slate-400">Action</span>
+                  <span class="font-semibold text-slate-400" id="sim-action-verdict">—</span>
+                </div>
               </div>
-              <div class="flex items-center gap-2">
-                <span class="text-slate-400">Interception Policy:</span>
-                <span class="font-semibold text-slate-900 dark:text-white" id="sim-action-verdict">AUTO-QUARANTINE</span>
-              </div>
+
+              <!-- The API already returns the factors that fired; the previous
+                   UI discarded them. -->
+              <div id="sim-factors" class="mt-3 flex flex-wrap gap-1.5"></div>
             </div>
           </div>
 
@@ -666,6 +717,22 @@
               <p class="text-[12px] text-slate-400 mt-0.5" id="fi-caption">&nbsp;</p>
             </div>
             <div class="h-[340px]"><canvas id="chart-feature-importance"></canvas></div>
+          </div>
+
+          <!-- ============================================================
+               Spark MLlib trained on the complete 15M-row dataset, against
+               the 500k-sample scikit-learn benchmark.
+               ============================================================ -->
+          <div class="p-6 rounded-xl border border-slate-200/80 dark:border-slate-800/80 flex flex-col gap-4">
+            <div>
+              <h3 class="text-[15px] font-semibold text-slate-900 dark:text-white">Distributed Training on All 15M Rows</h3>
+              <p class="text-[12px] text-slate-400 mt-0.5">
+                Spark MLlib fits the complete dataset — feature engineering, splitting, weighting
+                and evaluation all distributed. Compared here against the 500,000-row stratified
+                sample the single-node scikit-learn models use.
+              </p>
+            </div>
+            <div id="spark-ml-panel"></div>
           </div>
 
           <!-- Leakage audit: the showcase finding -->

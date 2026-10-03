@@ -114,8 +114,10 @@ def point_config_at(tmp):
         "MODEL_COMPARISON_JSON": "model_comparison.json",
         "THRESHOLD_ANALYSIS_JSON": "threshold_analysis.json",
         "FEATURE_IMPORTANCE_JSON": "feature_importance.json",
+        "SPARK_ML_COMPARISON_JSON": "spark_ml_comparison.json",
     }.items():
         setattr(config, attr, config.MODELS_DIR / filename)
+    config.SPARK_ML_MODEL_DIR = config.MODELS_DIR / "spark_ml"
 
     config.ML_SAMPLE_TARGET = ROWS
     return config
@@ -136,11 +138,11 @@ def main():
         config = point_config_at(tmp)
         csv_path = config.RAW_DIR / "transactions.csv"
 
-        print(f"\n[1/5] Generating {ROWS:,} synthetic transactions...")
+        print(f"\n[1/6] Generating {ROWS:,} synthetic transactions...")
         source = generate_csv(csv_path)
         print(f"      fraud rate {source['is_fraud'].mean() * 100:.3f}%")
 
-        print("\n[2/5] PySpark preprocessing...")
+        print("\n[2/6] PySpark preprocessing...")
         import src.preprocessing.preprocess as pp
         pp.config = config
         result = pp.run_pyspark_preprocessing(
@@ -161,7 +163,7 @@ def main():
         ok &= check("alerts generated", config.ALERTS_JSON.exists())
         ok &= check("benchmark recorded", config.PIPELINE_BENCHMARK_JSON.exists())
 
-        print("\n[3/5] K-Means customer segmentation...")
+        print("\n[3/6] K-Means customer segmentation...")
         import src.customer_segmentation.clustering as cl
         cl.config = config
         clusters = cl.perform_customer_segmentation()
@@ -169,14 +171,14 @@ def main():
         ok &= check("assignments saved", len(clusters.get("assignments", {})) > 0)
         ok &= check("quality verdict present", "segmentation_quality" in clusters)
 
-        print("\n[4/5] Isolation Forest anomaly detection...")
+        print("\n[4/6] Isolation Forest anomaly detection...")
         import src.anomaly_detection.anomaly as an
         an.config = config
         anomalies = an.perform_anomaly_detection()
         ok &= check("anomalies detected", anomalies["anomalies_in_sample"] > 0)
         ok &= check("validated against labels", anomalies.get("label_validation") is not None)
 
-        print("\n[5/5] Fraud model benchmark + leakage audit...")
+        print("\n[5/6] Fraud model benchmark + leakage audit...")
         import src.fraud_detection.train_models as tm
         tm.config = config
         comparison = tm.train_fraud_models(models_dir=config.MODELS_DIR, run_cv=False)
@@ -202,6 +204,36 @@ def main():
                     not any("status" in f.lower() for f in comparison["feature_names"]))
         ok &= check("target excluded from features",
                     "is_fraud" not in comparison["feature_names"])
+
+        print("\n[6/6] Spark MLlib on the full dataset...")
+        # Logistic regression only: the tree ensembles are far slower, and this
+        # stage exists to prove the distributed path runs end to end rather than
+        # to benchmark it.
+        import src.fraud_detection.spark_ml as sml
+        sml.config = config
+        spark_res = sml.train_spark_models(
+            raw_path=csv_path, include_gbt=False, include_rf=False, save_models=False
+        )
+        ok &= check("trained on the full dataset",
+                    spark_res["trained_on_full_dataset"] is True)
+        ok &= check("used every row", spark_res["dataset_rows"] == ROWS,
+                    f"{spark_res['dataset_rows']:,} rows")
+        ok &= check("train + test accounts for the dataset",
+                    spark_res["train_rows"] + spark_res["test_rows"] == ROWS)
+        ok &= check("class weighting applied",
+                    spark_res["class_weighting"]["weight_positive"] > 1)
+        sp_best = spark_res["models"][spark_res["best_model"]]
+        ok &= check("Spark model produces a ranking",
+                    sp_best["ranking"]["pr_auc"] > 0,
+                    f"PR-AUC {sp_best['ranking']['pr_auc']}")
+        ok &= check("top-slice lift above 1x",
+                    any(r["lift"] > 1 for r in sp_best["precision_at_k"]))
+        ok &= check("compared against the sampled benchmark",
+                    spark_res["comparison_with_sampled_sklearn"]["available"] is True)
+        ok &= check("transaction_status excluded from Spark features",
+                    all("status" not in c.lower()
+                        for c in sml.NUMERIC_COLS + sml.FLAG_COLS
+                        + sml.CUSTOMER_COLS + sml.CATEGORICAL_COLS))
 
         print("\n" + "=" * 60)
         print("SMOKE TEST PASSED" if ok else "SMOKE TEST FAILED")

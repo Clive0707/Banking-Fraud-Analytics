@@ -105,15 +105,18 @@ banking-fraud-analytics/
 │   ├── features.py                    # single source of truth for feature engineering
 │   ├── preprocessing/preprocess.py    # PySpark pipeline (local[*], no Hadoop)
 │   ├── fraud_detection/
-│   │   ├── train_models.py            # 5-model benchmark
+│   │   ├── train_models.py            # 5-model benchmark (500k stratified sample)
+│   │   ├── spark_ml.py                # Spark MLlib benchmark (ALL 15M rows)
 │   │   ├── metrics.py                 # PR-AUC, precision@k, lift, gain, cost curves
 │   │   └── leakage_analysis.py        # target-leakage audit
 │   ├── customer_segmentation/clustering.py
 │   └── anomaly_detection/anomaly.py
-├── backend/                           # Flask API (22 endpoints)
+├── backend/                           # Flask API (25 endpoints)
 ├── frontend/                          # dashboard: app.js + analytics.js (Model Lab)
-├── scripts/smoke_test.py              # end-to-end pipeline verification
-├── tests/                             # 74 pytest tests
+├── scripts/
+│   ├── generate_dataset.py            # regenerate the 15M-row source CSV
+│   └── smoke_test.py                  # end-to-end pipeline verification
+├── tests/                             # 113 pytest tests
 └── Dockerfile / .github/workflows/ci.yml
 ```
 
@@ -170,6 +173,36 @@ Methodology:
 - Categoricals are **one-hot encoded**. `LabelEncoder` previously imposed a meaningless ordering on `location`, which made the 5× international lift invisible to the linear model.
 - Per-customer baseline features are fitted **on the training split only**, so test rows do not contribute to their own baselines.
 - Thresholds are tuned per model for F1 and for expected net saving.
+
+### Distributed training on all 15M rows
+
+The benchmark above trains on the 500,000-row stratified sample because scikit-learn is single-node. Spark MLlib trains on the **complete dataset** — feature engineering, splitting, class weighting, fitting and evaluation all distributed, with only the final metrics collected to the driver:
+
+```bash
+python run.py --spark-ml
+```
+
+| Spark model (11,998,182 training rows) | PR-AUC | ROC-AUC | Top-1% lift | Train |
+|---|---:|---:|---:|---:|
+| **Spark GBT** | **0.0310** | 0.755 | 5.36× | 379s |
+| Spark Logistic Regression | 0.0303 | 0.754 | 5.25× | 156s |
+| Spark Random Forest | 0.0290 | 0.752 | 4.99× | 653s |
+
+Whole benchmark: **1,829 seconds** over 15M rows, tested on a held-out 3,001,818.
+
+**Does 30× the data help?** Barely, on the summary metric:
+
+| | Training rows | PR-AUC | Top-1% lift |
+|---|---:|---:|---:|
+| scikit-learn (stratified sample) | 399,747 | 0.0299 | 4.29× |
+| Spark MLlib (full dataset) | 11,998,182 | 0.0310 | **5.36×** |
+| | **30×** | **+3.9%** | **+25%** |
+
+PR-AUC moves 3.9% for thirty times the training data — the sample already sits on the plateau of the learning curve, which justifies the sampling decision with a measurement instead of an assumption.
+
+The lift at the top 1% is the more interesting number: it improves **25%**, from 4.29× to 5.36×. The extra data does not make the model better at separating the whole population, but it does sharpen the ranking at the very top — which is exactly the slice an analyst team reviews, so it is the improvement that would actually be felt in production.
+
+---
 
 ### Threshold economics
 
@@ -250,13 +283,20 @@ Several displayed metrics used to be invented. All are now computed or shown as 
 pip install -r requirements.txt
 ```
 
-Place `banking_transactions_15m.csv` in `data/raw/` (or in the parent directory, where `run.py` will copy it).
+**The dataset is not in the repository** — at 1.76 GB it exceeds GitHub's 100 MB file limit. Regenerate it:
+
+```bash
+python scripts/generate_dataset.py
+```
+
+The dashboard and the sampled models work without it (the stratified sample and all computed artefacts are committed); only the PySpark pipeline and distributed training need the full file. See §13.
 
 ```bash
 python run.py --all          # full rebuild, then serve
 python run.py                # serve, reusing existing artefacts
 python run.py --reprocess    # rerun the Spark pipeline only
-python run.py --train        # retrain the models only
+python run.py --train        # retrain the sampled scikit-learn models only
+python run.py --spark-ml     # train Spark MLlib on ALL 15M rows (needs the raw CSV)
 python run.py --no-serve --all   # batch rebuild, no web server
 python run.py --production   # serve via waitress instead of the dev server
 ```
@@ -273,7 +313,7 @@ docker run -p 5000:5000 -v "$PWD/data:/app/data" -v "$PWD/models:/app/models" ba
 Tests:
 
 ```bash
-pytest                       # 74 unit and API tests
+pytest                       # 113 unit and API tests
 python scripts/smoke_test.py # full pipeline on synthetic data, no raw file needed
 ```
 
@@ -299,6 +339,7 @@ python scripts/smoke_test.py # full pipeline on synthetic data, no raw file need
 | `GET /api/customer/<id>` | Customer 360 with velocity metrics |
 | `GET /api/anomalies` | Isolation Forest summary and label validation |
 | `GET /api/model-performance` | Full benchmark with curves and baselines |
+| `GET /api/spark-ml` | Spark MLlib results on all 15M rows, vs the sampled benchmark |
 | `GET /api/thresholds` | Threshold sweep and cost curves |
 | `GET /api/feature-importance` | Per-model feature importance |
 | `GET /api/data-quality` | Measured quality scores |
@@ -311,20 +352,66 @@ python scripts/smoke_test.py # full pipeline on synthetic data, no raw file need
 
 ## 13. Dataset
 
-**`banking_transactions_15m.csv`** — 15,000,000 rows, ~1.85 GB, 1 Jan – 31 Dec 2025, 25,000 customers, 12 merchants, 14 locations.
+**`banking_transactions_15m.csv`** — 15,000,000 rows, ~1.76 GB, 1 Jan – 31 Dec 2025, 25,000 customers, 12 merchants, 14 locations.
 
 Schema: `transaction_id`, `customer_id`, `transaction_date`, `transaction_time`, `transaction_type`, `account_type`, `amount`, `balance_before`, `balance_after`, `merchant`, `location`, `payment_method`, `device_type`, `transaction_status`, `is_fraud`.
 
 `is_fraud` is strictly the target and is never a feature. `transaction_status` is excluded from every feature set for the reason in §2.
 
-**Sampling.** PySpark processes all 15M records for cleaning, aggregation and metrics. For Scikit-learn training it draws a reproducible **stratified sample of ~500,000 records** (`sampleBy`, seed 42) that preserves the `is_fraud` class distribution exactly, so model training fits in local RAM without discarding fraud cases.
+### Getting the data
+
+GitHub rejects files above 100 MB, so the 1.76 GB source file is **not in this repository**. Regenerate it:
+
+```bash
+python scripts/generate_dataset.py
+```
+
+That writes `data/raw/banking_transactions_15m.csv` in a few minutes and verifies it against the documented properties. Smaller runs are available for a quick check:
+
+```bash
+python scripts/generate_dataset.py --rows 1000000   # 1M rows
+python scripts/generate_dataset.py --verify-only    # check an existing file
+```
+
+**What works without it.** The stratified sample and every computed artefact *are* committed, so a fresh clone can already run the dashboard, retrain the scikit-learn models and run the segmentation. The dataset is only needed for `--reprocess` (the PySpark pipeline) and `--spark-ml` (distributed training).
+
+| From a fresh clone | Needs the raw CSV? |
+|---|---|
+| `python run.py` — dashboard | No |
+| `python run.py --train` — retrain sampled models | No |
+| `python run.py --segment` / `--anomalies` | No |
+| `python run.py --reprocess` — PySpark pipeline | **Yes** |
+| `python run.py --spark-ml` — distributed training | **Yes** |
+
+### Fidelity of the regenerated data
+
+Every generator parameter was measured from the original file, not invented: the categorical mixes, the clipped-lognormal amounts (median ₹1,946, mean ₹5,267), the balance distribution, and a fraud probability table keyed by (overnight, international, high-value) that reproduces the measured lifts and their interactions.
+
+Two mechanics are reproduced exactly because the analysis depends on them:
+
+- **The ledger defect.** A transaction larger than the available balance zeroes it rather than overdrawing. Drains and overdrafts are the same set of rows — a 100% correspondence in the source data — which is what drops the consistency score to ~95%.
+- **The target leak.** `Declined` and `Flagged` occur only on fraudulent rows, so the leakage audit in §2 has something to find.
+
+This reproduces the dataset's *statistical structure*, not its exact bytes. A fresh draw lands near the headline figures rather than on them — the 0.9776% fraud rate, 746,174 ledger violations and 95.03% consistency quoted above were measured on the original file. The generator's `--verify` step checks each property against an explicit tolerance band and fails loudly if one drifts:
+
+```
+[PASS] fraud rate near 1% -- 1.0104%
+[PASS] overnight lift ~3x -- 3.02x
+[PASS] international lift ~5x -- 4.87x
+[PASS] high-value lift >5x -- 8.45x
+[PASS] status leak present (precision 1.0)
+[PASS] ledger defect ~5% -- 4.281%
+[PASS] drains correspond exactly to overdrafts
+```
+
+**Sampling.** PySpark processes all 15M records for cleaning, aggregation and metrics. For scikit-learn training it draws a reproducible **stratified sample of ~500,000 records** (`sampleBy`, seed 42) that preserves the `is_fraud` class distribution exactly, so single-node model training fits in local RAM without discarding fraud cases. Spark MLlib trains on the full 15M in parallel — see §7.
 
 ---
 
 ## 14. Technology
 
 **Big data** PySpark 4.2 (`local[*]`, no Hadoop/HDFS/YARN), PyArrow, Parquet
-**ML** Scikit-learn, XGBoost, LightGBM, Joblib
+**ML** Spark MLlib (distributed, all 15M rows), Scikit-learn, XGBoost, LightGBM, Joblib
 **Backend** Python 3.10+, Flask, Waitress
 **Frontend** HTML5, Tailwind, ES6, Chart.js 4
-**Quality** pytest (74 tests), GitHub Actions, Docker, Ruff
+**Quality** pytest (113 tests), GitHub Actions, Docker, Ruff

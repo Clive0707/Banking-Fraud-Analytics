@@ -53,6 +53,8 @@ CUSTOMER_CLUSTERS_JSON = PROCESSED_DIR / "customer_clusters.json"
 ANOMALIES_JSON = PROCESSED_DIR / "anomalies_summary.json"
 
 MODEL_COMPARISON_JSON = MODELS_DIR / "model_comparison.json"
+SPARK_ML_COMPARISON_JSON = MODELS_DIR / "spark_ml_comparison.json"
+SPARK_ML_MODEL_DIR = MODELS_DIR / "spark_ml"
 THRESHOLD_ANALYSIS_JSON = MODELS_DIR / "threshold_analysis.json"
 FEATURE_IMPORTANCE_JSON = MODELS_DIR / "feature_importance.json"
 

@@ -95,6 +95,7 @@ def create_analytics_blueprint(data_service):
                 "customer_clusters": data_service.customer_clusters is not None,
                 "anomalies": data_service.anomalies_summary is not None,
                 "pipeline_benchmark": data_service.pipeline_benchmark is not None,
+                "spark_ml_comparison": data_service.spark_ml_comparison is not None,
             },
         })
 
@@ -224,6 +225,14 @@ def create_analytics_blueprint(data_service):
     @bp.route("/feature-importance", methods=["GET"])
     def get_feature_importance():
         return _respond(data_service.get_feature_importance())
+
+    @bp.route("/spark-ml", methods=["GET"])
+    def get_spark_ml():
+        """
+        Spark MLlib models trained distributed on all 15M rows, with the
+        comparison against the 500k-sample scikit-learn benchmark.
+        """
+        return _respond(data_service.get_spark_ml())
 
     # ------------------------------------------------------------------
     # Platform

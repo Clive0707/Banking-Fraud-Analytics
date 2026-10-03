@@ -78,6 +78,7 @@ class DataService:
         self.pipeline_benchmark = None
         self.threshold_analysis = None
         self.feature_importance = None
+        self.spark_ml_comparison = None
 
         # Datasets
         self.transactions_df = None
@@ -114,6 +115,7 @@ class DataService:
         self.model_comparison = _load_json(config.MODEL_COMPARISON_JSON)
         self.threshold_analysis = _load_json(config.THRESHOLD_ANALYSIS_JSON)
         self.feature_importance = _load_json(config.FEATURE_IMPORTANCE_JSON)
+        self.spark_ml_comparison = _load_json(config.SPARK_ML_COMPARISON_JSON)
 
         if self.model_comparison:
             self.best_model_name = self.model_comparison.get("best_model")
@@ -337,6 +339,12 @@ class DataService:
 
     def get_feature_importance(self):
         return self.feature_importance or {"error": "Feature importance not found."}
+
+    def get_spark_ml(self):
+        """Spark MLlib benchmark trained on the complete 15M-row dataset."""
+        return self.spark_ml_comparison or {
+            "error": "Spark MLlib benchmark not found. Run: python run.py --spark-ml"
+        }
 
     def get_alerts(self, category="All"):
         alerts = self.analytical_alerts or []
@@ -781,6 +789,7 @@ class DataService:
             "segment_lift": self.get_segment_lift(),
             "leakage_audit": self.get_leakage_report(),
             "model_performance": self.get_model_performance(),
+            "spark_ml_full_dataset": self.get_spark_ml(),
             "threshold_analysis": self.get_threshold_analysis(),
             "feature_importance": self.get_feature_importance(),
             "customer_clusters": self.get_customer_clusters(),

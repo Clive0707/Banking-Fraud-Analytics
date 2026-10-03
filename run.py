@@ -40,7 +40,14 @@ def stage_banner(name):
 
 
 def setup_data_files():
-    """Copy the raw CSVs in from the parent directory on first run."""
+    """
+    Make the raw CSVs available, copying them in from the parent directory if a
+    previous checkout left them there.
+
+    The dataset itself is not in the repository -- at 1.76 GB it exceeds
+    GitHub's file limit -- so a fresh clone regenerates it with
+    scripts/generate_dataset.py.
+    """
     config.ensure_dirs()
     parent = BASE_DIR.parent
     for filename in (config.RAW_TRANSACTIONS_CSV.name, config.RAW_CUSTOMERS_CSV.name):
@@ -74,6 +81,9 @@ def main():
     parser.add_argument("--segment", action="store_true", help="Force K-Means customer segmentation")
     parser.add_argument("--anomalies", action="store_true", help="Force Isolation Forest anomaly detection")
     parser.add_argument("--all", action="store_true", help="Force every stage to rerun")
+    parser.add_argument("--spark-ml", action="store_true",
+                        help="Also train Spark MLlib models on ALL 15M rows (needs the raw CSV; "
+                             "not included in --all because of its runtime)")
     parser.add_argument("--export-full", action="store_true",
                         help="Also write month-partitioned Parquet for all 15M rows")
     parser.add_argument("--no-serve", action="store_true", help="Run the pipeline without starting the web server")
@@ -90,10 +100,13 @@ def main():
     # --- Stage 1: PySpark preprocessing -----------------------------------
     if force_all or args.reprocess or not config.SUMMARY_STATS_JSON.exists():
         if not config.RAW_TRANSACTIONS_CSV.exists():
+            logger.error(f"Raw dataset not found at {config.RAW_TRANSACTIONS_CSV}.")
             logger.error(
-                f"Raw dataset not found at {config.RAW_TRANSACTIONS_CSV}. "
-                f"Place banking_transactions_15m.csv there and rerun."
+                "The 1.76 GB source file is too large for GitHub, so it is not in the "
+                "repository. Regenerate a statistically faithful copy with:"
             )
+            logger.error("    python scripts/generate_dataset.py")
+            logger.error("Then rerun this command.")
             return 1
         stage_banner("STAGE 1/4  PySpark preprocessing (15M transactions, local[*], no Hadoop)")
         from src.preprocessing.preprocess import run_pyspark_preprocessing
@@ -124,6 +137,23 @@ def main():
         train_fraud_models(run_cv=not args.no_cv)
     else:
         logger.info("Stage 4/4  Model artefacts present -- skipping (use --train to force).")
+
+    # --- Optional stage: Spark MLlib on the complete dataset ---------------
+    # The scikit-learn benchmark above trains on a 500k stratified sample because
+    # scikit-learn is single-node. This stage trains distributed over all 15M
+    # rows so the Big Data claim covers the machine learning, not just the
+    # aggregation. It is opt-in because it re-reads the full 1.85 GB CSV.
+    if args.spark_ml:
+        if not config.RAW_TRANSACTIONS_CSV.exists():
+            logger.error(
+                f"--spark-ml needs the full dataset at {config.RAW_TRANSACTIONS_CSV}; "
+                f"the sampled Parquet is not enough."
+            )
+            logger.error("Regenerate it with:  python scripts/generate_dataset.py")
+            return 1
+        stage_banner("STAGE 5/5  Spark MLlib training on ALL 15,000,000 rows")
+        from src.fraud_detection.spark_ml import train_spark_models
+        train_spark_models()
 
     if args.no_serve:
         logger.info("Pipeline complete. --no-serve set, exiting without starting the web server.")

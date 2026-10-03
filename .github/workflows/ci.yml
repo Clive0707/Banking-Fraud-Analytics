@@ -42,6 +42,12 @@ jobs:
         # skips the checks that need trained artefacts.
         run: pytest -q
 
+      - name: Verify the dataset generator reproduces the documented properties
+        # The 1.76 GB source file is not in the repository, so CI regenerates a
+        # small one and checks its statistical structure.
+        run: |
+          python scripts/generate_dataset.py --rows 400000 --chunk-rows 200000
+
       - name: Verify the pipeline runs end to end on a small sample
         run: python scripts/smoke_test.py
 

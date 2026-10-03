@@ -492,6 +492,8 @@ async function loadOverviewFlowChart() {
 async function loadFraud() {
   // Segment lift, hourly fraud curve and geographic breakdown.
   if (window.loadFraudExtras) loadFraudExtras();
+  // Wire up the simulator controls and score the default transaction.
+  initSimulator();
 
   try {
     const res = await fetch('/api/fraud').then(r => r.json());
@@ -506,14 +508,41 @@ async function loadFraud() {
       if (countEl) countEl.innerText = totalFraud ? formatNumber(totalFraud) : '—';
 
       // Fraud value now comes from the Spark aggregation (summary.total_fraud_value)
-      // instead of being estimated as 0.98% of total volume.
+      // instead of being estimated as 0.98% of total volume. Compact format so
+      // the figure fits its tile instead of overflowing.
       const valEl = document.getElementById('fraud-total-value');
       if (valEl) {
         try {
           const s = await fetch('/api/summary').then(r => r.json());
-          valEl.innerText = s.total_fraud_value != null ? formatINR(s.total_fraud_value) : '—';
+          if (s.total_fraud_value != null) {
+            valEl.innerText = formatINRCompact(s.total_fraud_value);
+            valEl.title = formatINR(s.total_fraud_value);
+          } else {
+            valEl.innerText = '—';
+          }
         } catch (e) {
           valEl.innerText = '—';
+        }
+      }
+
+      // Highest-risk channel, derived rather than hardcoded.
+      const ranked = res.payment_method
+        .filter(p => p.fraud_rate != null)
+        .sort((a, b) => b.fraud_rate - a.fraud_rate);
+      const topChannel = document.getElementById('fraud-top-channel');
+      const topRate = document.getElementById('fraud-top-channel-rate');
+      if (topChannel && topRate) {
+        if (ranked.length) {
+          const top = ranked[0];
+          topChannel.innerText = top.payment_method;
+          // Three decimals: channel fraud rates sit within 0.05pp of each other,
+          // so two decimals rounds them all to the same number and implies a
+          // difference that is not there.
+          topRate.innerText = `${top.fraud_rate.toFixed(3)}% fraud rate`
+            + (top.lift != null ? ` · ${top.lift.toFixed(2)}× baseline` : '');
+        } else {
+          topChannel.innerText = '—';
+          topRate.innerText = '—';
         }
       }
 
@@ -563,69 +592,268 @@ function renderFraudChannels(channels) {
   }).join('');
 }
 
+// ==========================================================================
+// FRAUD RISK SIMULATOR
+//
+// Rewritten after the original proved both slow and wrong:
+//
+//  * It hardcoded `?model=Random Forest`, the slowest model to score (557ms vs
+//    128ms for Logistic Regression) and NOT the one the benchmark selects.
+//  * `balance_before`/`balance_after` were fixed literals, so changing the
+//    amount left the ledger inconsistent and fed the model nonsense values for
+//    balance_change, amount_to_balance_ratio and zero_balance_after.
+//  * `location` was pinned to Mumbai, making the strongest signal in the
+//    dataset -- the ~5x international lift -- impossible to exercise.
+//  * The "(Late Night)" label marked hours 1-5, but the model's night window is
+//    hour < 5. Hour 0 read "Standard" while the model treated it as night.
+//  * Verdict bands were hardcoded at 0.5/0.8 and ignored the tuned operating
+//    threshold the API returns.
+//  * A failed call silently substituted an invented 0.923 / 0.045.
+//  * Nothing guarded against overlapping requests, so a slow early response
+//    could overwrite a newer one.
+// ==========================================================================
+
+// Must match config.NIGHT_END_HOUR on the backend.
+const SIM_NIGHT_END_HOUR = 5;
+
+// Monotonically increasing id so a stale in-flight response is discarded
+// rather than overwriting a newer result.
+let simRequestId = 0;
+let simDebounceTimer = null;
+
+function simInputs() {
+  const amount = Math.max(0, parseFloat(document.getElementById('pred-amount')?.value) || 0);
+  const balanceBefore = Math.max(0, parseFloat(document.getElementById('pred-balance')?.value) || 0);
+  const hour = parseInt(document.getElementById('pred-hour-slider')?.value ?? 3, 10);
+  return {
+    amount,
+    balanceBefore,
+    hour,
+    method: document.getElementById('pred-payment')?.value || 'UPI',
+    location: document.getElementById('pred-location')?.value || 'Mumbai',
+    model: document.getElementById('pred-model')?.value || ''
+  };
+}
+
+/**
+ * Closing balance follows the dataset's own rule: a transaction larger than the
+ * available balance drains the account to zero rather than overdrawing.
+ */
+function derivedClosingBalance(amount, balanceBefore) {
+  return amount > balanceBefore ? 0 : balanceBefore - amount;
+}
+
 function updateSimHour(hour) {
+  const h = parseInt(hour, 10);
   const lbl = document.getElementById('sim-hour-label');
   if (!lbl) return;
-  const h = parseInt(hour);
-  const formatted = `${h < 10 ? '0' + h : h}:00`;
-  const context = (h >= 1 && h <= 5) ? ' (Late Night)' : ' (Standard)';
-  lbl.innerText = `${formatted}${context}`;
+  const isNight = h < SIM_NIGHT_END_HOUR;
+  lbl.innerText = `${String(h).padStart(2, '0')}:00${isNight ? '  ·  overnight window (~3× baseline)' : ''}`;
+  lbl.className = isNight
+    ? 'text-[11px] font-mono text-rose-600 dark:text-rose-400'
+    : 'text-[11px] font-mono text-slate-400';
+}
+
+function updateDerivedBalance() {
+  const { amount, balanceBefore } = simInputs();
+  const el = document.getElementById('sim-derived-balance');
+  if (!el) return;
+  const after = derivedClosingBalance(amount, balanceBefore);
+  const drained = amount > balanceBefore;
+  el.innerText = formatINR(after) + (drained ? '  (drained)' : '');
+  el.className = drained
+    ? 'h-9 flex items-center px-3 text-xs font-mono text-rose-600 dark:text-rose-400 bg-rose-50/50 dark:bg-rose-900/15 border border-rose-200/70 dark:border-rose-800/40 rounded-lg'
+    : 'h-9 flex items-center px-3 text-xs font-mono text-slate-500 bg-slate-50/60 dark:bg-slate-800/30 border border-slate-200/70 dark:border-slate-700/70 rounded-lg';
+}
+
+function setSimPending() {
+  const prob = document.getElementById('sim-prob-display');
+  if (prob) {
+    prob.innerText = '…';
+    prob.className = 'text-base font-semibold font-mono text-slate-400';
+  }
+  const tag = document.getElementById('sim-verdict-tag');
+  if (tag) {
+    tag.innerText = 'SCORING';
+    tag.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-slate-100 text-slate-500 border border-slate-200 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700';
+  }
+}
+
+function setSimError(message) {
+  const prob = document.getElementById('sim-prob-display');
+  if (prob) {
+    prob.innerText = '—';
+    prob.className = 'text-base font-semibold font-mono text-slate-400';
+  }
+  const tag = document.getElementById('sim-verdict-tag');
+  if (tag) {
+    tag.innerText = 'UNAVAILABLE';
+    tag.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800/40';
+  }
+  const verdict = document.getElementById('sim-action-verdict');
+  if (verdict) {
+    verdict.innerText = '—';
+    verdict.className = 'font-semibold text-slate-400';
+  }
+  const factors = document.getElementById('sim-factors');
+  if (factors) {
+    factors.innerHTML = `<span class="text-[11px] text-slate-400">${message}</span>`;
+  }
 }
 
 async function runRiskSimulation() {
-  const amt = parseFloat(document.getElementById('pred-amount')?.value || 85000);
-  const hour = parseInt(document.getElementById('pred-hour-slider')?.value || 3);
-  const method = document.getElementById('pred-payment')?.value || 'UPI';
+  const { amount, balanceBefore, hour, method, location, model } = simInputs();
+  updateDerivedBalance();
 
   const payload = {
-    amount: amt,
-    balance_before: 90000.0,
-    balance_after: 5000.0,
-    transaction_time: `${hour < 10 ? '0' + hour : hour}:15:00`,
+    amount,
+    balance_before: balanceBefore,
+    balance_after: derivedClosingBalance(amount, balanceBefore),
+    transaction_time: `${String(hour).padStart(2, '0')}:15:00`,
+    transaction_date: '2025-06-15',
     transaction_type: 'Bank Transfer',
     account_type: 'Savings',
     payment_method: method,
     device_type: 'Android',
-    location: 'Mumbai'
+    location,
+    merchant: 'Amazon',
+    customer_id: 100001
   };
 
+  const myId = ++simRequestId;
+  setSimPending();
+
   try {
-    const res = await fetch('/api/predict?model=Random%20Forest', {
+    const url = model ? `/api/predict?model=${encodeURIComponent(model)}` : '/api/predict';
+    const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
-    }).then(r => r.json());
+    });
 
-    const prob = res.fraud_probability !== undefined ? res.fraud_probability : (res.prediction === 'Fraud' ? 0.923 : 0.045);
-    const probDisplay = document.getElementById('sim-prob-display');
-    if (probDisplay) {
-      probDisplay.innerText = `${(prob * 100).toFixed(1)}%`;
-      probDisplay.className = prob > 0.5 ? 'text-base font-semibold font-mono text-rose-600' : 'text-base font-semibold font-mono text-emerald-600';
+    // A newer request started while this one was in flight; drop this result.
+    if (myId !== simRequestId) return;
+
+    const data = await res.json();
+    if (!res.ok || data.error) {
+      setSimError(data.error || `Scoring failed (${res.status})`);
+      return;
     }
-
-    const tag = document.getElementById('sim-verdict-tag');
-    if (tag) {
-      if (prob > 0.8) {
-        tag.innerText = 'CRITICAL THREAT';
-        tag.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-rose-50 text-rose-700 border border-rose-200';
-      } else if (prob > 0.5) {
-        tag.innerText = 'SUSPICIOUS DIVERGENCE';
-        tag.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-amber-50 text-amber-700 border border-amber-200';
-      } else {
-        tag.innerText = 'FRICTIONLESS CLEARANCE';
-        tag.className = 'px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-emerald-50 text-emerald-700 border border-emerald-200';
-      }
-    }
-
-    const verdict = document.getElementById('sim-action-verdict');
-    if (verdict) {
-      verdict.innerText = prob > 0.8 ? 'AUTO-QUARANTINE' : (prob > 0.5 ? 'STEP-UP 2FA' : 'AUTHORIZE');
-      verdict.className = prob > 0.5 ? 'font-semibold text-rose-600' : 'font-semibold text-emerald-600';
-    }
-
+    renderSimulation(data);
   } catch (err) {
+    if (myId !== simRequestId) return;
     console.error('Simulation error:', err);
+    setSimError('Could not reach the scoring service');
   }
+}
+
+function renderSimulation(res) {
+  // Band against the model's own tuned operating point, not a fixed 0.5.
+  const prob = res.fraud_probability;
+  const threshold = res.operating_threshold ?? 0.5;
+
+  const probDisplay = document.getElementById('sim-prob-display');
+  if (probDisplay) {
+    probDisplay.innerText = `${(prob * 100).toFixed(2)}%`;
+    probDisplay.className = prob >= threshold
+      ? 'text-base font-semibold font-mono text-rose-600 dark:text-rose-400'
+      : 'text-base font-semibold font-mono text-emerald-600 dark:text-emerald-500';
+  }
+
+  const note = document.getElementById('sim-threshold-note');
+  if (note) {
+    note.innerText = `vs ${threshold.toFixed(3)} threshold · ${res.model_used}`;
+  }
+
+  const tag = document.getElementById('sim-verdict-tag');
+  if (tag) {
+    const styles = {
+      High: ['CRITICAL THREAT', 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800/40'],
+      Medium: ['ELEVATED RISK', 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800/40'],
+      Low: ['CLEARED', 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800/40']
+    };
+    const [label, cls] = styles[res.risk_level] || styles.Low;
+    tag.innerText = label;
+    tag.className = `px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium border ${cls}`;
+  }
+
+  const verdict = document.getElementById('sim-action-verdict');
+  if (verdict) {
+    const action = res.risk_level === 'High' ? 'HOLD FOR REVIEW'
+      : res.risk_level === 'Medium' ? 'STEP-UP 2FA' : 'AUTHORISE';
+    verdict.innerText = action;
+    verdict.className = res.risk_level === 'High'
+      ? 'font-semibold text-rose-600 dark:text-rose-400'
+      : res.risk_level === 'Medium'
+        ? 'font-semibold text-amber-600 dark:text-amber-500'
+        : 'font-semibold text-emerald-600 dark:text-emerald-500';
+  }
+
+  // Surface the explanations the API returns; the old UI threw them away.
+  const factors = document.getElementById('sim-factors');
+  if (factors) {
+    const list = res.triggered_risk_factors || [];
+    const neutral = list.length === 1 && list[0].startsWith('No elevated');
+    factors.innerHTML = list.map(f => `
+      <span class="px-2 py-0.5 rounded text-[11px] border ${neutral
+        ? 'bg-slate-50 text-slate-500 border-slate-200 dark:bg-slate-800/40 dark:text-slate-400 dark:border-slate-700'
+        : 'bg-rose-50/70 text-rose-700 border-rose-200/70 dark:bg-rose-900/15 dark:text-rose-400 dark:border-rose-800/40'}">${f}</span>
+    `).join('');
+  }
+}
+
+/** Re-score shortly after the last edit, so dragging the slider is responsive. */
+function scheduleSimulation(delay = 250) {
+  clearTimeout(simDebounceTimer);
+  simDebounceTimer = setTimeout(runRiskSimulation, delay);
+}
+
+/** Populate the model picker from the benchmark, defaulting to the best model. */
+async function initSimulator() {
+  const select = document.getElementById('pred-model');
+  if (select && !select.options.length) {
+    try {
+      const perf = await fetch('/api/model-performance').then(r => r.json());
+      const names = Object.keys(perf.models || {});
+      if (names.length) {
+        select.innerHTML = names.map(n =>
+          `<option value="${n}"${n === perf.best_model ? ' selected' : ''}>${n}${n === perf.best_model ? ' (best)' : ''}</option>`
+        ).join('');
+      }
+    } catch (e) {
+      console.warn('Could not load model list for the simulator:', e);
+    }
+  }
+
+  const slider = document.getElementById('pred-hour-slider');
+  if (slider && !slider.dataset.bound) {
+    slider.dataset.bound = '1';
+    slider.addEventListener('input', () => {
+      updateSimHour(slider.value);
+      updateDerivedBalance();
+      scheduleSimulation();
+    });
+  }
+
+  ['pred-amount', 'pred-balance'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.dataset.bound) {
+      el.dataset.bound = '1';
+      el.addEventListener('input', () => { updateDerivedBalance(); scheduleSimulation(400); });
+    }
+  });
+
+  ['pred-payment', 'pred-location', 'pred-model'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && !el.dataset.bound) {
+      el.dataset.bound = '1';
+      el.addEventListener('change', () => scheduleSimulation(0));
+    }
+  });
+
+  if (slider) updateSimHour(slider.value);
+  updateDerivedBalance();
+  runRiskSimulation();
 }
 
 // ==========================================================================

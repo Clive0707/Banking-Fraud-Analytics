@@ -124,8 +124,102 @@ async function loadIntelligence() {
     renderCostCurve(),
     renderPrecisionAtK(),
     renderFeatureImportance(),
+    renderSparkML(),
     renderLeakagePanel()
   ]);
+}
+
+/**
+ * Spark MLlib trained on the complete 15M-row dataset, next to the 500k-sample
+ * scikit-learn benchmark.
+ *
+ * The question this panel answers is the one a Big Data project has to answer:
+ * does training on all 15M rows actually beat training on a stratified sample?
+ */
+async function renderSparkML() {
+  try {
+    const sm = await getJSON('/api/spark-ml', 'sparkml');
+    if (sm.error) return panelError('spark-ml-panel', sm.error);
+
+    const cmp = sm.comparison_with_sampled_sklearn || {};
+    const sampled = cmp.sampled_sklearn || {};
+    const full = cmp.full_dataset_spark || {};
+
+    const verdictStyle = {
+      'more data helps': 'text-emerald-600 dark:text-emerald-500',
+      'more data hurts': 'text-rose-600 dark:text-rose-500',
+      'no material gain from the extra data': 'text-slate-600 dark:text-slate-300'
+    }[cmp.verdict] || 'text-slate-600 dark:text-slate-300';
+
+    const modelRows = Object.keys(sm.models || {})
+      .sort((a, b) => sm.models[b].ranking.pr_auc - sm.models[a].ranking.pr_auc)
+      .map(name => {
+        const m = sm.models[name];
+        const t1 = (m.precision_at_k || []).find(r => r.capacity_fraction === 0.01) || {};
+        const isBest = name === sm.best_model;
+        return `
+          <tr class="border-b border-slate-100 dark:border-slate-800/60 ${isBest ? 'bg-emerald-50/50 dark:bg-emerald-900/10' : ''}">
+            <td class="py-2.5 px-3 text-[12px] font-medium text-slate-900 dark:text-white whitespace-nowrap">
+              ${name}${isBest ? ' <span class="text-[10px] text-emerald-600 dark:text-emerald-500 font-semibold">BEST</span>' : ''}
+            </td>
+            <td class="py-2.5 px-3 text-[12px] font-mono text-slate-900 dark:text-white">${m.ranking.pr_auc}</td>
+            <td class="py-2.5 px-3 text-[12px] font-mono text-slate-500">${m.ranking.roc_auc}</td>
+            <td class="py-2.5 px-3 text-[12px] font-mono text-slate-500">${t1.lift ? t1.lift.toFixed(2) + '×' : '—'}</td>
+            <td class="py-2.5 px-3 text-[12px] font-mono text-slate-400">${m.timing?.train_seconds ?? '—'}s</td>
+          </tr>`;
+      }).join('');
+
+    setHTML('spark-ml-panel', `
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+        <div class="p-4 rounded-lg border border-slate-200/70 dark:border-slate-800">
+          <div class="text-[11px] uppercase tracking-wide text-slate-400 mb-2">Sampled · scikit-learn</div>
+          <div class="text-[20px] font-semibold text-slate-900 dark:text-white">${num(sampled.train_rows)} rows</div>
+          <div class="text-[12px] text-slate-500 mt-1">${sampled.model || '—'}</div>
+          <div class="flex gap-5 mt-3 text-[12px] font-mono">
+            <span class="text-slate-500">PR-AUC <strong class="text-slate-900 dark:text-white">${sampled.pr_auc ?? '—'}</strong></span>
+            <span class="text-slate-500">lift <strong class="text-slate-900 dark:text-white">${sampled.top_1pct_lift ? sampled.top_1pct_lift.toFixed(2) + '×' : '—'}</strong></span>
+          </div>
+        </div>
+        <div class="p-4 rounded-lg border border-emerald-200/70 dark:border-emerald-800/40 bg-emerald-50/30 dark:bg-emerald-900/10">
+          <div class="text-[11px] uppercase tracking-wide text-emerald-700 dark:text-emerald-500 mb-2">Full dataset · Spark MLlib</div>
+          <div class="text-[20px] font-semibold text-slate-900 dark:text-white">${num(full.train_rows)} rows</div>
+          <div class="text-[12px] text-slate-500 mt-1">${full.model || '—'}</div>
+          <div class="flex gap-5 mt-3 text-[12px] font-mono">
+            <span class="text-slate-500">PR-AUC <strong class="text-slate-900 dark:text-white">${full.pr_auc ?? '—'}</strong></span>
+            <span class="text-slate-500">lift <strong class="text-slate-900 dark:text-white">${full.top_1pct_lift ? full.top_1pct_lift.toFixed(2) + '×' : '—'}</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/40 mb-5">
+        <div class="flex items-baseline gap-3 flex-wrap">
+          <span class="text-[13px] font-semibold ${verdictStyle}">${cmp.training_data_multiple ? cmp.training_data_multiple + '× the training data' : ''} → PR-AUC ${cmp.pr_auc_change_pct > 0 ? '+' : ''}${cmp.pr_auc_change_pct}%</span>
+          <span class="text-[12px] text-slate-500">Verdict: <strong>${cmp.verdict || '—'}</strong></span>
+        </div>
+        <p class="text-[11.5px] text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">${cmp.interpretation || ''}</p>
+      </div>
+
+      <table class="w-full text-left">
+        <thead>
+          <tr class="border-b border-slate-200 dark:border-slate-800">
+            <th class="py-2 px-3 text-[10px] uppercase tracking-wide text-slate-400 font-medium">Spark model (15M rows)</th>
+            <th class="py-2 px-3 text-[10px] uppercase tracking-wide text-slate-400 font-medium">PR-AUC</th>
+            <th class="py-2 px-3 text-[10px] uppercase tracking-wide text-slate-400 font-medium">ROC-AUC</th>
+            <th class="py-2 px-3 text-[10px] uppercase tracking-wide text-slate-400 font-medium">Top-1% lift</th>
+            <th class="py-2 px-3 text-[10px] uppercase tracking-wide text-slate-400 font-medium">Train</th>
+          </tr>
+        </thead>
+        <tbody>${modelRows}</tbody>
+      </table>
+
+      <p class="text-[11px] text-slate-400 mt-3 px-3 leading-relaxed">
+        ${sm.engine} · trained on ${num(sm.train_rows)} rows, tested on ${num(sm.test_rows)} ·
+        ${sm.n_features} features · ${sm.timing?.total_seconds}s total · Hadoop ${sm.hadoop}.
+      </p>
+    `);
+  } catch (err) {
+    panelError('spark-ml-panel', err.message);
+  }
 }
 
 /**
