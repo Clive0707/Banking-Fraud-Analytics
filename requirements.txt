@@ -7,11 +7,15 @@ pandas>=2.0.0
 numpy>=1.24.0
 
 # ---- Machine learning ----
-# Upper bounds are pinned to the current major versions because this repository
-# ships trained model pickles. A new major of any of these can change the
-# serialisation format and make the committed artefacts unloadable; a minor
-# mismatch only warns (CI currently unpickles 1.9.0 artefacts under 1.9.1).
-scikit-learn>=1.2.0,<2
+# This repository ships trained model pickles, and scikit-learn pickles are not
+# forward compatible: the committed artefacts were produced by 1.9.0, and
+# loading them under 1.7 fails at predict time because `multi_class` was removed
+# from LogisticRegression in 1.8. The floor therefore matches the artefacts
+# rather than the oldest version the source happens to run on.
+#
+# scikit-learn 1.8+ requires Python 3.11, which is why this project does too.
+# To use an older scikit-learn, regenerate the models: python run.py --train
+scikit-learn>=1.9,<2
 xgboost>=2.0.0,<4        # gradient-boosted trees for the fraud benchmark
 lightgbm>=4.0.0,<6       # second GBDT family for the benchmark
 joblib>=1.3.0

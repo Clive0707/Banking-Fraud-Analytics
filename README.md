@@ -279,6 +279,11 @@ Several displayed metrics used to be invented. All are now computed or shown as 
 
 ## 11. Installation and running
 
+Requires **Python 3.11 or newer**: the committed model artefacts were produced by
+scikit-learn 1.9, and scikit-learn 1.8+ requires 3.11. On 3.10 pip can only
+resolve scikit-learn 1.7, which unpickles those artefacts but fails when scoring.
+To run on an older interpreter, retrain the models with `python run.py --train`.
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -412,6 +417,6 @@ This reproduces the dataset's *statistical structure*, not its exact bytes. A fr
 
 **Big data** PySpark 4.2 (`local[*]`, no Hadoop/HDFS/YARN), PyArrow, Parquet
 **ML** Spark MLlib (distributed, all 15M rows), Scikit-learn, XGBoost, LightGBM, Joblib
-**Backend** Python 3.10+, Flask, Waitress
+**Backend** Python 3.11+, Flask, Waitress
 **Frontend** HTML5, Tailwind, ES6, Chart.js 4
 **Quality** pytest (113 tests), GitHub Actions, Docker, Ruff

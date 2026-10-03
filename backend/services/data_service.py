@@ -134,13 +134,45 @@ class DataService:
             path = self.models_dir / filename
             if path.exists():
                 try:
-                    self.models[name] = joblib.load(path)
-                    logger.info(f"Loaded model pipeline: {name}")
+                    model = joblib.load(path)
                 except Exception as exc:
                     logger.warning(f"Failed to load {filename}: {exc}")
+                    continue
+
+                # Unpickling can succeed while the estimator is still unusable:
+                # scikit-learn pickles are not forward compatible, so an artefact
+                # written by 1.9 loads under 1.7 and then raises at predict time
+                # because `multi_class` was removed from LogisticRegression in
+                # 1.8. Scoring one synthetic row here turns that into a clean
+                # "model unavailable" at startup instead of a 400 on every
+                # prediction request.
+                if not self._model_is_usable(name, model):
+                    continue
+
+                self.models[name] = model
+                logger.info(f"Loaded model pipeline: {name}")
 
         if self.best_model_name not in self.models and self.models:
             self.best_model_name = next(iter(self.models))
+
+    def _model_is_usable(self, name, model):
+        """Score a single zero row to prove the estimator actually runs."""
+        if self.feature_cols is None:
+            return True  # nothing to build a probe from; defer to runtime
+        try:
+            probe = pd.DataFrame(
+                [[0.0] * len(self.feature_cols)], columns=self.feature_cols
+            )
+            model.predict_proba(probe.values)
+            return True
+        except Exception as exc:
+            logger.warning(
+                f"Model '{name}' unpickled but cannot score and was dropped: "
+                f"{type(exc).__name__}: {exc}. This usually means the artefact "
+                f"was written by a different scikit-learn version -- retrain "
+                f"with: python run.py --train"
+            )
+            return False
 
         # Operating thresholds chosen by the cost analysis, falling back to 0.5.
         if self.threshold_analysis:

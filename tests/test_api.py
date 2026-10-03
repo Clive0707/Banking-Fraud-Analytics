@@ -48,6 +48,27 @@ class TestEndpointsRespond:
         assert body["status"] == "ok"
         assert "artefacts" in body
 
+    def test_every_loaded_model_can_actually_score(self, client, has_models):
+        """
+        A model that unpickles but cannot predict must not be advertised.
+
+        scikit-learn pickles are not forward compatible: artefacts written by
+        1.9 load under 1.7 and then raise at predict time. The loader probes
+        each estimator, so anything listed here is genuinely usable.
+        """
+        if not has_models:
+            pytest.skip("no models in this environment")
+        for name in client.get("/api/health").get_json()["models_loaded"]:
+            res = client.post(f"/api/predict?model={name}", json={
+                "amount": 1000, "balance_before": 5000, "balance_after": 4000,
+                "transaction_time": "12:00:00", "transaction_date": "2025-06-15",
+                "transaction_type": "UPI", "account_type": "Savings",
+                "payment_method": "UPI", "device_type": "Android",
+                "location": "Mumbai", "merchant": "Amazon", "customer_id": 100001,
+            })
+            assert res.status_code == 200, f"{name} is advertised but cannot score"
+            assert "fraud_probability" in res.get_json(), name
+
     def test_unknown_endpoint_is_404(self, client):
         assert client.get("/api/does-not-exist").status_code == 404
 
