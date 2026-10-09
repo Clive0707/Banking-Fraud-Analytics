@@ -90,6 +90,7 @@ class DataService:
         self.customer_baselines = None
         self.best_model_name = None
         self.operating_thresholds = {}
+        self.supported_max_probability = {}
 
         self.load_cache()
 
@@ -155,24 +156,15 @@ class DataService:
         if self.best_model_name not in self.models and self.models:
             self.best_model_name = next(iter(self.models))
 
-    def _model_is_usable(self, name, model):
-        """Score a single zero row to prove the estimator actually runs."""
-        if self.feature_cols is None:
-            return True  # nothing to build a probe from; defer to runtime
-        try:
-            probe = pd.DataFrame(
-                [[0.0] * len(self.feature_cols)], columns=self.feature_cols
-            )
-            model.predict_proba(probe.values)
-            return True
-        except Exception as exc:
-            logger.warning(
-                f"Model '{name}' unpickled but cannot score and was dropped: "
-                f"{type(exc).__name__}: {exc}. This usually means the artefact "
-                f"was written by a different scikit-learn version -- retrain "
-                f"with: python run.py --train"
-            )
-            return False
+        # How far up the probability scale each model has real evidence. Beyond
+        # this point a score is extrapolation, not a measured rate.
+        if self.model_comparison:
+            for name, block in self.model_comparison.get("models", {}).items():
+                cal = block.get("calibration") or {}
+                if cal.get("supported_max_probability") is not None:
+                    self.supported_max_probability[name] = float(
+                        cal["supported_max_probability"]
+                    )
 
         # Operating thresholds chosen by the cost analysis, falling back to 0.5.
         if self.threshold_analysis:
@@ -207,6 +199,25 @@ class DataService:
             f"Ready: {len(self.models)} models, "
             f"{0 if self.transactions_df is None else len(self.transactions_df):,} transactions."
         )
+
+    def _model_is_usable(self, name, model):
+        """Score a single zero row to prove the estimator actually runs."""
+        if self.feature_cols is None:
+            return True  # nothing to build a probe from; defer to runtime
+        try:
+            probe = pd.DataFrame(
+                [[0.0] * len(self.feature_cols)], columns=self.feature_cols
+            )
+            model.predict_proba(probe.values)
+            return True
+        except Exception as exc:
+            logger.warning(
+                f"Model '{name}' unpickled but cannot score and was dropped: "
+                f"{type(exc).__name__}: {exc}. This usually means the artefact "
+                f"was written by a different scikit-learn version -- retrain "
+                f"with: python run.py --train"
+            )
+            return False
 
     # ------------------------------------------------------------------
     # Scoring helpers
@@ -798,12 +809,32 @@ class DataService:
                     f"this customer's own average"
                 )
 
+            # Say plainly when a score sits beyond the range the test set
+            # supports. The model is well calibrated where the data lives --
+            # 99.8% of real transactions score under 0.1 -- but a sandbox input
+            # can be built far outside that, and quoting "98% probability" from
+            # a region holding three observed rows would be false precision.
+            supported_max = self.supported_max_probability.get(used)
+            extrapolating = supported_max is not None and proba > supported_max
+
             return {
                 "prediction": "Fraud" if proba >= threshold else "Legitimate",
                 "fraud_probability": round(proba, 4),
                 "fraud_probability_pct": f"{proba * 100:.2f}%",
                 "risk_level": self._risk_level(proba, used),
                 "model_used": used,
+                "evidence": {
+                    "within_supported_range": not extrapolating,
+                    "supported_max_probability": supported_max,
+                    "note": (
+                        f"This score is above {supported_max:.0%}, where the "
+                        f"held-out set holds too few transactions to verify the "
+                        f"rate. Treat it as 'very high risk' rather than a "
+                        f"literal probability."
+                        if extrapolating else
+                        "Within the range the held-out test set supports."
+                    ),
+                },
                 "operating_threshold": round(threshold, 4),
                 "threshold_basis": (
                     "cost-optimal (maximises expected net saving)"

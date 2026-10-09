@@ -149,6 +149,11 @@ STATUS_IF_LEGIT = (["Completed", "Pending"], [0.97020, 0.02980])
 COLUMNS = config.RAW_COLUMNS
 CHUNK_ROWS = 1_000_000
 
+# Rough on-disk cost of one CSV row, used only by the overwrite guard.
+APPROX_BYTES_PER_ROW = 125
+# Block an overwrite that would shrink an existing file by more than this.
+SHRINK_GUARD_FACTOR = 4
+
 
 def _zero_pad(values):
     """Two-digit zero-padded strings, using numpy so the dtype is predictable."""
@@ -239,14 +244,30 @@ def generate_chunk(rng, n, start_id, date_index):
 
 
 def generate_dataset(rows=DEFAULT_ROWS, seed=config.RANDOM_SEED, output=None,
-                     chunk_rows=CHUNK_ROWS, write_profiles=True):
+                     chunk_rows=CHUNK_ROWS, write_profiles=True, force=False):
     """
     Write `rows` transactions to CSV, streaming in chunks so peak memory stays
     near one chunk rather than the whole dataset.
     """
     output = Path(output) if output else config.RAW_TRANSACTIONS_CSV
     output.parent.mkdir(parents=True, exist_ok=True)
+
+    # Refuse to silently replace a substantially larger existing dataset.
+    # Running this without --output defaults to the real data path, and a small
+    # --rows run would otherwise destroy a full-size file in place; that is
+    # exactly how a 1.76 GB source was once overwritten by a 400k-row test file.
     if output.exists():
+        existing_bytes = output.stat().st_size
+        projected_bytes = rows * APPROX_BYTES_PER_ROW
+        if existing_bytes > projected_bytes * SHRINK_GUARD_FACTOR and not force:
+            raise SystemExit(
+                f"Refusing to overwrite {output}.\n"
+                f"  existing file : {existing_bytes / 1e9:.2f} GB\n"
+                f"  this run makes: ~{projected_bytes / 1e9:.2f} GB ({rows:,} rows)\n"
+                f"Writing would shrink it by more than "
+                f"{SHRINK_GUARD_FACTOR:g}x. If that is intended, pass --force, "
+                f"or send the output elsewhere with --output."
+            )
         output.unlink()
 
     rng = np.random.default_rng(seed)
@@ -393,13 +414,15 @@ def main():
                         help="verify an existing dataset without regenerating it")
     parser.add_argument("--no-verify", action="store_true",
                         help="skip verification after generating")
+    parser.add_argument("--force", action="store_true",
+                        help="allow overwriting a much larger existing dataset")
     args = parser.parse_args()
 
     if args.verify_only:
         return 0 if verify(args.output) else 1
 
     generate_dataset(rows=args.rows, seed=args.seed, output=args.output,
-                     chunk_rows=args.chunk_rows)
+                     chunk_rows=args.chunk_rows, force=args.force)
 
     if not args.no_verify:
         sample = min(args.rows, 2_000_000)

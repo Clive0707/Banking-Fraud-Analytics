@@ -6,143 +6,135 @@
       "features": [
         {
           "feature": "is_night",
-          "importance": 0.374005
-        },
-        {
-          "feature": "amount",
-          "importance": 0.120681
+          "importance": 0.382483
         },
         {
           "feature": "is_international",
-          "importance": 0.12042
+          "importance": 0.117123
+        },
+        {
+          "feature": "amount",
+          "importance": 0.107349
         },
         {
           "feature": "amount_log",
-          "importance": 0.05737
+          "importance": 0.069966
         },
         {
           "feature": "transaction_type_Online Purchase",
-          "importance": 0.041366
+          "importance": 0.040481
         },
         {
           "feature": "device_type_Windows",
-          "importance": 0.040987
+          "importance": 0.038725
         },
         {
           "feature": "amount_z_vs_customer",
-          "importance": 0.032059
+          "importance": 0.036876
         },
         {
           "feature": "amount_over_cust_mean",
-          "importance": 0.029254
+          "importance": 0.028304
         },
         {
           "feature": "intl_x_night",
-          "importance": 0.025061
-        },
-        {
-          "feature": "intl_x_high",
-          "importance": 0.015483
-        },
-        {
-          "feature": "cust_avg_amount",
-          "importance": 0.015426
+          "importance": 0.022904
         },
         {
           "feature": "hour",
-          "importance": 0.015092
-        },
-        {
-          "feature": "transaction_type_Card Payment",
-          "importance": 0.013906
-        },
-        {
-          "feature": "night_x_high",
-          "importance": 0.010853
-        },
-        {
-          "feature": "transaction_type_Bank Transfer",
-          "importance": 0.010732
-        },
-        {
-          "feature": "zero_balance_after",
-          "importance": 0.009781
-        },
-        {
-          "feature": "day_of_month",
-          "importance": 0.006761
-        },
-        {
-          "feature": "payment_method_Debit Card",
-          "importance": 0.006683
-        },
-        {
-          "feature": "device_type_Android",
-          "importance": 0.006224
-        },
-        {
-          "feature": "balance_change",
-          "importance": 0.005948
+          "importance": 0.018562
         },
         {
           "feature": "device_type_Mac",
-          "importance": 0.004832
+          "importance": 0.016433
         },
         {
-          "feature": "day_of_week",
-          "importance": 0.004507
+          "feature": "transaction_type_Card Payment",
+          "importance": 0.01472
         },
         {
-          "feature": "balance_before",
-          "importance": 0.004346
-        },
-        {
-          "feature": "account_type_Savings",
-          "importance": 0.003729
-        },
-        {
-          "feature": "is_high_amount",
-          "importance": 0.003678
-        },
-        {
-          "feature": "device_type_iOS",
-          "importance": 0.00346
-        },
-        {
-          "feature": "balance_after",
-          "importance": 0.003149
-        },
-        {
-          "feature": "account_type_Salary",
-          "importance": 0.003006
+          "feature": "zero_balance_after",
+          "importance": 0.012632
         },
         {
           "feature": "payment_method_Credit Card",
-          "importance": 0.002774
+          "importance": 0.011423
         },
         {
-          "feature": "payment_method_Net Banking",
-          "importance": 0.002246
+          "feature": "balance_change",
+          "importance": 0.010445
         },
         {
-          "feature": "payment_method_UPI",
-          "importance": 0.002046
+          "feature": "account_type_Savings",
+          "importance": 0.008711
+        },
+        {
+          "feature": "transaction_type_Bank Transfer",
+          "importance": 0.008535
+        },
+        {
+          "feature": "day_of_month",
+          "importance": 0.006388
+        },
+        {
+          "feature": "account_type_Salary",
+          "importance": 0.005702
+        },
+        {
+          "feature": "device_type_iOS",
+          "importance": 0.005348
+        },
+        {
+          "feature": "balance_before",
+          "importance": 0.005305
+        },
+        {
+          "feature": "payment_method_Debit Card",
+          "importance": 0.005016
         },
         {
           "feature": "cust_unique_merchants",
-          "importance": 0.001939
+          "importance": 0.005014
         },
         {
           "feature": "cust_txn_count",
-          "importance": 0.001296
+          "importance": 0.004084
         },
         {
-          "feature": "amount_to_balance_ratio",
-          "importance": 0.000844
+          "feature": "cust_avg_amount",
+          "importance": 0.003558
+        },
+        {
+          "feature": "balance_after",
+          "importance": 0.003209
+        },
+        {
+          "feature": "is_high_amount",
+          "importance": 0.002958
         },
         {
           "feature": "transaction_type_UPI",
-          "importance": 5.4e-05
+          "importance": 0.001448
+        },
+        {
+          "feature": "amount_to_balance_ratio",
+          "importance": 0.001445
+        },
+        {
+          "feature": "day_of_week",
+          "importance": 0.001319
+        },
+        {
+          "feature": "device_type_Android",
+          "importance": 0.001317
+        },
+        {
+          "feature": "payment_method_UPI",
+          "importance": 0.001257
+        },
+        {
+          "feature": "payment_method_Net Banking",
+          "importance": 0.000958
         }
       ]
     },
@@ -152,119 +144,115 @@
       "features": [
         {
           "feature": "is_night",
-          "importance": 0.587937
+          "importance": 0.58854
         },
         {
           "feature": "is_international",
-          "importance": 0.082761
+          "importance": 0.071817
         },
         {
           "feature": "amount",
-          "importance": 0.077847
-        },
-        {
-          "feature": "device_type_Windows",
-          "importance": 0.029321
-        },
-        {
-          "feature": "cust_avg_amount",
-          "importance": 0.02898
+          "importance": 0.070286
         },
         {
           "feature": "day_of_month",
-          "importance": 0.020222
-        },
-        {
-          "feature": "amount_over_cust_mean",
-          "importance": 0.019362
-        },
-        {
-          "feature": "amount_z_vs_customer",
-          "importance": 0.018501
+          "importance": 0.030721
         },
         {
           "feature": "amount_to_balance_ratio",
-          "importance": 0.017362
+          "importance": 0.028184
         },
         {
-          "feature": "balance_before",
-          "importance": 0.017353
+          "feature": "amount_over_cust_mean",
+          "importance": 0.026738
+        },
+        {
+          "feature": "device_type_Windows",
+          "importance": 0.025998
         },
         {
           "feature": "hour",
-          "importance": 0.013398
+          "importance": 0.021387
         },
         {
-          "feature": "balance_change",
-          "importance": 0.012603
-        },
-        {
-          "feature": "cust_txn_count",
-          "importance": 0.012497
-        },
-        {
-          "feature": "balance_after",
-          "importance": 0.010137
-        },
-        {
-          "feature": "transaction_type_Online Purchase",
-          "importance": 0.009857
-        },
-        {
-          "feature": "cust_unique_merchants",
-          "importance": 0.008722
-        },
-        {
-          "feature": "amount_log",
-          "importance": 0.008458
-        },
-        {
-          "feature": "intl_x_night",
-          "importance": 0.004703
+          "feature": "balance_before",
+          "importance": 0.020857
         },
         {
           "feature": "day_of_week",
-          "importance": 0.004313
+          "importance": 0.015196
         },
         {
-          "feature": "payment_method_Net Banking",
-          "importance": 0.003568
+          "feature": "balance_after",
+          "importance": 0.013527
+        },
+        {
+          "feature": "cust_avg_amount",
+          "importance": 0.012593
+        },
+        {
+          "feature": "cust_txn_count",
+          "importance": 0.011734
+        },
+        {
+          "feature": "balance_change",
+          "importance": 0.011097
+        },
+        {
+          "feature": "amount_z_vs_customer",
+          "importance": 0.010313
+        },
+        {
+          "feature": "transaction_type_Online Purchase",
+          "importance": 0.008535
+        },
+        {
+          "feature": "cust_unique_merchants",
+          "importance": 0.006219
+        },
+        {
+          "feature": "intl_x_night",
+          "importance": 0.004814
+        },
+        {
+          "feature": "amount_log",
+          "importance": 0.004335
         },
         {
           "feature": "transaction_type_UPI",
-          "importance": 0.002336
-        },
-        {
-          "feature": "payment_method_UPI",
-          "importance": 0.002121
-        },
-        {
-          "feature": "account_type_Salary",
-          "importance": 0.001542
-        },
-        {
-          "feature": "device_type_Android",
-          "importance": 0.001524
-        },
-        {
-          "feature": "account_type_Savings",
-          "importance": 0.00126
-        },
-        {
-          "feature": "device_type_iOS",
-          "importance": 0.001194
-        },
-        {
-          "feature": "payment_method_Credit Card",
-          "importance": 0.001122
-        },
-        {
-          "feature": "payment_method_Debit Card",
-          "importance": 0.000736
+          "importance": 0.003992
         },
         {
           "feature": "transaction_type_Card Payment",
-          "importance": 0.000263
+          "importance": 0.003211
+        },
+        {
+          "feature": "device_type_iOS",
+          "importance": 0.002865
+        },
+        {
+          "feature": "account_type_Savings",
+          "importance": 0.002605
+        },
+        {
+          "feature": "device_type_Mac",
+          "importance": 0.002148
+        },
+        {
+          "feature": "payment_method_Net Banking",
+          "importance": 0.00136
+        },
+        {
+          "feature": "payment_method_UPI",
+          "importance": 0.000721
+        },
+        {
+          "feature": "payment_method_Debit Card",
+          "importance": 0.000157
+        },
+        {
+          "feature": "device_type_Android",
+          "importance": 5.1e-05
         },
         {
           "feature": "is_high_amount",
@@ -275,19 +263,15 @@
           "importance": 0.0
         },
         {
-          "feature": "intl_x_high",
-          "importance": 0.0
-        },
-        {
-          "feature": "night_x_high",
-          "importance": 0.0
-        },
-        {
           "feature": "transaction_type_Bank Transfer",
           "importance": 0.0
         },
         {
-          "feature": "device_type_Mac",
+          "feature": "account_type_Salary",
+          "importance": 0.0
+        },
+        {
+          "feature": "payment_method_Credit Card",
           "importance": 0.0
         }
       ]
@@ -298,143 +282,135 @@
       "features": [
         {
           "feature": "hour",
-          "importance": 0.286674
+          "importance": 0.283943
         },
         {
           "feature": "is_night",
-          "importance": 0.259579
+          "importance": 0.252368
         },
         {
           "feature": "is_international",
-          "importance": 0.061098
+          "importance": 0.052983
         },
         {
           "feature": "amount",
-          "importance": 0.037542
+          "importance": 0.039296
         },
         {
           "feature": "amount_log",
-          "importance": 0.036748
+          "importance": 0.034767
         },
         {
           "feature": "cust_avg_amount",
-          "importance": 0.030972
-        },
-        {
-          "feature": "balance_change",
-          "importance": 0.03032
+          "importance": 0.033642
         },
         {
           "feature": "amount_over_cust_mean",
-          "importance": 0.02938
+          "importance": 0.032335
+        },
+        {
+          "feature": "balance_change",
+          "importance": 0.031855
         },
         {
           "feature": "amount_z_vs_customer",
-          "importance": 0.02861
+          "importance": 0.030998
         },
         {
           "feature": "amount_to_balance_ratio",
-          "importance": 0.027924
+          "importance": 0.028125
         },
         {
           "feature": "balance_before",
-          "importance": 0.02633
+          "importance": 0.026736
         },
         {
           "feature": "balance_after",
-          "importance": 0.025484
+          "importance": 0.026512
         },
         {
           "feature": "day_of_month",
-          "importance": 0.020222
+          "importance": 0.021692
         },
         {
           "feature": "cust_txn_count",
-          "importance": 0.018042
+          "importance": 0.018914
         },
         {
           "feature": "day_of_week",
-          "importance": 0.011376
-        },
-        {
-          "feature": "transaction_type_Online Purchase",
-          "importance": 0.011022
+          "importance": 0.011914
         },
         {
           "feature": "cust_unique_merchants",
-          "importance": 0.010369
+          "importance": 0.011388
+        },
+        {
+          "feature": "transaction_type_Online Purchase",
+          "importance": 0.011231
         },
         {
           "feature": "device_type_Windows",
-          "importance": 0.009775
+          "importance": 0.009614
         },
         {
           "feature": "intl_x_night",
-          "importance": 0.006113
+          "importance": 0.006712
         },
         {
           "feature": "device_type_Android",
-          "importance": 0.003804
+          "importance": 0.004624
         },
         {
           "feature": "transaction_type_UPI",
-          "importance": 0.003333
+          "importance": 0.003356
         },
         {
           "feature": "payment_method_UPI",
-          "importance": 0.003328
+          "importance": 0.003253
         },
         {
           "feature": "account_type_Savings",
-          "importance": 0.003106
+          "importance": 0.003131
         },
         {
           "feature": "transaction_type_Card Payment",
-          "importance": 0.002697
+          "importance": 0.00292
         },
         {
           "feature": "payment_method_Debit Card",
-          "importance": 0.002582
+          "importance": 0.002712
         },
         {
           "feature": "account_type_Salary",
-          "importance": 0.002442
+          "importance": 0.0026
         },
         {
           "feature": "device_type_iOS",
-          "importance": 0.002067
-        },
-        {
-          "feature": "transaction_type_Bank Transfer",
-          "importance": 0.002022
+          "importance": 0.002319
         },
         {
           "feature": "payment_method_Net Banking",
-          "importance": 0.00192
+          "importance": 0.002021
+        },
+        {
+          "feature": "transaction_type_Bank Transfer",
+          "importance": 0.001921
         },
         {
           "feature": "payment_method_Credit Card",
-          "importance": 0.001575
+          "importance": 0.001842
         },
         {
           "feature": "is_high_amount",
-          "importance": 0.001299
+          "importance": 0.001556
         },
         {
           "feature": "device_type_Mac",
-          "importance": 0.001153
+          "importance": 0.001499
         },
         {
           "feature": "zero_balance_after",
-          "importance": 0.001054
-        },
-        {
-          "feature": "night_x_high",
-          "importance": 3.7e-05
-        },
-        {
-          "feature": "intl_x_high",
-          "importance": 0.0
+          "importance": 0.001221
         }
       ]
     },
@@ -443,144 +419,136 @@
       "kind": "impurity_decrease",
       "features": [
         {
-          "feature": "is_night",
-          "importance": 0.108017
-        },
-        {
           "feature": "is_international",
-          "importance": 0.10253
+          "importance": 0.100487
         },
         {
           "feature": "hour",
-          "importance": 0.064923
-        },
-        {
-          "feature": "device_type_Windows",
-          "importance": 0.050189
+          "importance": 0.072347
         },
         {
           "feature": "zero_balance_after",
-          "importance": 0.042701
+          "importance": 0.052786
         },
         {
-          "feature": "amount_log",
-          "importance": 0.041458
+          "feature": "device_type_Windows",
+          "importance": 0.052558
         },
         {
           "feature": "transaction_type_Online Purchase",
-          "importance": 0.032162
+          "importance": 0.034554
+        },
+        {
+          "feature": "amount_log",
+          "importance": 0.033926
         },
         {
           "feature": "amount",
-          "importance": 0.029662
+          "importance": 0.032611
         },
         {
           "feature": "balance_change",
-          "importance": 0.024976
-        },
-        {
-          "feature": "balance_after",
-          "importance": 0.024444
-        },
-        {
-          "feature": "device_type_iOS",
-          "importance": 0.024005
-        },
-        {
-          "feature": "cust_avg_amount",
-          "importance": 0.023505
-        },
-        {
-          "feature": "account_type_Salary",
-          "importance": 0.023163
-        },
-        {
-          "feature": "account_type_Savings",
-          "importance": 0.022941
-        },
-        {
-          "feature": "transaction_type_UPI",
-          "importance": 0.022844
-        },
-        {
-          "feature": "amount_over_cust_mean",
-          "importance": 0.022807
-        },
-        {
-          "feature": "amount_to_balance_ratio",
-          "importance": 0.022767
-        },
-        {
-          "feature": "balance_before",
-          "importance": 0.022713
+          "importance": 0.030082
         },
         {
           "feature": "transaction_type_Card Payment",
-          "importance": 0.022152
+          "importance": 0.027231
         },
         {
-          "feature": "day_of_month",
-          "importance": 0.022133
+          "feature": "device_type_iOS",
+          "importance": 0.027214
+        },
+        {
+          "feature": "amount_over_cust_mean",
+          "importance": 0.026542
+        },
+        {
+          "feature": "account_type_Salary",
+          "importance": 0.02626
+        },
+        {
+          "feature": "is_night",
+          "importance": 0.026123
         },
         {
           "feature": "amount_z_vs_customer",
-          "importance": 0.022094
+          "importance": 0.026087
         },
         {
-          "feature": "day_of_week",
-          "importance": 0.021698
+          "feature": "amount_to_balance_ratio",
+          "importance": 0.026074
         },
         {
-          "feature": "payment_method_UPI",
-          "importance": 0.021402
-        },
-        {
-          "feature": "cust_txn_count",
-          "importance": 0.02134
+          "feature": "cust_avg_amount",
+          "importance": 0.025975
         },
         {
           "feature": "device_type_Android",
-          "importance": 0.020862
+          "importance": 0.025917
+        },
+        {
+          "feature": "balance_after",
+          "importance": 0.025752
+        },
+        {
+          "feature": "balance_before",
+          "importance": 0.024837
+        },
+        {
+          "feature": "day_of_week",
+          "importance": 0.02471
         },
         {
           "feature": "payment_method_Debit Card",
-          "importance": 0.020751
+          "importance": 0.024447
         },
         {
           "feature": "cust_unique_merchants",
-          "importance": 0.020748
+          "importance": 0.024025
         },
         {
-          "feature": "payment_method_Credit Card",
-          "importance": 0.020018
+          "feature": "day_of_month",
+          "importance": 0.024009
+        },
+        {
+          "feature": "account_type_Savings",
+          "importance": 0.023619
+        },
+        {
+          "feature": "cust_txn_count",
+          "importance": 0.02339
+        },
+        {
+          "feature": "payment_method_UPI",
+          "importance": 0.022981
         },
         {
           "feature": "transaction_type_Bank Transfer",
-          "importance": 0.019974
+          "importance": 0.022873
         },
         {
-          "feature": "payment_method_Net Banking",
-          "importance": 0.019939
+          "feature": "transaction_type_UPI",
+          "importance": 0.02243
+        },
+        {
+          "feature": "payment_method_Credit Card",
+          "importance": 0.022421
         },
         {
           "feature": "device_type_Mac",
-          "importance": 0.015794
+          "importance": 0.02233
+        },
+        {
+          "feature": "payment_method_Net Banking",
+          "importance": 0.019489
         },
         {
           "feature": "is_high_amount",
-          "importance": 0.010305
+          "importance": 0.013382
         },
         {
           "feature": "intl_x_night",
-          "importance": 0.010006
-        },
-        {
-          "feature": "night_x_high",
-          "importance": 0.004979
-        },
-        {
-          "feature": "intl_x_high",
-          "importance": 0.0
+          "importance": 0.012531
         }
       ]
     },
@@ -590,143 +558,135 @@
       "features": [
         {
           "feature": "amount_z_vs_customer",
-          "importance": 0.098871
+          "importance": 0.091895
         },
         {
           "feature": "cust_avg_amount",
-          "importance": 0.086331
-        },
-        {
-          "feature": "hour",
-          "importance": 0.084758
+          "importance": 0.088387
         },
         {
           "feature": "amount_over_cust_mean",
-          "importance": 0.082702
+          "importance": 0.085605
         },
         {
-          "feature": "amount_to_balance_ratio",
-          "importance": 0.078306
+          "feature": "hour",
+          "importance": 0.084274
         },
         {
           "feature": "day_of_month",
-          "importance": 0.076734
+          "importance": 0.081129
         },
         {
           "feature": "balance_before",
-          "importance": 0.070806
+          "importance": 0.076371
         },
         {
-          "feature": "cust_txn_count",
-          "importance": 0.063871
+          "feature": "amount_to_balance_ratio",
+          "importance": 0.073992
         },
         {
           "feature": "balance_after",
-          "importance": 0.062621
+          "importance": 0.062581
+        },
+        {
+          "feature": "cust_txn_count",
+          "importance": 0.05996
         },
         {
           "feature": "amount",
-          "importance": 0.052702
+          "importance": 0.05379
         },
         {
           "feature": "balance_change",
-          "importance": 0.044476
+          "importance": 0.044194
         },
         {
           "feature": "day_of_week",
-          "importance": 0.039315
+          "importance": 0.039153
         },
         {
           "feature": "cust_unique_merchants",
-          "importance": 0.032903
-        },
-        {
-          "feature": "transaction_type_UPI",
-          "importance": 0.010242
+          "importance": 0.033911
         },
         {
           "feature": "transaction_type_Card Payment",
-          "importance": 0.008548
+          "importance": 0.009476
         },
         {
-          "feature": "transaction_type_Online Purchase",
-          "importance": 0.008427
+          "feature": "transaction_type_UPI",
+          "importance": 0.009315
         },
         {
-          "feature": "payment_method_UPI",
-          "importance": 0.008387
+          "feature": "payment_method_Debit Card",
+          "importance": 0.009153
         },
         {
           "feature": "is_international",
+          "importance": 0.008831
+        },
+        {
+          "feature": "device_type_Android",
           "importance": 0.008347
         },
         {
           "feature": "device_type_Windows",
-          "importance": 0.008105
-        },
-        {
-          "feature": "account_type_Savings",
-          "importance": 0.008024
+          "importance": 0.008266
         },
         {
           "feature": "account_type_Salary",
-          "importance": 0.007944
+          "importance": 0.007702
         },
         {
-          "feature": "payment_method_Debit Card",
-          "importance": 0.007742
+          "feature": "account_type_Savings",
+          "importance": 0.00754
         },
         {
-          "feature": "device_type_iOS",
+          "feature": "transaction_type_Online Purchase",
+          "importance": 0.007419
+        },
+        {
+          "feature": "payment_method_UPI",
           "importance": 0.007258
         },
         {
-          "feature": "device_type_Android",
-          "importance": 0.007218
+          "feature": "transaction_type_Bank Transfer",
+          "importance": 0.007097
         },
         {
           "feature": "payment_method_Net Banking",
-          "importance": 0.006976
+          "importance": 0.006774
         },
         {
-          "feature": "transaction_type_Bank Transfer",
+          "feature": "device_type_iOS",
           "importance": 0.006613
         },
         {
           "feature": "payment_method_Credit Card",
-          "importance": 0.006613
-        },
-        {
-          "feature": "amount_log",
-          "importance": 0.006169
+          "importance": 0.006452
         },
         {
           "feature": "device_type_Mac",
-          "importance": 0.004476
+          "importance": 0.005524
+        },
+        {
+          "feature": "amount_log",
+          "importance": 0.004516
         },
         {
           "feature": "is_night",
-          "importance": 0.003024
+          "importance": 0.002581
         },
         {
           "feature": "is_high_amount",
-          "importance": 0.000887
+          "importance": 0.00125
         },
         {
           "feature": "intl_x_night",
-          "importance": 0.000484
+          "importance": 0.000605
         },
         {
           "feature": "zero_balance_after",
-          "importance": 0.000121
-        },
-        {
-          "feature": "intl_x_high",
-          "importance": 0.0
-        },
-        {
-          "feature": "night_x_high",
-          "importance": 0.0
+          "importance": 4e-05
         }
       ]
     }

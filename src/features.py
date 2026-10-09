@@ -141,6 +141,16 @@ def _attach_customer_features(out, customer_stats):
     for col in ("amount_z_vs_customer", "amount_over_cust_mean", "amount_to_balance_ratio"):
         out[col] = out[col].replace([np.inf, -np.inf], 0.0)
 
+    # Bound the ratio and deviation features to the range actually observed in
+    # the data. No real transaction is affected -- the limits sit outside the
+    # observed extremes -- but it stops the model extrapolating far beyond its
+    # evidence. Without this a sandbox transaction producing a 444-sigma
+    # deviation (against a maximum of 57 in 499,684 real rows) drove a linear
+    # model to 99.9% confidence from a region it had never seen.
+    for col, (lo, hi) in config.FEATURE_CLIPS.items():
+        if col in out.columns:
+            out[col] = out[col].clip(lower=lo, upper=hi)
+
     return out
 
 

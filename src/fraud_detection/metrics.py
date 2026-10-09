@@ -46,6 +46,10 @@ from src import config
 
 logger = logging.getLogger(__name__)
 
+# A reliability bin needs this many rows before its probability is treated as
+# evidence-backed rather than extrapolation.
+MIN_BIN_SUPPORT = 30
+
 
 # ---------------------------------------------------------------------------
 # Baselines
@@ -276,6 +280,76 @@ def cost_curve(y_true, y_score, amounts, n_points=60,
 
 
 # ---------------------------------------------------------------------------
+# Calibration
+# ---------------------------------------------------------------------------
+
+def calibration_report(y_true, y_score, n_bins=10):
+    """
+    How close the predicted score is to an actual probability.
+
+    This matters because `class_weight="balanced"` re-weights the 1% positive
+    class roughly 100x, which shifts the log-odds by a constant and inflates
+    every output. The raw score is a good *ranking* but a poor *probability*:
+    uncalibrated, rows scored 0.75 carried a true fraud rate near 3%. Reporting
+    a score of 0.99 as "99% probability of fraud" is simply wrong, so the
+    pipeline calibrates and this quantifies the result.
+    """
+    y_true = np.asarray(y_true).astype(int)
+    y_score = np.asarray(y_score, dtype=float)
+
+    prevalence = float(y_true.mean()) if len(y_true) else 0.0
+    mean_predicted = float(y_score.mean()) if len(y_score) else 0.0
+    brier = float(np.mean((y_score - y_true) ** 2)) if len(y_true) else 0.0
+
+    # Equal-width reliability bins.
+    edges = np.linspace(0.0, 1.0, n_bins + 1)
+    bins = []
+    gaps = []
+    weights = []
+    for i in range(n_bins):
+        lo, hi = edges[i], edges[i + 1]
+        sel = (y_score >= lo) & (y_score < hi if i < n_bins - 1 else y_score <= hi)
+        n = int(sel.sum())
+        if n == 0:
+            continue
+        pred = float(y_score[sel].mean())
+        actual = float(y_true[sel].mean())
+        bins.append({
+            "bin_start": round(float(lo), 3),
+            "bin_end": round(float(hi), 3),
+            "count": n,
+            "mean_predicted": round(pred, 6),
+            "actual_fraud_rate": round(actual, 6),
+            "gap": round(pred - actual, 6),
+        })
+        gaps.append(abs(pred - actual))
+        weights.append(n)
+
+    # Expected calibration error: bin gaps weighted by population.
+    ece = float(np.average(gaps, weights=weights)) if gaps else 0.0
+
+    # The highest score the test set actually supports. Calibration can only
+    # correct regions it observed: on this dataset 99.8% of rows score under
+    # 0.1, and above 0.5 there are 3 rows in 99,937. A prediction beyond this
+    # point is extrapolation, however well calibrated the bulk of the range is,
+    # and the dashboard labels it as such rather than quoting false confidence.
+    supported = [b for b in bins if b["count"] >= MIN_BIN_SUPPORT]
+    supported_max = supported[-1]["bin_end"] if supported else 0.0
+
+    return {
+        "brier_score": round(brier, 6),
+        "expected_calibration_error": round(ece, 6),
+        "supported_max_probability": round(float(supported_max), 4),
+        "min_rows_for_support": MIN_BIN_SUPPORT,
+        "mean_predicted": round(mean_predicted, 6),
+        "actual_prevalence": round(prevalence, 6),
+        # >1 means the model overstates fraud probability on average.
+        "inflation_factor": round(mean_predicted / prevalence, 3) if prevalence else None,
+        "reliability_bins": bins,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Curve exports for the dashboard
 # ---------------------------------------------------------------------------
 
@@ -313,6 +387,7 @@ def evaluate_model(y_true, y_score, amounts=None, default_threshold=0.5):
     """
     payload = {
         "ranking": ranking_metrics(y_true, y_score),
+        "calibration": calibration_report(y_true, y_score),
         "at_default_threshold": metrics_at_threshold(y_true, y_score, default_threshold),
         "precision_at_k": precision_at_k(y_true, y_score),
         "gain_curve": gain_curve(y_true, y_score),

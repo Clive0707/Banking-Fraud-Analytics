@@ -762,7 +762,36 @@ function renderSimulation(res) {
 
   const note = document.getElementById('sim-threshold-note');
   if (note) {
-    note.innerText = `vs ${threshold.toFixed(3)} threshold · ${res.model_used}`;
+    // "1 in N" is much harder to misread than a bare percentage. The score is
+    // calibrated on a held-out split, so within the supported range it is a
+    // real probability: 8% means roughly 1 in 12 such transactions are fraud.
+    const ev = res.evidence || {};
+    const odds = prob > 0 ? Math.round(1 / prob) : null;
+    if (ev.within_supported_range === false) {
+      // Above the range the test set can verify, the number stops being a
+      // measured rate. Saying so beats quoting false precision.
+      note.innerText = `beyond verified range (>${(ev.supported_max_probability * 100).toFixed(0)}%) · ${res.model_used}`;
+      note.className = 'text-[11px] font-mono text-amber-600 dark:text-amber-500';
+    } else {
+      const oddsText = odds && odds > 1 ? ` · about 1 in ${formatNumber(odds)} like this is fraud` : '';
+      note.innerText = `vs ${threshold.toFixed(3)} threshold · ${res.model_used}${oddsText}`;
+      note.className = 'text-[11px] font-mono text-slate-400';
+    }
+  }
+
+  // Explain an out-of-evidence score rather than leaving the number to speak.
+  const evidence = document.getElementById('sim-evidence');
+  if (evidence) {
+    const ev = res.evidence || {};
+    if (ev.within_supported_range === false) {
+      evidence.innerHTML = `
+        <div class="flex items-start gap-2 p-2.5 rounded-lg bg-amber-50 dark:bg-amber-900/15 border border-amber-200/70 dark:border-amber-800/40">
+          <span class="material-symbols-outlined text-[15px] text-amber-600 dark:text-amber-500 mt-px">info</span>
+          <span class="text-[11px] text-amber-800/90 dark:text-amber-300/80 leading-relaxed">${ev.note}</span>
+        </div>`;
+    } else {
+      evidence.innerHTML = '';
+    }
   }
 
   const tag = document.getElementById('sim-verdict-tag');

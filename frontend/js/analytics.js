@@ -150,9 +150,92 @@ async function loadIntelligence() {
     renderCostCurve(),
     renderPrecisionAtK(),
     renderFeatureImportance(),
+    renderCalibration(),
     renderSparkML(),
     renderLeakagePanel()
   ]);
+}
+
+/**
+ * How close the predicted score is to an actual probability, before and after
+ * calibration.
+ *
+ * This is the panel that explains why a "99% fraud probability" was previously
+ * meaningless: with 1% prevalence and balanced class weights, the raw output is
+ * inflated by roughly 39x.
+ */
+async function renderCalibration() {
+  try {
+    const perf = await getJSON('/api/model-performance', 'perf');
+    const best = perf.models?.[perf.best_model];
+    if (!best || !best.calibration) {
+      return panelError('calibration-panel',
+        'Calibration report not available -- retrain with python run.py --train');
+    }
+
+    const after = best.calibration;
+    const before = best.calibration_before;
+
+    const card = (label, c, tone) => `
+      <div class="p-4 rounded-lg border ${tone}">
+        <div class="text-[11px] uppercase tracking-wide text-slate-400 mb-2">${label}</div>
+        <div class="flex gap-6 text-[12px] font-mono">
+          <span class="text-slate-500">mean predicted
+            <strong class="text-slate-900 dark:text-white">${pct(c.mean_predicted)}</strong></span>
+          <span class="text-slate-500">actual
+            <strong class="text-slate-900 dark:text-white">${pct(c.actual_prevalence)}</strong></span>
+        </div>
+        <div class="mt-2 text-[12px]">
+          <span class="text-slate-500">overstates fraud by </span>
+          <strong class="${c.inflation_factor > 2 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-500'}">${c.inflation_factor}×</strong>
+          <span class="text-slate-400 text-[11px]"> · Brier ${c.brier_score}</span>
+        </div>
+      </div>`;
+
+    const rows = (after.reliability_bins || []).map(b => `
+      <tr class="border-b border-slate-100 dark:border-slate-800/60">
+        <td class="py-2 px-3 text-[12px] font-mono text-slate-600 dark:text-slate-300">${b.bin_start.toFixed(1)}–${b.bin_end.toFixed(1)}</td>
+        <td class="py-2 px-3 text-[12px] font-mono text-slate-500">${num(b.count)}</td>
+        <td class="py-2 px-3 text-[12px] font-mono text-slate-900 dark:text-white">${pct(b.mean_predicted)}</td>
+        <td class="py-2 px-3 text-[12px] font-mono text-slate-900 dark:text-white">${pct(b.actual_fraud_rate)}</td>
+        <td class="py-2 px-3 text-[12px] font-mono ${Math.abs(b.gap) > 0.05 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-400'}">${b.gap > 0 ? '+' : ''}${pct(b.gap)}</td>
+      </tr>`).join('');
+
+    setHTML('calibration-panel', `
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+        ${before ? card('Raw score (balanced weights)', before,
+          'border-rose-200/70 dark:border-rose-800/40 bg-rose-50/30 dark:bg-rose-900/10') : ''}
+        ${card('After Platt scaling', after,
+          'border-emerald-200/70 dark:border-emerald-800/40 bg-emerald-50/30 dark:bg-emerald-900/10')}
+      </div>
+
+      <p class="text-[11.5px] text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
+        Calibration is monotonic, so PR-AUC (${best.ranking.pr_auc}) and ROC-AUC
+        (${best.ranking.roc_auc}) are unchanged — the model ranks exactly as well as before.
+        What changes is that the number attached to a transaction now means what it says.
+        ${best.calibration_method ? `Method: ${best.calibration_method}.` : ''}
+      </p>
+
+      <table class="w-full text-left">
+        <thead>
+          <tr class="border-b border-slate-200 dark:border-slate-800">
+            <th class="py-2 px-3 text-[10px] uppercase tracking-wide text-slate-400 font-medium">Predicted band</th>
+            <th class="py-2 px-3 text-[10px] uppercase tracking-wide text-slate-400 font-medium">Transactions</th>
+            <th class="py-2 px-3 text-[10px] uppercase tracking-wide text-slate-400 font-medium">Mean predicted</th>
+            <th class="py-2 px-3 text-[10px] uppercase tracking-wide text-slate-400 font-medium">Actual fraud rate</th>
+            <th class="py-2 px-3 text-[10px] uppercase tracking-wide text-slate-400 font-medium">Gap</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <p class="text-[11px] text-slate-400 mt-3 px-3">
+        Expected calibration error ${pct(after.expected_calibration_error)} — the
+        population-weighted average gap between what the model predicts and what actually happens.
+      </p>
+    `);
+  } catch (err) {
+    panelError('calibration-panel', err.message);
+  }
 }
 
 /**

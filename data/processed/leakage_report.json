@@ -82,15 +82,15 @@
   "leaky_vs_clean": {
     "clean_no_status": {
       "n_features": 35,
-      "roc_auc": 0.728416,
-      "pr_auc": 0.025881,
-      "precision": 0.029453,
+      "roc_auc": 0.728426,
+      "pr_auc": 0.025896,
+      "precision": 0.029454,
       "recall": 0.711224,
-      "f1_score": 0.056563,
+      "f1_score": 0.056565,
       "confusion_matrix": [
         [
-          75989,
-          22968
+          75990,
+          22967
         ],
         [
           283,
@@ -100,15 +100,15 @@
     },
     "leaky_with_status": {
       "n_features": 39,
-      "roc_auc": 0.929318,
-      "pr_auc": 0.772733,
-      "precision": 0.331152,
+      "roc_auc": 0.929324,
+      "pr_auc": 0.77375,
+      "precision": 0.331296,
       "recall": 0.77449,
-      "f1_score": 0.463936,
+      "f1_score": 0.464078,
       "confusion_matrix": [
         [
-          97424,
-          1533
+          97425,
+          1532
         ],
         [
           221,
@@ -117,9 +117,9 @@
       ]
     },
     "inflation": {
-      "pr_auc_multiple": 29.86,
+      "pr_auc_multiple": 29.88,
       "f1_multiple": 8.2,
-      "precision_delta": 0.301699,
+      "precision_delta": 0.301842,
       "interpretation": "The leaky model's headline metrics are the ones a naive benchmark would publish. They are unreachable in production because the feature driving them is not available at scoring time."
     }
   }

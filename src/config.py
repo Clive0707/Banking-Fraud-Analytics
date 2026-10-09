@@ -199,6 +199,21 @@ HIGH_AMOUNT_THRESHOLD = 100_000.0
 # Spend that drains the account to exactly zero.
 ZERO_BALANCE_EPS = 1e-9
 
+# Bounds for the unbounded ratio and deviation features.
+#
+# These are set just outside the range observed across the 500k sample
+# (amount_z_vs_customer spans -34.5 to 56.9; amount_over_cust_mean 0.03 to 19.4;
+# amount_to_balance_ratio 0 to 249.8), so no real transaction is altered. They
+# exist to stop a linear model extrapolating to absurd confidence on inputs it
+# has never seen: a sandbox transaction once produced a z-score of 444 against a
+# customer whose own history tops out near 57, and the model duly reported
+# 99.9% certainty from a region of feature space with no supporting evidence.
+FEATURE_CLIPS = {
+    "amount_z_vs_customer": (-60.0, 60.0),
+    "amount_over_cust_mean": (0.0, 25.0),
+    "amount_to_balance_ratio": (0.0, 300.0),
+}
+
 # ---------------------------------------------------------------------------
 # Target leakage
 # ---------------------------------------------------------------------------
@@ -228,8 +243,21 @@ REVIEW_CAPACITY_FRACTIONS = [0.001, 0.005, 0.01, 0.02, 0.05, 0.10]
 # ML training
 # ---------------------------------------------------------------------------
 
+# A binary feature needs this much presence in the training split before a
+# coefficient can be estimated from it. The stratified sample preserves the
+# overall fraud rate but not rare feature *combinations*: intl_x_high holds 207
+# rows and a 10.9x lift across the full 15M, yet only 7 rows and zero frauds
+# survive into a 500k sample. Fitting that cell produced a -9.75 coefficient on
+# the strongest real signal in the data, which then dominated exactly the
+# highest-risk predictions. Features below these thresholds are dropped and
+# reported rather than silently fitted to noise.
+MIN_FEATURE_SUPPORT = 100
+MIN_FEATURE_POSITIVES = 5
+
 RANDOM_SEED = 42
 TEST_SIZE = 0.2
+# Share of the non-test data held out to calibrate predicted probabilities.
+CALIBRATION_SIZE = 0.2
 CV_FOLDS = 5
 ML_SAMPLE_TARGET = 500_000
 

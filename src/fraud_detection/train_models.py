@@ -38,7 +38,9 @@ from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.frozen import FrozenEstimator
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.pipeline import Pipeline
@@ -115,6 +117,56 @@ def build_model_zoo(scale_pos_weight):
         logger.warning("lightgbm not installed -- skipping LightGBM from the benchmark.")
 
     return zoo
+
+
+def drop_low_support_features(X, y, feature_names):
+    """
+    Remove binary features with too few examples to estimate a coefficient.
+
+    A 0/1 column that is set on a handful of rows -- especially with no positive
+    cases among them -- carries no information the model can use, but logistic
+    regression will still assign it a weight. On this dataset `intl_x_high` was
+    set on 7 of 499,684 rows with zero frauds, and the fitted coefficient of
+    -9.75 swamped every other term for international high-value transactions,
+    which the full 15M shows to be the single riskiest segment.
+
+    Continuous features are left alone; the concern is empty indicator cells.
+    """
+    kept, dropped = [], []
+    y = np.asarray(y).astype(int)
+
+    for col in feature_names:
+        values = X[col].values
+        is_binary = np.isin(np.unique(values), (0.0, 1.0)).all()
+        if not is_binary:
+            kept.append(col)
+            continue
+
+        present = values == 1
+        support = int(present.sum())
+        positives = int(y[present].sum())
+        if support < config.MIN_FEATURE_SUPPORT or positives < config.MIN_FEATURE_POSITIVES:
+            dropped.append({
+                "feature": col,
+                "support": support,
+                "positives": positives,
+                "reason": (
+                    f"only {support} rows set ({positives} fraudulent); needs "
+                    f"{config.MIN_FEATURE_SUPPORT} rows and "
+                    f"{config.MIN_FEATURE_POSITIVES} positives"
+                ),
+            })
+        else:
+            kept.append(col)
+
+    for d in dropped:
+        logger.warning(f"Dropping '{d['feature']}': {d['reason']}")
+    if dropped:
+        logger.info(
+            f"{len(dropped)} feature(s) dropped for insufficient support; "
+            f"{len(kept)} retained."
+        )
+    return kept, dropped
 
 
 def fit_customer_baselines(train_df):
@@ -222,11 +274,22 @@ def train_fraud_models(models_dir=None, sample_path=None, run_cv=True):
     leakage = run_leakage_analysis(df)
 
     # --- Split, then fit customer baselines on train only -----------------
-    idx_tr, idx_te = train_test_split(
+    # Three-way split: fit / calibrate / test.
+    #
+    # class_weight="balanced" re-weights the 1% positive class about 100x, which
+    # shifts the log-odds by a constant and inflates every predicted
+    # probability -- uncalibrated, rows scored 0.75 carried a true fraud rate
+    # near 3%. A held-out calibration split maps the scores back onto real
+    # probabilities without the test set ever being used for fitting.
+    idx_fit_calib, idx_te = train_test_split(
         np.arange(len(y)), test_size=config.TEST_SIZE,
         random_state=config.RANDOM_SEED, stratify=y,
     )
-    train_df, test_df = df.iloc[idx_tr], df.iloc[idx_te]
+    idx_tr, idx_cal = train_test_split(
+        idx_fit_calib, test_size=config.CALIBRATION_SIZE,
+        random_state=config.RANDOM_SEED, stratify=y[idx_fit_calib],
+    )
+    train_df, calib_df, test_df = df.iloc[idx_tr], df.iloc[idx_cal], df.iloc[idx_te]
 
     logger.info("Fitting per-customer baselines on the training split only...")
     customer_stats = fit_customer_baselines(train_df)
@@ -240,8 +303,24 @@ def train_fraud_models(models_dir=None, sample_path=None, run_cv=True):
     )
     X_test_df = X_test_df.reindex(columns=feature_names, fill_value=0.0)
 
+    X_calib_df, _ = feat_mod.assemble_matrix(
+        calib_df, customer_stats=customer_stats, fit=False
+    )
+    X_calib_df = X_calib_df.reindex(columns=feature_names, fill_value=0.0)
+
+    # Drop binary features the training split cannot support. Keeping them
+    # lets the optimiser fit an arbitrary coefficient to a near-empty cell.
+    feature_names, dropped_features = drop_low_support_features(
+        X_train_df, y[idx_tr], feature_names
+    )
+    X_train_df = X_train_df[feature_names]
+    X_test_df = X_test_df[feature_names]
+    X_calib_df = X_calib_df[feature_names]
+
     X_train, X_test = X_train_df.values, X_test_df.values
+    X_calib = X_calib_df.values
     y_train, y_test = y[idx_tr], y[idx_te]
+    y_calib = y[idx_cal]
     test_amounts = test_df["amount"].astype(float).values
 
     pos, neg = int(y_train.sum()), int((y_train == 0).sum())
@@ -249,6 +328,9 @@ def train_fraud_models(models_dir=None, sample_path=None, run_cv=True):
     logger.info(
         f"Feature matrix {X_train.shape}; train fraud={pos:,} legit={neg:,} "
         f"(scale_pos_weight={scale_pos_weight:.1f})"
+    )
+    logger.info(
+        f"Split: {len(y_train):,} fit / {len(y_calib):,} calibrate / {len(y_test):,} test"
     )
 
     baseline = metric_mod.no_skill_baseline(y_test)
@@ -268,11 +350,28 @@ def train_fraud_models(models_dir=None, sample_path=None, run_cv=True):
         pipeline.fit(X_train, y_train)
         train_secs = time.perf_counter() - t0
 
+        # Record how far the raw scores sit from real probabilities, then fix it.
+        raw_test_score = pipeline.predict_proba(X_test)[:, 1]
+        raw_calibration = metric_mod.calibration_report(y_test, raw_test_score)
+
+        # Platt scaling. The balanced-weight distortion is a constant offset in
+        # log-odds, which a sigmoid fit recovers almost exactly, and it is far
+        # more stable than isotonic at this positive count. Being monotonic it
+        # leaves PR-AUC and ROC-AUC untouched -- the ranking is unchanged, only
+        # the numbers attached to it become meaningful.
+        # FrozenEstimator replaces the cv="prefit" argument, which scikit-learn
+        # 1.9 removed. Wrapping the already-fitted pipeline keeps it frozen so
+        # only the calibrator is fitted on the held-out split.
+        calibrated = CalibratedClassifierCV(FrozenEstimator(pipeline), method="sigmoid")
+        calibrated.fit(X_calib, y_calib)
+
         t1 = time.perf_counter()
-        y_score = pipeline.predict_proba(X_test)[:, 1]
+        y_score = calibrated.predict_proba(X_test)[:, 1]
         predict_secs = time.perf_counter() - t1
 
         evaluation = metric_mod.evaluate_model(y_test, y_score, amounts=test_amounts)
+        evaluation["calibration_before"] = raw_calibration
+        evaluation["calibration_method"] = "sigmoid (Platt) on a held-out split"
         evaluation["timing"] = {
             "train_seconds": round(train_secs, 3),
             "predict_seconds": round(predict_secs, 4),
@@ -286,7 +385,9 @@ def train_fraud_models(models_dir=None, sample_path=None, run_cv=True):
             )
 
         stem = MODEL_FILENAMES[name]
-        joblib.dump(pipeline, models_path / f"{stem}_pipeline.pkl", compress=3)
+        # The calibrated estimator is what gets served, so the probability the
+        # dashboard shows is the probability the evaluation measured.
+        joblib.dump(calibrated, models_path / f"{stem}_pipeline.pkl", compress=3)
         evaluation["artifact"] = f"{stem}_pipeline.pkl"
         results[name] = evaluation
 
@@ -297,10 +398,12 @@ def train_fraud_models(models_dir=None, sample_path=None, run_cv=True):
         r = evaluation["ranking"]
         pk = evaluation["precision_at_k"]
         at1pct = next((row for row in pk if row["capacity_fraction"] == 0.01), pk[0])
+        cal = evaluation["calibration"]
         logger.info(
             f"  {name}: PR-AUC={r['pr_auc']:.4f} (random={baseline['prevalence']:.4f}) "
-            f"ROC-AUC={r['roc_auc']:.4f} | top-1% precision={at1pct['precision_at_k']:.4f} "
-            f"lift={at1pct['lift']:.2f}x | {train_secs:.1f}s"
+            f"ROC-AUC={r['roc_auc']:.4f} | top-1% lift={at1pct['lift']:.2f}x "
+            f"| probability inflation {raw_calibration['inflation_factor']}x -> "
+            f"{cal['inflation_factor']}x | {train_secs:.1f}s"
         )
 
     # --- Select the best model on PR-AUC ----------------------------------
@@ -319,9 +422,11 @@ def train_fraud_models(models_dir=None, sample_path=None, run_cv=True):
         "dataset_total_records": 15_000_000,
         "training_sample_size": int(len(df)),
         "train_rows": int(len(y_train)),
+        "calibration_rows": int(len(y_calib)),
         "test_rows": int(len(y_test)),
         "n_features": int(X_train.shape[1]),
         "feature_names": feature_names,
+        "dropped_features": dropped_features,
         "selection_metric": "pr_auc",
         "best_model": best_model_name,
         "no_skill_baseline": baseline,
@@ -343,6 +448,17 @@ def train_fraud_models(models_dir=None, sample_path=None, run_cv=True):
             "as a standalone rule) and is unavailable at scoring time.",
             "Operating thresholds are tuned per model for F1 and for expected "
             "net saving rather than left at the 0.5 default.",
+            "Binary features with too few examples to estimate are dropped "
+            "rather than fitted. The stratified sample preserves the overall "
+            "fraud rate but not rare feature combinations, so an interaction "
+            "that is genuinely strong across 15M rows can arrive with single "
+            "digit support and no positives -- enough for the optimiser to "
+            "assign it a large arbitrary weight.",
+            "Scores are calibrated with Platt scaling on a held-out split. "
+            "class_weight='balanced' makes the raw output a good ranking but a "
+            "poor probability: uncalibrated, rows scored 0.75 carried a true "
+            "fraud rate near 3%. Calibration is monotonic, so PR-AUC and ROC-AUC "
+            "are unchanged while the displayed probability becomes meaningful.",
         ],
     }
 

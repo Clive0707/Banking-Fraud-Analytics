@@ -116,7 +116,7 @@ banking-fraud-analytics/
 ├── scripts/
 │   ├── generate_dataset.py            # regenerate the 15M-row source CSV
 │   └── smoke_test.py                  # end-to-end pipeline verification
-├── tests/                             # 113 pytest tests
+├── tests/                             # 131 pytest tests
 └── Dockerfile / .github/workflows/ci.yml
 ```
 
@@ -173,6 +173,31 @@ Methodology:
 - Categoricals are **one-hot encoded**. `LabelEncoder` previously imposed a meaningless ordering on `location`, which made the 5× international lift invisible to the linear model.
 - Per-customer baseline features are fitted **on the training split only**, so test rows do not contribute to their own baselines.
 - Thresholds are tuned per model for F1 and for expected net saving.
+
+### Calibration: what the probability actually means
+
+`class_weight="balanced"` re-weights the 1% positive class roughly 100x. That makes the raw output a good **ranking** and a poor **probability** — it shifts the log-odds by a constant, inflating every score. Measured on the held-out set, the mean prediction was **39.55x** the true base rate: rows scored 0.75 carried an actual fraud rate near 3%.
+
+Platt scaling on a dedicated calibration split (fit / calibrate / test = 319,797 / 79,950 / 99,937) corrects it:
+
+| | Mean predicted | Actual rate | Inflation | Brier | ECE |
+|---|---:|---:|---:|---:|---:|
+| Raw score | 0.3878 | 0.0098 | **39.55x** | 0.1884 | 0.3780 |
+| Calibrated | 0.0098 | 0.0098 | **1.001x** | 0.0096 | **0.0003** |
+
+Calibration is monotonic, so **PR-AUC and ROC-AUC are unchanged** — the ranking and the lift story survive exactly; only the number attached to a transaction becomes meaningful.
+
+### Knowing where the model has evidence
+
+Calibration can only correct the regions it observed. On the held-out set **99,783 of 99,937 rows score under 0.1**, and above 0.5 there are **3 rows, none of them fraud**. A score beyond that is extrapolation however well calibrated the bulk of the range is, so the API reports `supported_max_probability` (20%) and the sandbox labels anything above it *"beyond verified range"* instead of quoting false precision.
+
+### Features the sample cannot support
+
+The stratified sample preserves the overall fraud rate but not rare feature *combinations*. `intl_x_high` holds **207 rows and a 10.87x lift across the full 15M**, yet only **5 rows and zero frauds** survive into the training split — enough for logistic regression to fit a **-9.75** coefficient on the strongest real signal in the data, which then dominated exactly the highest-risk predictions.
+
+Binary features below 100 rows or 5 positives are now dropped and reported in `model_comparison.json` rather than fitted to noise. Two were removed: `intl_x_high` and `night_x_high`. This is also a concrete argument for the distributed path below — on all 15M rows those interactions have the support to be learned.
+
+---
 
 ### Distributed training on all 15M rows
 
@@ -318,7 +343,7 @@ docker run -p 5000:5000 -v "$PWD/data:/app/data" -v "$PWD/models:/app/models" ba
 Tests:
 
 ```bash
-pytest                       # 113 unit and API tests
+pytest                       # 131 unit and API tests
 python scripts/smoke_test.py # full pipeline on synthetic data, no raw file needed
 ```
 
@@ -419,4 +444,4 @@ This reproduces the dataset's *statistical structure*, not its exact bytes. A fr
 **ML** Spark MLlib (distributed, all 15M rows), Scikit-learn, XGBoost, LightGBM, Joblib
 **Backend** Python 3.11+, Flask, Waitress
 **Frontend** HTML5, Tailwind, ES6, Chart.js 4
-**Quality** pytest (113 tests), GitHub Actions, Docker, Ruff
+**Quality** pytest (131 tests), GitHub Actions, Docker, Ruff
